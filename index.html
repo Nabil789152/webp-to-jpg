@@ -3,48 +3,142 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="description" content="Convertisseur WEBP vers JPG gratuit en ligne. Conversion multiple, ZIP, compression, redimensionnement et glisser-déposer." />
-<title>WEBP to JPG Converter - Gratuit</title>
+<meta name="description" content="Convertisseur WEBP vers JPG gratuit en ligne. Conversion rapide, ZIP, compression et redimensionnement." />
+<title>WEBP to JPG Converter</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
-body{font-family:Arial,sans-serif;background:#f4f6f9;margin:0;padding:20px;text-align:center}
-.container{max-width:950px;margin:auto;background:#fff;padding:24px;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
-.dropzone{border:2px dashed #bbb;padding:30px;border-radius:14px;margin:15px 0;cursor:pointer}
-.controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:15px 0}
-input,button,select{padding:10px;border-radius:8px;border:1px solid #ccc}
-button{cursor:pointer}
-#preview{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:20px}
-.card{width:170px;border:1px solid #ddd;padding:10px;border-radius:12px}
-.card img{max-width:100%;border-radius:8px}
-small{display:block;color:#666}
+:root{
+  --primary:#00c853;
+  --dark:#0f1720;
+  --card:#121a24;
+  --text:#e8f5e9;
+  --muted:#9ccc9c;
+}
+
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:linear-gradient(135deg,#07130b,#0b1f14);
+  color:var(--text);
+  text-align:center;
+}
+
+.container{
+  max-width:980px;
+  margin:40px auto;
+  background:rgba(18,26,36,0.85);
+  padding:25px;
+  border-radius:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+  border:1px solid rgba(0,200,83,0.2);
+}
+
+h1{
+  color:var(--primary);
+  margin-bottom:5px;
+}
+
+p{
+  color:var(--muted);
+}
+
+.dropzone{
+  margin:20px 0;
+  padding:40px;
+  border:2px dashed var(--primary);
+  border-radius:16px;
+  cursor:pointer;
+  transition:0.3s;
+  background:rgba(0,200,83,0.05);
+}
+
+.dropzone:hover{
+  background:rgba(0,200,83,0.12);
+}
+
+.controls{
+  display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:12px;
+  margin:20px 0;
+}
+
+input,select,button{
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  outline:none;
+}
+
+button{
+  background:var(--primary);
+  color:white;
+  cursor:pointer;
+  font-weight:bold;
+  transition:0.3s;
+}
+
+button:hover{
+  background:#00e676;
+}
+
+#preview{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  justify-content:center;
+  margin-top:20px;
+}
+
+.card{
+  width:160px;
+  background:var(--card);
+  border:1px solid rgba(0,200,83,0.2);
+  padding:10px;
+  border-radius:14px;
+}
+
+.card img{
+  max-width:100%;
+  border-radius:10px;
+}
+
+small{
+  color:var(--muted);
+  display:block;
+  margin-top:5px;
+}
 </style>
 </head>
 <body>
+
 <div class="container">
-<h1>WEBP → JPG Converter</h1>
-<p>Multi-images • ZIP • Compression • Redimensionnement • Drag & Drop</p>
+  <h1>WEBP → JPG Converter</h1>
+  <p>Outil rapide • Green Tech • Gratuit</p>
 
-<div class="dropzone" id="dropzone">Glissez vos images ici ou cliquez</div>
-<input type="file" id="upload" accept="image/*" multiple hidden>
+  <div class="dropzone" id="dropzone">Glissez vos images ici ou cliquez</div>
+  <input type="file" id="upload" accept="image/*" multiple hidden>
 
-<div class="controls">
-<label>Qualité JPG
-<select id="quality">
-<option value="1">100%</option>
-<option value="0.9" selected>90%</option>
-<option value="0.8">80%</option>
-<option value="0.6">60%</option>
-</select></label>
+  <div class="controls">
+    <label>Qualité
+      <select id="quality">
+        <option value="1">100%</option>
+        <option value="0.9" selected>90%</option>
+        <option value="0.8">80%</option>
+        <option value="0.6">60%</option>
+      </select>
+    </label>
 
-<label>Largeur max
-<input type="number" id="resize" placeholder="ex: 1200" min="1" style="width:110px">
-</label>
+    <label>Largeur max
+      <input type="number" id="resize" placeholder="1200">
+    </label>
 
-<button onclick="convertImages()">Convertir</button>
-<button onclick="downloadZip()">Télécharger ZIP</button>
-</div>
+    <button onclick="convertImages()">Convertir</button>
+    <button onclick="downloadZip()">ZIP</button>
+  </div>
 
-<div id="preview"></div>
+  <div id="preview"></div>
 </div>
 
 <script>
@@ -55,70 +149,85 @@ let files=[];
 let converted=[];
 
 function loadFiles(list){
- files=Array.from(list);
- preview.innerHTML='';
- converted=[];
- files.forEach(file=>{
-   const reader=new FileReader();
-   reader.onload=e=>{
-     const div=document.createElement('div');
-     div.className='card';
-     div.innerHTML=`<img src="${e.target.result}"><small>${file.name}</small>`;
-     preview.appendChild(div);
-   };
-   reader.readAsDataURL(file);
- });
+  files=[...list];
+  preview.innerHTML='';
+  converted=[];
+
+  files.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const div=document.createElement('div');
+      div.className='card';
+      div.innerHTML=`<img src="${e.target.result}"><small>${file.name}</small>`;
+      preview.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 upload.addEventListener('change',e=>loadFiles(e.target.files));
 dropzone.onclick=()=>upload.click();
 dropzone.addEventListener('dragover',e=>e.preventDefault());
 dropzone.addEventListener('drop',e=>{
- e.preventDefault();
- loadFiles(e.dataTransfer.files);
+  e.preventDefault();
+  loadFiles(e.dataTransfer.files);
 });
 
 function convertImages(){
- if(!files.length) return alert('Sélectionnez des images');
- converted=[];
- const quality=parseFloat(document.getElementById('quality').value);
- const maxWidth=parseInt(document.getElementById('resize').value);
+  if(!files.length) return alert('Sélectionnez des images');
+  converted=[];
 
- files.forEach(file=>{
-   const reader=new FileReader();
-   reader.onload=e=>{
-     const img=new Image();
-     img.src=e.target.result;
-     img.onload=()=>{
-       let w=img.width,h=img.height;
-       if(maxWidth && w>maxWidth){ h=Math.round(h*(maxWidth/w)); w=maxWidth; }
-       const canvas=document.createElement('canvas');
-       canvas.width=w; canvas.height=h;
-       canvas.getContext('2d').drawImage(img,0,0,w,h);
-       canvas.toBlob(blob=>{
-         const name=file.name.replace(/\.[^.]+$/,'')+'.jpg';
-         converted.push({name,blob});
-         const a=document.createElement('a');
-         a.href=URL.createObjectURL(blob);
-         a.download=name;
-         a.click();
-       },'image/jpeg',quality);
-     };
-   };
-   reader.readAsDataURL(file);
- });
+  const quality=parseFloat(document.getElementById('quality').value);
+  const maxWidth=parseInt(document.getElementById('resize').value);
+
+  files.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const img=new Image();
+      img.src=e.target.result;
+
+      img.onload=()=>{
+        let w=img.width,h=img.height;
+        if(maxWidth && w>maxWidth){
+          h=Math.round(h*(maxWidth/w));
+          w=maxWidth;
+        }
+
+        const canvas=document.createElement('canvas');
+        canvas.width=w;
+        canvas.height=h;
+
+        canvas.getContext('2d').drawImage(img,0,0,w,h);
+
+        canvas.toBlob(blob=>{
+          const name=file.name.replace(/\.[^.]+$/,'')+'.jpg';
+          converted.push({name,blob});
+
+          const a=document.createElement('a');
+          a.href=URL.createObjectURL(blob);
+          a.download=name;
+          a.click();
+        },'image/jpeg',quality);
+      };
+    };
+
+    reader.readAsDataURL(file);
+  });
 }
 
 async function downloadZip(){
- if(!converted.length) return alert('Convertissez d’abord les images');
- const zip=new JSZip();
- converted.forEach(f=>zip.file(f.name,f.blob));
- const blob=await zip.generateAsync({type:'blob'});
- const a=document.createElement('a');
- a.href=URL.createObjectURL(blob);
- a.download='converted-jpg.zip';
- a.click();
+  if(!converted.length) return alert('Convertissez d’abord');
+
+  const zip=new JSZip();
+  converted.forEach(f=>zip.file(f.name,f.blob));
+
+  const blob=await zip.generateAsync({type:'blob'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='images-jpg.zip';
+  a.click();
 }
 </script>
+
 </body>
 </html>
