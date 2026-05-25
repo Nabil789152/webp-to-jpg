@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Convertisseur WEBP → JPG</title>
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  margin: 0;
+  padding: 20px;
+  text-align: center;
+}
+.container {
+  max-width: 800px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+h1 {
+  margin-bottom: 10px;
+}
+input, button {
+  margin: 10px;
+  padding: 10px;
+}
+#preview {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+.card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 10px;
+  width: 150px;
+}
+.card img {
+  max-width: 100%;
+  border-radius: 6px;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Convertisseur WEBP → JPG</h1>
+  <p>Conversion multiple directement dans le navigateur</p>
+
+  <input type="file" id="upload" accept="image/webp,image/*" multiple />
+  <br />
+  <button onclick="convertImages()">Convertir en JPG</button>
+
+  <div id="preview"></div>
+</div>
+
+<script>
+const upload = document.getElementById('upload');
+const preview = document.getElementById('preview');
+let files = [];
+
+upload.addEventListener('change', (e) => {
+  files = Array.from(e.target.files);
+  preview.innerHTML = '';
+
+  files.forEach((file, index) => {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const div = document.createElement('div');
+      div.className = 'card';
+      div.innerHTML = `<img src="${event.target.result}" /><p>${file.name}</p>`;
+      preview.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+function convertImages() {
+  if (files.length === 0) {
+    alert('Veuillez sélectionner des images');
+    return;
+  }
+
+</html>
