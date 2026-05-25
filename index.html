@@ -3,87 +3,122 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Convertisseur WEBP → JPG</title>
+<meta name="description" content="Convertisseur WEBP vers JPG gratuit en ligne. Conversion multiple, ZIP, compression, redimensionnement et glisser-déposer." />
+<title>WEBP to JPG Converter - Gratuit</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f9;
-  margin: 0;
-  padding: 20px;
-  text-align: center;
-}
-.container {
-  max-width: 800px;
-  margin: auto;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-h1 {
-  margin-bottom: 10px;
-}
-input, button {
-  margin: 10px;
-  padding: 10px;
-}
-#preview {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 20px;
-}
-.card {
-  border: 1px solid #ddd;
-  padding: 10px;
-  border-radius: 10px;
-  width: 150px;
-}
-.card img {
-  max-width: 100%;
-  border-radius: 6px;
-}
+body{font-family:Arial,sans-serif;background:#f4f6f9;margin:0;padding:20px;text-align:center}
+.container{max-width:950px;margin:auto;background:#fff;padding:24px;border-radius:16px;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+.dropzone{border:2px dashed #bbb;padding:30px;border-radius:14px;margin:15px 0;cursor:pointer}
+.controls{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:15px 0}
+input,button,select{padding:10px;border-radius:8px;border:1px solid #ccc}
+button{cursor:pointer}
+#preview{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:20px}
+.card{width:170px;border:1px solid #ddd;padding:10px;border-radius:12px}
+.card img{max-width:100%;border-radius:8px}
+small{display:block;color:#666}
 </style>
 </head>
 <body>
-
 <div class="container">
-  <h1>Convertisseur WEBP → JPG</h1>
-  <p>Conversion multiple directement dans le navigateur</p>
+<h1>WEBP → JPG Converter</h1>
+<p>Multi-images • ZIP • Compression • Redimensionnement • Drag & Drop</p>
 
-  <input type="file" id="upload" accept="image/webp,image/*" multiple />
-  <br />
-  <button onclick="convertImages()">Convertir en JPG</button>
+<div class="dropzone" id="dropzone">Glissez vos images ici ou cliquez</div>
+<input type="file" id="upload" accept="image/*" multiple hidden>
 
-  <div id="preview"></div>
+<div class="controls">
+<label>Qualité JPG
+<select id="quality">
+<option value="1">100%</option>
+<option value="0.9" selected>90%</option>
+<option value="0.8">80%</option>
+<option value="0.6">60%</option>
+</select></label>
+
+<label>Largeur max
+<input type="number" id="resize" placeholder="ex: 1200" min="1" style="width:110px">
+</label>
+
+<button onclick="convertImages()">Convertir</button>
+<button onclick="downloadZip()">Télécharger ZIP</button>
+</div>
+
+<div id="preview"></div>
 </div>
 
 <script>
-const upload = document.getElementById('upload');
-const preview = document.getElementById('preview');
-let files = [];
+const upload=document.getElementById('upload');
+const dropzone=document.getElementById('dropzone');
+const preview=document.getElementById('preview');
+let files=[];
+let converted=[];
 
-upload.addEventListener('change', (e) => {
-  files = Array.from(e.target.files);
-  preview.innerHTML = '';
+function loadFiles(list){
+ files=Array.from(list);
+ preview.innerHTML='';
+ converted=[];
+ files.forEach(file=>{
+   const reader=new FileReader();
+   reader.onload=e=>{
+     const div=document.createElement('div');
+     div.className='card';
+     div.innerHTML=`<img src="${e.target.result}"><small>${file.name}</small>`;
+     preview.appendChild(div);
+   };
+   reader.readAsDataURL(file);
+ });
+}
 
-  files.forEach((file, index) => {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const div = document.createElement('div');
-      div.className = 'card';
-      div.innerHTML = `<img src="${event.target.result}" /><p>${file.name}</p>`;
-      preview.appendChild(div);
-    };
-    reader.readAsDataURL(file);
-  });
+upload.addEventListener('change',e=>loadFiles(e.target.files));
+dropzone.onclick=()=>upload.click();
+dropzone.addEventListener('dragover',e=>e.preventDefault());
+dropzone.addEventListener('drop',e=>{
+ e.preventDefault();
+ loadFiles(e.dataTransfer.files);
 });
 
-function convertImages() {
-  if (files.length === 0) {
-    alert('Veuillez sélectionner des images');
-    return;
-  }
+function convertImages(){
+ if(!files.length) return alert('Sélectionnez des images');
+ converted=[];
+ const quality=parseFloat(document.getElementById('quality').value);
+ const maxWidth=parseInt(document.getElementById('resize').value);
 
+ files.forEach(file=>{
+   const reader=new FileReader();
+   reader.onload=e=>{
+     const img=new Image();
+     img.src=e.target.result;
+     img.onload=()=>{
+       let w=img.width,h=img.height;
+       if(maxWidth && w>maxWidth){ h=Math.round(h*(maxWidth/w)); w=maxWidth; }
+       const canvas=document.createElement('canvas');
+       canvas.width=w; canvas.height=h;
+       canvas.getContext('2d').drawImage(img,0,0,w,h);
+       canvas.toBlob(blob=>{
+         const name=file.name.replace(/\.[^.]+$/,'')+'.jpg';
+         converted.push({name,blob});
+         const a=document.createElement('a');
+         a.href=URL.createObjectURL(blob);
+         a.download=name;
+         a.click();
+       },'image/jpeg',quality);
+     };
+   };
+   reader.readAsDataURL(file);
+ });
+}
+
+async function downloadZip(){
+ if(!converted.length) return alert('Convertissez d’abord les images');
+ const zip=new JSZip();
+ converted.forEach(f=>zip.file(f.name,f.blob));
+ const blob=await zip.generateAsync({type:'blob'});
+ const a=document.createElement('a');
+ a.href=URL.createObjectURL(blob);
+ a.download='converted-jpg.zip';
+ a.click();
+}
+</script>
+</body>
 </html>
