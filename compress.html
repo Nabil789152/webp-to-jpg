@@ -32,12 +32,6 @@ h2{
   border:1px solid rgba(0,255,204,0.2);
 }
 
-label{
-  display:block;
-  margin-bottom:5px;
-  color:#00ffcc;
-}
-
 input[type="file"]{
   margin-top:10px;
 }
@@ -60,6 +54,7 @@ button{
   cursor:pointer;
 }
 
+/* PREVIEW */
 .preview{
   display:flex;
   justify-content:center;
@@ -77,7 +72,9 @@ button{
 .info{
   font-size:14px;
   color:#9fffe6;
+  margin-top:5px;
 }
+
 </style>
 </head>
 
@@ -90,8 +87,9 @@ button{
 <input type="file" id="file" accept="image/*">
 
 <div class="box">
-<label>Qualité de compression</label>
+<label>Qualité de compression</label><br>
 <input type="range" id="quality" min="10" max="100" value="70">
+<br>
 <small id="qtext">Qualité : 70%</small>
 </div>
 
@@ -106,10 +104,12 @@ button{
 let img=new Image();
 let originalSize=0;
 
+/* SLIDER TEXT */
 document.getElementById("quality").oninput=(e)=>{
 document.getElementById("qtext").innerText="Qualité : "+e.target.value+"%";
 };
 
+/* LOAD IMAGE */
 document.getElementById("file").onchange=(e)=>{
 const file=e.target.files[0];
 
@@ -133,6 +133,7 @@ document.getElementById("preview").innerHTML=`
 reader.readAsDataURL(file);
 };
 
+/* COMPRESS */
 function compress(){
 
 if(!img.src){
@@ -155,16 +156,21 @@ let reduction=(100-(newSize/originalSize*100)).toFixed(1);
 
 let url=URL.createObjectURL(blob);
 
+/* RESULT UI PRO */
 document.getElementById("preview").innerHTML+=`
 <div>
+
 <p class="info">Image compressée</p>
+
+<img src="${url}">
+
 <p class="info">Taille : ${newSize} KB</p>
 <p class="info">Réduction : ${reduction}%</p>
-<img src="${url}">
-<br><br>
+
 <a href="${url}" download="compressed.jpg">
 <button>Télécharger</button>
 </a>
+
 </div>
 `;
 
