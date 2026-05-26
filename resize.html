@@ -1,1 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Resize</title>
+<style>
+body{background:#05070d;color:#fff;text-align:center;font-family:Arial}
+</style>
+</head>
+<body>
 
+<h2>Resize Images</h2>
+
+<input type="file" id="file" multiple>
+<input type="number" id="w" placeholder="Largeur">
+<button onclick="go()">Resize</button>
+
+<script>
+function go(){
+let files=document.getElementById("file").files;
+let w=parseInt(document.getElementById("w").value);
+
+for(let f of files){
+let r=new FileReader();
+r.onload=e=>{
+let img=new Image();
+img.src=e.target.result;
+img.onload=()=>{
+let h=img.height*(w/img.width);
+let c=document.createElement("canvas");
+c.width=w;
+c.height=h;
+c.getContext("2d").drawImage(img,0,0,w,h);
+c.toBlob(b=>{
+let a=document.createElement("a");
+a.href=URL.createObjectURL(b);
+a.download="resized.jpg";
+a.click();
+});
+};
+};
+r.readAsDataURL(f);
+}
+}
+</script>
+
+</body>
+</html>
