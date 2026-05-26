@@ -1,76 +1,52 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>Resize Pro Preview</title>
-
-<style>
 body{
+  font-family:Arial;
   background:#05070d;
   color:#e6fff9;
-  font-family:Arial;
   text-align:center;
   margin:0;
 }
 
-h2{
-  color:#00ffcc;
-  margin-top:20px;
-}
-
 .container{
-  max-width:800px;
+  max-width:600px;
   margin:auto;
   padding:20px;
 }
 
 .box{
   background:rgba(255,255,255,0.05);
-  padding:15px;
-  margin:10px 0;
-  border-radius:12px;
   border:1px solid rgba(0,255,204,0.2);
+  border-radius:12px;
+  padding:15px;
+  margin-top:15px;
 }
 
-label{
-  display:block;
-  margin-bottom:5px;
-  color:#00ffcc;
-}
-
+/* 🔥 INPUTS PLUS PETITS ET PRO */
 input{
-  padding:10px;
   width:80%;
+  max-width:300px;
+  padding:10px;
+  margin-top:8px;
   border-radius:8px;
   border:none;
-  text-align:center;
+  outline:none;
 }
 
-small{
+/* LABELS PROPRES */
+label{
+  display:block;
+  margin-top:10px;
+  color:#00ffcc;
+  font-weight:bold;
+}
+
+/* INFO UNITÉ */
+.unit{
   color:#9fffe6;
+  font-size:13px;
+  margin-top:4px;
 }
 
-/* IMAGE PREVIEW */
-.preview{
-  display:flex;
-  justify-content:center;
-  gap:20px;
-  flex-wrap:wrap;
-  margin-top:20px;
-}
-
-.preview img{
-  max-width:100px;
-  border-radius:10px;
-  border:1px solid #00ffcc;
-}
-
-.info{
-  font-size:14px;
-  color:#9fffe6;
-  margin-top:5px;
-}
-
+/* BUTTON */
 button{
   margin-top:15px;
   padding:12px 20px;
@@ -80,113 +56,3 @@ button{
   font-weight:bold;
   cursor:pointer;
 }
-</style>
-</head>
-
-<body>
-
-<h2>RESIZE IMAGE PRO</h2>
-
-<div class="container">
-
-<input type="file" id="file" accept="image/*">
-
-<div class="box">
-<label>Largeur actuelle</label>
-<input type="text" id="currentW" readonly>
-<small>Unité : Pixels (px)</small>
-</div>
-
-<div class="box">
-<label>Hauteur actuelle</label>
-<input type="text" id="currentH" readonly>
-<small>Unité : Pixels (px)</small>
-</div>
-
-<div class="box">
-<label>Nouvelle largeur</label>
-<input type="number" id="newW" placeholder="Ex: 800">
-<small>Unité : Pixels (px)</small>
-</div>
-
-<button onclick="resize()">Modifier image</button>
-
-<!-- PREVIEW -->
-<div class="preview" id="preview"></div>
-
-</div>
-
-<script>
-
-let img=new Image();
-
-document.getElementById("file").onchange=(e)=>{
-const reader=new FileReader();
-
-reader.onload=ev=>{
-img.src=ev.target.result;
-
-img.onload=()=>{
-
-document.getElementById("currentW").value=img.width + " px";
-document.getElementById("currentH").value=img.height + " px";
-
-/* PREVIEW ORIGINAL */
-document.getElementById("preview").innerHTML=`
-<div>
-<p class="info">Image originale (${img.width}px × ${img.height}px)</p>
-<img src="${img.src}">
-</div>
-`;
-};
-
-};
-
-reader.readAsDataURL(e.target.files[0]);
-};
-
-function resize(){
-
-if(!img.src){
-alert("Ajoute une image");
-return;
-}
-
-let w=parseInt(document.getElementById("newW").value);
-
-if(!w){
-alert("Entre une largeur en pixels");
-return;
-}
-
-let h=img.height*(w/img.width);
-
-let canvas=document.createElement("canvas");
-canvas.width=w;
-canvas.height=h;
-
-canvas.getContext("2d").drawImage(img,0,0,w,h);
-
-canvas.toBlob(blob=>{
-let url=URL.createObjectURL(blob);
-
-/* AJOUT PREVIEW RESULTAT */
-document.getElementById("preview").innerHTML+=`
-<div>
-<p class="info">Résultat (${w}px × ${Math.round(h)}px)</p>
-<img src="${url}">
-<br><br>
-<a href="${url}" download="resized.jpg">
-<button>Télécharger</button>
-</a>
-</div>
-`;
-
-},"image/jpeg");
-
-}
-
-</script>
-
-</body>
-</html>
