@@ -2,18 +2,52 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Converter Fix</title>
+<title>Converter with Preview</title>
+
 <style>
-body{background:#05070d;color:white;text-align:center;font-family:Arial}
-.drop{border:2px dashed #00ffcc;padding:40px;margin:20px;cursor:pointer}
+body{
+  background:#05070d;
+  color:white;
+  font-family:Arial;
+  text-align:center;
+}
+
+.drop{
+  border:2px dashed #00ffcc;
+  padding:40px;
+  margin:20px;
+  cursor:pointer;
+}
+
+#preview{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin-top:20px;
+}
+
+.card{
+  width:140px;
+  background:rgba(255,255,255,0.05);
+  padding:10px;
+  border-radius:10px;
+}
+
+.card img{
+  width:100%;
+  border-radius:8px;
+}
 </style>
+
 </head>
 
 <body>
 
-<h2>Image Converter (FIX)</h2>
+<h2>Image Converter + Preview</h2>
 
 <div class="drop" id="drop">Clique ou glisse une image</div>
+
 <input type="file" id="file" accept="image/*" hidden>
 
 <select id="mode">
@@ -24,29 +58,58 @@ body{background:#05070d;color:white;text-align:center;font-family:Arial}
 
 <button onclick="convert()">Convertir</button>
 
+<div id="preview"></div>
+
 <script>
+
 const file=document.getElementById("file");
 const drop=document.getElementById("drop");
+const preview=document.getElementById("preview");
+
+let imgData=null;
 
 drop.onclick=()=>file.click();
 
-file.onchange=e=>load(e.target.files);
+file.onchange=e=>{
+load(e.target.files[0]);
+};
 
 function load(f){
-const file=f[0];
 const reader=new FileReader();
 
 reader.onload=e=>{
+imgData=e.target.result;
+
+// 🔥 AFFICHAGE VIGNETTE
+preview.innerHTML=`
+<div class="card">
+<img src="${imgData}">
+<p>${f.name}</p>
+</div>`;
+};
+
+reader.readAsDataURL(f);
+}
+
+function convert(){
+if(!imgData){
+alert("Ajoute une image");
+return;
+}
+
 const img=new Image();
-img.src=e.target.result;
+img.src=imgData;
 
 img.onload=()=>{
+
 const canvas=document.createElement("canvas");
 canvas.width=img.width;
 canvas.height=img.height;
+
 canvas.getContext("2d").drawImage(img,0,0);
 
 let mode=document.getElementById("mode").value;
+
 let type="image/jpeg";
 let ext=".jpg";
 
@@ -59,11 +122,11 @@ a.href=URL.createObjectURL(blob);
 a.download="converted"+ext;
 a.click();
 },type);
-};
+
 };
 
-reader.readAsDataURL(file);
 }
+
 </script>
 
 </body>
