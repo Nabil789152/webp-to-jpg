@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Image Converter Pro</title>
+<title>WebP Converter</title>
 
 <style>
 body{
@@ -62,21 +62,23 @@ button{
 
 <body>
 
-<h2>Image Converter Pro</h2>
-
-<p>Convert WebP / PNG / JPG instantly</p>
+<h2>WebP Converter</h2>
+<p>Convert WebP → JPG / PNG</p>
 
 <div class="container">
 
 <div class="box">
 
-<input type="file" id="file" accept="image/*">
+<input type="file" id="file" accept="image/webp">
 
 <div class="box">
 <p id="detected">Format détecté : -</p>
 </div>
 
-<select id="format"></select>
+<select id="format">
+<option value="image/jpeg">JPG</option>
+<option value="image/png">PNG</option>
+</select>
 
 <button onclick="convert()">Convertir</button>
 
@@ -90,81 +92,17 @@ button{
 
 let img=new Image();
 
-/* SMART FORMAT OPTIONS */
-function updateFormatOptions(type){
-
-let select=document.getElementById("format");
-
-let options="";
-
-if(type==="WEBP"){
-options=`
-<option value="image/jpeg">JPG</option>
-<option value="image/png">PNG</option>
-`;
-}
-else if(type==="PNG"){
-options=`
-<option value="image/jpeg">JPG</option>
-<option value="image/webp">WEBP</option>
-`;
-}
-else if(type==="JPG"){
-options=`
-<option value="image/png">PNG</option>
-<option value="image/webp">WEBP</option>
-`;
-}
-else{
-options=`
-<option value="image/jpeg">JPG</option>
-<option value="image/png">PNG</option>
-<option value="image/webp">WEBP</option>
-`;
-}
-
-select.innerHTML=options;
-}
-
-/* SMART SUGGESTION */
-function smartSuggestion(type){
-
-let suggestion="";
-
-if(type==="WEBP"){
-suggestion="Recommandé : JPG ou PNG";
-}
-else if(type==="PNG"){
-suggestion="Recommandé : JPG ou WEBP";
-}
-else if(type==="JPG"){
-suggestion="Recommandé : WEBP ou PNG";
-}
-else{
-suggestion="";
-}
-
-document.getElementById("detected").innerHTML=
-"Format détecté : " + type + "<br><small>" + suggestion + "</small>";
-}
-
-/* LOAD IMAGE */
+/* DETECTION SIMPLE */
 document.getElementById("file").onchange=(e)=>{
 const file=e.target.files[0];
 if(!file) return;
 
-let type=file.type;
+if(file.type!=="image/webp"){
+alert("Seuls les fichiers WEBP sont autorisés");
+return;
+}
 
-let format="UNKNOWN";
-
-if(type==="image/webp") format="WEBP";
-else if(type==="image/png") format="PNG";
-else if(type==="image/jpeg") format="JPG";
-else format="OTHER";
-
-/* SMART UI */
-smartSuggestion(format);
-updateFormatOptions(format);
+document.getElementById("detected").innerText="Format détecté : WEBP";
 
 const reader=new FileReader();
 
@@ -174,7 +112,7 @@ img.src=ev.target.result;
 img.onload=()=>{
 document.getElementById("preview").innerHTML=`
 <div>
-<p>Image originale (${format})</p>
+<p>Image WebP originale</p>
 <img src="${img.src}">
 </div>
 `;
@@ -188,7 +126,7 @@ reader.readAsDataURL(file);
 function convert(){
 
 if(!img.src){
-alert("Ajoute une image");
+alert("Ajoute une image WebP");
 return;
 }
 
