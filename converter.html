@@ -84,6 +84,7 @@ button{
 
 </div>
 
+<!-- IMPORTANT : 1 SEUL AFFICHE -->
 <div class="preview" id="preview"></div>
 
 </div>
@@ -92,13 +93,13 @@ button{
 
 let img=new Image();
 
-/* DETECTION SIMPLE */
+/* LOAD IMAGE + DETECTION */
 document.getElementById("file").onchange=(e)=>{
 const file=e.target.files[0];
 if(!file) return;
 
 if(file.type!=="image/webp"){
-alert("Seuls les fichiers WEBP sont autorisés");
+alert("Seuls les fichiers WebP sont autorisés");
 return;
 }
 
@@ -110,9 +111,11 @@ reader.onload=ev=>{
 img.src=ev.target.result;
 
 img.onload=()=>{
+
+/* ❌ IMPORTANT : ON REMPLACE (PAS +=) */
 document.getElementById("preview").innerHTML=`
 <div>
-<p>Image WebP originale</p>
+<p>Image originale (WEBP)</p>
 <img src="${img.src}">
 </div>
 `;
@@ -142,7 +145,8 @@ canvas.toBlob(blob=>{
 
 let url=URL.createObjectURL(blob);
 
-document.getElementById("preview").innerHTML+=`
+/* ❌ IMPORTANT : ON REMPLACE TOUJOURS (PAS +=) */
+document.getElementById("preview").innerHTML=`
 <div>
 <p>Image convertie</p>
 <img src="${url}">
