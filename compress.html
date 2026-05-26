@@ -1,1 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Compression</title>
+<style>
+body{background:#05070d;color:#fff;text-align:center;font-family:Arial}
+</style>
+</head>
+<body>
 
+<h2>Compression d’images</h2>
+<input type="file" id="file" multiple>
+<input type="range" id="q" min="0.1" max="1" step="0.1" value="0.7">
+<button onclick="go()">Compresser</button>
+
+<script>
+function go(){
+let files=document.getElementById("file").files;
+let q=parseFloat(document.getElementById("q").value);
+
+for(let f of files){
+let r=new FileReader();
+r.onload=e=>{
+let img=new Image();
+img.src=e.target.result;
+img.onload=()=>{
+let c=document.createElement("canvas");
+c.width=img.width;
+c.height=img.height;
+c.getContext("2d").drawImage(img,0,0);
+c.toBlob(b=>{
+let a=document.createElement("a");
+a.href=URL.createObjectURL(b);
+a.download="compressed.jpg";
+a.click();
+},"image/jpeg",q);
+};
+};
+r.readAsDataURL(f);
+}
+}
+</script>
+
+</body>
+</html>
