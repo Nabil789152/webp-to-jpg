@@ -2,15 +2,10 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Converter with Preview</title>
+<title>Test Preview Fix</title>
 
 <style>
-body{
-  background:#05070d;
-  color:white;
-  font-family:Arial;
-  text-align:center;
-}
+body{background:#05070d;color:white;font-family:Arial;text-align:center}
 
 .drop{
   border:2px dashed #00ffcc;
@@ -20,23 +15,13 @@ body{
 }
 
 #preview{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-  gap:10px;
   margin-top:20px;
 }
 
-.card{
-  width:140px;
-  background:rgba(255,255,255,0.05);
-  padding:10px;
+#preview img{
+  width:160px;
   border-radius:10px;
-}
-
-.card img{
-  width:100%;
-  border-radius:8px;
+  border:1px solid #00ffcc;
 }
 </style>
 
@@ -44,19 +29,11 @@ body{
 
 <body>
 
-<h2>Image Converter + Preview</h2>
+<h2>TEST PREVIEW FIX</h2>
 
 <div class="drop" id="drop">Clique ou glisse une image</div>
 
-<input type="file" id="file" accept="image/*" hidden>
-
-<select id="mode">
-<option value="jpg">JPG</option>
-<option value="png">PNG</option>
-<option value="webp">WEBP</option>
-</select>
-
-<button onclick="convert()">Convertir</button>
+<input type="file" id="file" hidden accept="image/*">
 
 <div id="preview"></div>
 
@@ -66,66 +43,28 @@ const file=document.getElementById("file");
 const drop=document.getElementById("drop");
 const preview=document.getElementById("preview");
 
-let imgData=null;
-
+/* CLICK OK */
 drop.onclick=()=>file.click();
 
-file.onchange=e=>{
-load(e.target.files[0]);
-};
+/* LOAD IMAGE */
+file.onchange=(e)=>{
+const f=e.target.files[0];
 
-function load(f){
 const reader=new FileReader();
 
-reader.onload=e=>{
-imgData=e.target.result;
+reader.onload=(ev)=>{
+console.log("IMAGE CHARGÉE"); // test
 
-// 🔥 AFFICHAGE VIGNETTE
-preview.innerHTML=`
-<div class="card">
-<img src="${imgData}">
-<p>${f.name}</p>
-</div>`;
+preview.innerHTML=""; // reset
+
+const img=document.createElement("img");
+img.src=ev.target.result;
+
+preview.appendChild(img);
 };
 
 reader.readAsDataURL(f);
-}
-
-function convert(){
-if(!imgData){
-alert("Ajoute une image");
-return;
-}
-
-const img=new Image();
-img.src=imgData;
-
-img.onload=()=>{
-
-const canvas=document.createElement("canvas");
-canvas.width=img.width;
-canvas.height=img.height;
-
-canvas.getContext("2d").drawImage(img,0,0);
-
-let mode=document.getElementById("mode").value;
-
-let type="image/jpeg";
-let ext=".jpg";
-
-if(mode==="png"){type="image/png";ext=".png";}
-if(mode==="webp"){type="image/webp";ext=".webp";}
-
-canvas.toBlob(blob=>{
-const a=document.createElement("a");
-a.href=URL.createObjectURL(blob);
-a.download="converted"+ext;
-a.click();
-},type);
-
 };
-
-}
 
 </script>
 
