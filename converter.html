@@ -2,26 +2,19 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Convertisseur</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<title>Converter Fix</title>
 <style>
-body{background:#05070d;color:#fff;text-align:center;font-family:Arial}
-.container{max-width:900px;margin:auto;padding:20px}
-.drop{border:2px dashed #00ffcc;padding:40px;cursor:pointer}
-button,select,input{padding:10px;margin:5px}
-button{background:#00ffcc;border:none;font-weight:bold}
+body{background:#05070d;color:white;text-align:center;font-family:Arial}
+.drop{border:2px dashed #00ffcc;padding:40px;margin:20px;cursor:pointer}
 </style>
 </head>
+
 <body>
 
-<h2>Convertisseur</h2>
+<h2>Image Converter (FIX)</h2>
 
-<div class="container">
-
-<div id="drop" class="drop">Clique ou glisse images</div>
-<input type="file" id="file" multiple hidden>
-
-<br>
+<div class="drop" id="drop">Clique ou glisse une image</div>
+<input type="file" id="file" accept="image/*" hidden>
 
 <select id="mode">
 <option value="jpg">JPG</option>
@@ -30,69 +23,46 @@ button{background:#00ffcc;border:none;font-weight:bold}
 </select>
 
 <button onclick="convert()">Convertir</button>
-<button onclick="zip()">ZIP</button>
-
-<div id="preview"></div>
-
-</div>
 
 <script>
-let files=[],converted=[];
-
 const file=document.getElementById("file");
 const drop=document.getElementById("drop");
 
 drop.onclick=()=>file.click();
 
 file.onchange=e=>load(e.target.files);
-drop.ondragover=e=>e.preventDefault();
-drop.ondrop=e=>{e.preventDefault();load(e.dataTransfer.files);};
 
 function load(f){
-files=[...f];
-}
+const file=f[0];
+const reader=new FileReader();
 
-function convert(){
-converted=[];
-for(let f of files){
-let r=new FileReader();
-r.onload=e=>{
-let img=new Image();
+reader.onload=e=>{
+const img=new Image();
 img.src=e.target.result;
+
 img.onload=()=>{
-let c=document.createElement("canvas");
-c.width=img.width;
-c.height=img.height;
-c.getContext("2d").drawImage(img,0,0);
+const canvas=document.createElement("canvas");
+canvas.width=img.width;
+canvas.height=img.height;
+canvas.getContext("2d").drawImage(img,0,0);
 
 let mode=document.getElementById("mode").value;
-let type="image/jpeg",ext=".jpg";
-if(mode=="png"){type="image/png";ext=".png";}
-if(mode=="webp"){type="image/webp";ext=".webp";}
+let type="image/jpeg";
+let ext=".jpg";
 
-c.toBlob(b=>{
-let name=f.name.replace(/\.[^/.]+$/,"")+ext;
-converted.push({name,blob:b});
+if(mode==="png"){type="image/png";ext=".png";}
+if(mode==="webp"){type="image/webp";ext=".webp";}
 
-let a=document.createElement("a");
-a.href=URL.createObjectURL(b);
-a.download=name;
+canvas.toBlob(blob=>{
+const a=document.createElement("a");
+a.href=URL.createObjectURL(blob);
+a.download="converted"+ext;
 a.click();
 },type);
 };
 };
-r.readAsDataURL(f);
-}
-}
 
-async function zip(){
-let z=new JSZip();
-converted.forEach(f=>z.file(f.name,f.blob));
-let b=await z.generateAsync({type:"blob"});
-let a=document.createElement("a");
-a.href=URL.createObjectURL(b);
-a.download="files.zip";
-a.click();
+reader.readAsDataURL(file);
 }
 </script>
 
