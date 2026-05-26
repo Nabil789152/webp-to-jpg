@@ -1,3 +1,190 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Image Converter Pro</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#05070d;
+  color:#e6fff9;
+  text-align:center;
+}
+
+h2{
+  color:#00ffcc;
+  margin-top:20px;
+}
+
+p{
+  color:#9fffe6;
+}
+
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:20px;
+}
+
+.box{
+  background:rgba(255,255,255,0.05);
+  padding:15px;
+  border-radius:12px;
+  border:1px solid rgba(0,255,204,0.2);
+  margin-top:15px;
+}
+
+input, select{
+  margin-top:10px;
+  padding:10px;
+}
+
+button{
+  margin-top:15px;
+  padding:12px 20px;
+  background:linear-gradient(90deg,#00ffcc,#7c4dff);
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.preview img{
+  max-width:250px;
+  margin-top:15px;
+  border-radius:10px;
+  border:1px solid #00ffcc;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Image Converter Pro</h2>
+
+<p>Convert WebP / PNG / JPG instantly</p>
+
+<div class="container">
+
+<div class="box">
+
+<input type="file" id="file" accept="image/*">
+
+<div class="box">
+<p id="detected">Format détecté : -</p>
+</div>
+
+<select id="format"></select>
+
+<button onclick="convert()">Convertir</button>
+
+</div>
+
+<div class="preview" id="preview"></div>
+
+</div>
+
+<script>
+
+let img=new Image();
+
+/* SMART FORMAT OPTIONS */
+function updateFormatOptions(type){
+
+let select=document.getElementById("format");
+
+let options="";
+
+if(type==="WEBP"){
+options=`
+<option value="image/jpeg">JPG</option>
+<option value="image/png">PNG</option>
+`;
+}
+else if(type==="PNG"){
+options=`
+<option value="image/jpeg">JPG</option>
+<option value="image/webp">WEBP</option>
+`;
+}
+else if(type==="JPG"){
+options=`
+<option value="image/png">PNG</option>
+<option value="image/webp">WEBP</option>
+`;
+}
+else{
+options=`
+<option value="image/jpeg">JPG</option>
+<option value="image/png">PNG</option>
+<option value="image/webp">WEBP</option>
+`;
+}
+
+select.innerHTML=options;
+}
+
+/* SMART SUGGESTION */
+function smartSuggestion(type){
+
+let suggestion="";
+
+if(type==="WEBP"){
+suggestion="Recommandé : JPG ou PNG";
+}
+else if(type==="PNG"){
+suggestion="Recommandé : JPG ou WEBP";
+}
+else if(type==="JPG"){
+suggestion="Recommandé : WEBP ou PNG";
+}
+else{
+suggestion="";
+}
+
+document.getElementById("detected").innerHTML=
+"Format détecté : " + type + "<br><small>" + suggestion + "</small>";
+}
+
+/* LOAD IMAGE */
+document.getElementById("file").onchange=(e)=>{
+const file=e.target.files[0];
+if(!file) return;
+
+let type=file.type;
+
+let format="UNKNOWN";
+
+if(type==="image/webp") format="WEBP";
+else if(type==="image/png") format="PNG";
+else if(type==="image/jpeg") format="JPG";
+else format="OTHER";
+
+/* SMART UI */
+smartSuggestion(format);
+updateFormatOptions(format);
+
+const reader=new FileReader();
+
+reader.onload=ev=>{
+img.src=ev.target.result;
+
+img.onload=()=>{
+document.getElementById("preview").innerHTML=`
+<div>
+<p>Image originale (${format})</p>
+<img src="${img.src}">
+</div>
+`;
+};
+};
+
+reader.readAsDataURL(file);
+};
+
+/* CONVERT */
 function convert(){
 
 if(!img.src){
@@ -7,53 +194,19 @@ return;
 
 let format=document.getElementById("format").value;
 
-/* anti conversion inutile */
-let detected=document.getElementById("detected")?.innerText || "";
-
-if(detected.includes("JPG") && format==="image/jpeg"){
-alert("Déjà en JPG !");
-return;
-}
-
-if(detected.includes("PNG") && format==="image/png"){
-alert("Déjà en PNG !");
-return;
-}
-
-if(detected.includes("WEBP") && format==="image/webp"){
-alert("Déjà en WEBP !");
-return;
-}
-
-/* canvas */
 let canvas=document.createElement("canvas");
 canvas.width=img.width;
 canvas.height=img.height;
 
-let ctx=canvas.getContext("2d");
-ctx.drawImage(img,0,0);
-
-/* IMPORTANT : GIF fallback */
-let exportFormat=format;
-
-/* si GIF → fallback PNG (car GIF canvas non fiable) */
-if(format==="image/gif"){
-exportFormat="image/png";
-}
+canvas.getContext("2d").drawImage(img,0,0);
 
 canvas.toBlob(blob=>{
 
 let url=URL.createObjectURL(blob);
 
-let label="Image convertie";
-
-if(format==="image/jpeg") label="Converti en JPG";
-if(format==="image/png") label="Converti en PNG";
-if(format==="image/gif") label="Converti en GIF (statique)";
-
 document.getElementById("preview").innerHTML+=`
 <div>
-<p>${label}</p>
+<p>Image convertie</p>
 <img src="${url}">
 <br><br>
 <a href="${url}" download="converted">
@@ -62,6 +215,11 @@ document.getElementById("preview").innerHTML+=`
 </div>
 `;
 
-},exportFormat);
+},format);
 
 }
+
+</script>
+
+</body>
+</html>
