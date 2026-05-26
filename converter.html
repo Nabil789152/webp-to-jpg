@@ -7,25 +7,25 @@ return;
 
 let format=document.getElementById("format").value;
 
-/* sécurité : éviter conversion inutile */
-let currentFormat=document.getElementById("detected")?.innerText || "";
+/* éviter conversion inutile */
+let detected=document.getElementById("detected")?.innerText || "";
 
-if(currentFormat.includes("JPG") && format==="image/jpeg"){
+if(detected.includes("JPG") && format==="image/jpeg"){
 alert("Déjà en JPG !");
 return;
 }
 
-if(currentFormat.includes("PNG") && format==="image/png"){
+if(detected.includes("PNG") && format==="image/png"){
 alert("Déjà en PNG !");
 return;
 }
 
-if(currentFormat.includes("WEBP") && format==="image/webp"){
+if(detected.includes("WEBP") && format==="image/webp"){
 alert("Déjà en WEBP !");
 return;
 }
 
-/* canvas conversion */
+/* canvas */
 let canvas=document.createElement("canvas");
 canvas.width=img.width;
 canvas.height=img.height;
@@ -33,14 +33,20 @@ canvas.height=img.height;
 let ctx=canvas.getContext("2d");
 ctx.drawImage(img,0,0);
 
+/* conversion */
 canvas.toBlob(blob=>{
 
 let url=URL.createObjectURL(blob);
 
-/* affichage résultat */
+let label="Image convertie";
+
+if(format==="image/jpeg") label="Converti en JPG";
+if(format==="image/png") label="Converti en PNG";
+if(format==="image/gif") label="Converti en GIF (statique)";
+
 document.getElementById("preview").innerHTML+=`
 <div>
-<p>Image convertie</p>
+<p>${label}</p>
 <img src="${url}">
 <br><br>
 <a href="${url}" download="converted">
