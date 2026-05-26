@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Image Tools - Pro SaaS</title>
+<title>Image Tools Pro</title>
 
 <style>
 body{
@@ -19,7 +19,8 @@ header{
 
 h1{
   color:#00ffcc;
-  font-size:40px;
+  font-size:42px;
+  margin-bottom:10px;
 }
 
 p{
@@ -28,19 +29,19 @@ p{
 }
 
 .container{
-  max-width:900px;
+  max-width:1000px;
   margin:auto;
   padding:20px;
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
   gap:20px;
 }
 
 .card{
   background:rgba(255,255,255,0.05);
   border:1px solid rgba(0,255,204,0.2);
-  border-radius:12px;
-  padding:20px;
+  border-radius:14px;
+  padding:25px;
   transition:0.3s;
 }
 
@@ -49,12 +50,23 @@ p{
   border-color:#00ffcc;
 }
 
-a{
-  text-decoration:none;
+h3{
   color:#00ffcc;
+}
+
+a{
+  display:inline-block;
+  margin-top:12px;
+  padding:10px 18px;
+  background:linear-gradient(90deg,#00ffcc,#7c4dff);
+  color:#000;
+  text-decoration:none;
+  border-radius:8px;
   font-weight:bold;
-  display:block;
-  margin-top:10px;
+}
+
+a:hover{
+  opacity:0.9;
 }
 
 footer{
@@ -70,33 +82,33 @@ footer{
 
 <header>
 <h1>Image Tools Pro</h1>
-<p>Convertir • Compresser • Optimiser les images en un clic</p>
+<p>Convertir • Compresser • Redimensionner tes images en un clic</p>
 </header>
 
 <div class="container">
 
 <div class="card">
 <h3>WebP Converter</h3>
-<p>Convert WebP → JPG / PNG</p>
+<p>Convertir WebP → JPG / PNG</p>
 <a href="converter.html">Ouvrir</a>
 </div>
 
 <div class="card">
 <h3>Image Compressor</h3>
-<p>Réduis la taille de tes images</p>
+<p>Réduis la taille de tes images sans perte visible</p>
 <a href="compress.html">Ouvrir</a>
 </div>
 
 <div class="card">
 <h3>Resize Image</h3>
-<p>Redimensionne tes images facilement</p>
-<a href="#">Bientôt</a>
+<p>Changer la taille de tes images facilement</p>
+<a href="resize.html">Ouvrir</a>
 </div>
 
 </div>
 
 <footer>
-© 2026 Image Tools Pro - GitHub Pages
+© 2026 Image Tools Pro • GitHub Pages
 </footer>
 
 </body>
