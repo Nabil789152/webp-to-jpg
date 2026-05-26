@@ -1,97 +1,44 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<title>WebP Converter</title>
-
-<style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#05070d;
-  color:#e6fff9;
-  text-align:center;
-}
-
-h2{
-  color:#00ffcc;
-  margin-top:20px;
-}
-
-p{
-  color:#9fffe6;
-}
-
-.container{
-  max-width:700px;
-  margin:auto;
-  padding:20px;
-}
-
-.box{
-  background:rgba(255,255,255,0.05);
-  padding:15px;
-  border-radius:12px;
-  border:1px solid rgba(0,255,204,0.2);
-  margin-top:15px;
-}
-
-input{
-  margin-top:10px;
-}
-
-button{
-  margin-top:15px;
-  padding:12px 20px;
-  background:linear-gradient(90deg,#00ffcc,#7c4dff);
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
-  cursor:pointer;
-}
-
-.preview img{
-  max-width:250px;
-  margin-top:15px;
-  border-radius:10px;
-  border:1px solid #00ffcc;
-}
-</style>
-</head>
-
-<body>
-
-<h2>WebP Image Converter</h2>
-
-<p>Convert WebP → JPG / PNG / WEBP instantly</p>
-
-<div class="container">
-
-<div class="box">
-
-<input type="file" id="file" accept="image/*">
-
-<div style="margin-top:10px;">
-<select id="format">
-<option value="image/jpeg">JPG</option>
-<option value="image/png">PNG</option>
-<option value="image/webp">WEBP</option>
-</select>
-</div>
-
-<button onclick="convert()">Convertir</button>
-
-</div>
-
-<div class="preview" id="preview"></div>
-
-</div>
-
-<script>
-
 let img=new Image();
 
+/* SMART RULES */
+function smartSuggestion(type){
+
+let suggestion="";
+
+if(type==="WEBP"){
+suggestion="Recommandé : JPG (web) ou PNG (transparence)";
+}
+else if(type==="PNG"){
+suggestion="Recommandé : JPG (compression) ou PNG (qualité)";
+}
+else if(type==="JPG"){
+suggestion="Recommandé : WEBP (meilleure compression web)";
+}
+else{
+suggestion="Format inconnu";
+}
+
+document.getElementById("detected").innerHTML=
+"Format détecté : " + type + "<br><small>" + suggestion + "</small>";
+}
+
+/* FILE LOAD + DETECTION */
 document.getElementById("file").onchange=(e)=>{
+const file=e.target.files[0];
+if(!file) return;
+
+let type=file.type;
+
+let format="Inconnu";
+
+if(type==="image/webp") format="WEBP";
+else if(type==="image/png") format="PNG";
+else if(type==="image/jpeg") format="JPG";
+else format="Autre";
+
+/* SMART LOGIC */
+smartSuggestion(format);
+
 const reader=new FileReader();
 
 reader.onload=ev=>{
@@ -100,16 +47,17 @@ img.src=ev.target.result;
 img.onload=()=>{
 document.getElementById("preview").innerHTML=`
 <div>
-<p>Image originale</p>
+<p>Image originale (${format})</p>
 <img src="${img.src}">
 </div>
 `;
 };
 };
 
-reader.readAsDataURL(e.target.files[0]);
+reader.readAsDataURL(file);
 };
 
+/* CONVERT FUNCTION */
 function convert(){
 
 if(!img.src){
@@ -142,8 +90,3 @@ document.getElementById("preview").innerHTML+=`
 },format);
 
 }
-
-</script>
-
-</body>
-</html>
