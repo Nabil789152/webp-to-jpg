@@ -15,60 +15,64 @@ body{
 
 h2{
   color:#00ffcc;
-  margin-top:20px;
+  margin-top:15px;
+  font-size:22px;
 }
 
 .container{
-  max-width:600px;
+  max-width:520px;
   margin:auto;
-  padding:20px;
+  padding:15px;
 }
 
 .box{
   background:rgba(255,255,255,0.05);
   border:1px solid rgba(0,255,204,0.2);
-  border-radius:12px;
-  padding:15px;
-  margin-top:15px;
+  border-radius:10px;
+  padding:12px;
+  margin-top:12px;
+}
+
+input{
+  width:70%;
+  max-width:220px;
+  padding:8px;
+  margin-top:5px;
+  border:none;
+  border-radius:6px;
+  outline:none;
+  font-size:13px;
 }
 
 label{
   display:block;
-  margin-top:12px;
+  margin-top:8px;
   color:#00ffcc;
   font-weight:bold;
-}
-
-input{
-  width:80%;
-  max-width:300px;
-  padding:10px;
-  margin-top:6px;
-  border:none;
-  border-radius:8px;
-  outline:none;
+  font-size:13px;
 }
 
 .unit{
-  font-size:12px;
+  font-size:11px;
   color:#9fffe6;
-  margin-top:3px;
+  margin-top:2px;
 }
 
 button{
-  margin-top:15px;
-  padding:12px 20px;
+  margin-top:12px;
+  padding:10px 16px;
   background:linear-gradient(90deg,#00ffcc,#7c4dff);
   border:none;
-  border-radius:8px;
+  border-radius:6px;
   font-weight:bold;
   cursor:pointer;
+  font-size:13px;
 }
 
 .preview img{
-  max-width:250px;
-  margin-top:15px;
-  border-radius:10px;
+  max-width:220px;
+  margin-top:12px;
+  border-radius:8px;
   border:1px solid #00ffcc;
 }
 </style>
@@ -127,7 +131,6 @@ img.onload=()=>{
 document.getElementById("currentW").value=img.width;
 document.getElementById("currentH").value=img.height;
 
-/* preview original */
 document.getElementById("preview").innerHTML=`
 <div>
 <p>Image originale</p>
@@ -162,8 +165,7 @@ let canvas=document.createElement("canvas");
 canvas.width=newW;
 canvas.height=newH;
 
-let ctx=canvas.getContext("2d");
-ctx.drawImage(img,0,0,newW,newH);
+canvas.getContext("2d").drawImage(img,0,0,newW,newH);
 
 canvas.toBlob(blob=>{
 
