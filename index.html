@@ -2,184 +2,241 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NeoImage Tools - Outils gratuits de conversion et compression d'images</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Image Converter</title>
 
-<meta name="description" content="NeoImage Tools est une plateforme gratuite d'outils d'images : conversion WEBP, PNG, JPG, compression et optimisation en ligne." />
-<meta name="keywords" content="image tools, webp to jpg, png converter, image compressor online, free image tools" />
-<link rel="canonical" href="https://nabil789152.github.io/webp-to-jpg/" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <style>
-:root{
-  --neon:#00ffcc;
-  --neon2:#7c4dff;
-  --bg:#05070d;
-  --card:rgba(255,255,255,0.05);
-  --text:#e6fff9;
-  --muted:#9aa7b2;
-}
-
 body{
   margin:0;
-  font-family:Arial, sans-serif;
-  background:radial-gradient(circle at top,#0b1020,#05070d);
-  color:var(--text);
-}
-
-/* NAV */
-nav{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 30px;
-  border-bottom:1px solid rgba(255,255,255,0.08);
-}
-
-nav .logo{
-  font-weight:bold;
-  color:var(--neon);
-  letter-spacing:1px;
-}
-
-nav a{
-  color:var(--text);
-  text-decoration:none;
-  margin-left:15px;
-  opacity:0.8;
-}
-nav a:hover{opacity:1;color:var(--neon)}
-
-/* HERO */
-.hero{
+  font-family:Arial;
+  background:#05070d;
+  color:#e6fff9;
   text-align:center;
-  padding:80px 20px 40px;
-}
-.hero h1{
-  font-size:48px;
-  margin:0;
-  background:linear-gradient(90deg,var(--neon),var(--neon2));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-.hero p{
-  color:var(--muted);
-  font-size:18px;
-  margin-top:10px;
 }
 
-/* BUTTONS */
-.cta{
-  margin-top:25px;
-}
-.cta a{
-  display:inline-block;
-  padding:12px 18px;
-  margin:8px;
-  border-radius:10px;
-  text-decoration:none;
-  font-weight:bold;
+.container{
+  max-width:900px;
+  margin:40px auto;
+  padding:20px;
+  background:rgba(255,255,255,0.05);
+  border-radius:15px;
 }
 
-.btn-primary{
-  background:linear-gradient(90deg,var(--neon),var(--neon2));
-  color:#000;
-}
-.btn-secondary{
-  border:1px solid rgba(0,255,204,0.4);
-  color:var(--neon);
-}
-
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:20px;
+.dropzone{
   padding:40px;
-  max-width:1100px;
-  margin:auto;
+  border:2px dashed #00ffcc;
+  border-radius:12px;
+  cursor:pointer;
+  margin:20px 0;
+}
+
+.controls{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
+  margin:15px 0;
+}
+
+button,select,input{
+  padding:10px;
+  border-radius:8px;
+  border:none;
+}
+
+button{
+  background:#00ffcc;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+#preview{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:10px;
 }
 
 .card{
-  background:var(--card);
-  padding:20px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,0.08);
-  transition:0.3s;
-}
-.card:hover{
-  transform:translateY(-5px);
-  border-color:rgba(0,255,204,0.4);
-}
-.card h3{
-  color:var(--neon);
-}
-.card p{
-  color:var(--muted);
-  font-size:14px;
+  width:150px;
+  background:rgba(255,255,255,0.05);
+  padding:10px;
+  border-radius:10px;
 }
 
-footer{
-  text-align:center;
-  padding:30px;
-  font-size:12px;
-  color:var(--muted);
-  border-top:1px solid rgba(255,255,255,0.08);
+.card img{
+  max-width:100%;
+  border-radius:8px;
 }
 </style>
 </head>
 
 <body>
 
-<nav>
-  <div class="logo">NEO IMAGE TOOLS</div>
-  <div>
-    <a href="#tools">Outils</a>
-    <a href="#about">À propos</a>
-  </div>
-</nav>
+<div class="container">
 
-<section class="hero">
-  <h1>Outils d’images gratuits & rapides</h1>
-  <p>Convertissez, compressez et optimisez vos images en ligne sans installation</p>
+<h2>Image Converter</h2>
 
-  <div class="cta">
-    <a class="btn-primary" href="#tools">Commencer</a>
-    <a class="btn-secondary" href="converter.html">Ouvrir le convertisseur</a>
-  </div>
-</section>
+<div id="dropzone" class="dropzone">
+  Clique ou glisse tes images ici
+</div>
 
-<section id="tools" class="grid">
+<input type="file" id="upload" accept="image/*" multiple hidden />
 
-  <div class="card">
-    <h3>Convertisseur d’images</h3>
-    <p>WEBP, PNG, JPG - conversion rapide et gratuite</p>
-    <a class="btn-secondary" href="converter.html">Utiliser</a>
-  </div>
+<div class="controls">
+  <select id="mode">
+    <option value="jpg">JPG</option>
+    <option value="png">PNG</option>
+    <option value="webp">WEBP</option>
+  </select>
 
-  <div class="card">
-    <h3>Compression d’images</h3>
-    <p>Réduisez la taille sans perdre de qualité</p>
-    <a class="btn-secondary" href="compress.html">Utiliser</a>
-  </div>
+  <select id="quality">
+    <option value="1">100%</option>
+    <option value="0.9" selected>90%</option>
+    <option value="0.8">80%</option>
+  </select>
 
-  <div class="card">
-    <h3>Redimensionnement</h3>
-    <p>Ajustez la taille de vos images facilement</p>
-    <a class="btn-secondary" href="resize.html">Utiliser</a>
-  </div>
+  <button onclick="convert()">Convertir</button>
+  <button onclick="downloadZip()">ZIP</button>
+</div>
 
-</section>
+<div id="preview"></div>
 
-<section id="about" style="text-align:center;padding:40px;max-width:800px;margin:auto;">
-  <h2 style="color:var(--neon)">À propos</h2>
-  <p style="color:var(--muted)">
-    NeoImage Tools est une plateforme gratuite d’outils en ligne permettant de convertir, compresser et optimiser des images rapidement et sans installation.
-  </p>
-</section>
+</div>
 
-<footer>
-© 2026 NeoImage Tools - Free Image Processing Platform
-</footer>
+<script>
+
+const upload = document.getElementById("upload");
+const dropzone = document.getElementById("dropzone");
+const preview = document.getElementById("preview");
+
+let files = [];
+let converted = [];
+
+/* ✅ UN SEUL CLICK EVENT (important) */
+dropzone.addEventListener("click", () => {
+  upload.click();
+});
+
+/* Drag & Drop */
+dropzone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+});
+
+dropzone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  loadFiles(e.dataTransfer.files);
+});
+
+upload.addEventListener("change", (e) => {
+  loadFiles(e.target.files);
+});
+
+function loadFiles(list){
+  files = [...list];
+  preview.innerHTML = "";
+  converted = [];
+
+  for(let file of files){
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const div = document.createElement("div");
+      div.className = "card";
+      div.innerHTML = `<img src="${e.target.result}"><p>${file.name}</p>`;
+      preview.appendChild(div);
+    };
+    reader.readAsDataURL(file);
+  }
+}
+
+function convert(){
+
+  if(files.length === 0){
+    alert("Ajoute des images");
+    return;
+  }
+
+  converted = [];
+
+  const mode = document.getElementById("mode").value;
+  const quality = parseFloat(document.getElementById("quality").value);
+
+  for(let file of files){
+
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+
+      const img = new Image();
+      img.src = e.target.result;
+
+      img.onload = () => {
+
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img,0,0);
+
+        let type = "image/jpeg";
+        let ext = ".jpg";
+
+        if(mode === "png"){
+          type = "image/png";
+          ext = ".png";
+        }
+
+        if(mode === "webp"){
+          type = "image/webp";
+          ext = ".webp";
+        }
+
+        canvas.toBlob((blob) => {
+
+          const name = file.name.replace(/\.[^.]+$/,"") + ext;
+
+          converted.push({name,blob});
+
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = name;
+          a.click();
+
+        }, type, quality);
+
+      };
+
+    };
+
+    reader.readAsDataURL(file);
+  }
+}
+
+async function downloadZip(){
+
+  if(converted.length === 0){
+    alert("Convertis d'abord");
+    return;
+  }
+
+  const zip = new JSZip();
+
+  converted.forEach(f => {
+    zip.file(f.name, f.blob);
+  });
+
+  const content = await zip.generateAsync({type:"blob"});
+
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(content);
+  a.download = "images.zip";
+  a.click();
+}
+
+</script>
 
 </body>
 </html>
