@@ -2,8 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>NeoImage SaaS</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Image Tools - Pro SaaS</title>
 
 <style>
 body{
@@ -11,11 +10,11 @@ body{
   font-family:Arial;
   background:#05070d;
   color:#e6fff9;
+  text-align:center;
 }
 
 header{
-  text-align:center;
-  padding:40px 20px;
+  padding:60px 20px;
 }
 
 h1{
@@ -23,47 +22,45 @@ h1{
   font-size:40px;
 }
 
-.grid{
+p{
+  color:#9fffe6;
+  font-size:16px;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:20px;
-  padding:20px;
-  max-width:1000px;
-  margin:auto;
 }
 
 .card{
   background:rgba(255,255,255,0.05);
-  padding:20px;
-  border-radius:12px;
   border:1px solid rgba(0,255,204,0.2);
+  border-radius:12px;
+  padding:20px;
   transition:0.3s;
 }
 
 .card:hover{
-  transform:scale(1.03);
+  transform:scale(1.05);
   border-color:#00ffcc;
 }
 
 a{
   text-decoration:none;
-  color:#e6fff9;
-}
-
-.btn{
-  display:inline-block;
-  margin-top:10px;
-  padding:10px 15px;
-  background:linear-gradient(90deg,#00ffcc,#7c4dff);
-  border-radius:8px;
-  color:black;
+  color:#00ffcc;
   font-weight:bold;
+  display:block;
+  margin-top:10px;
 }
 
 footer{
-  text-align:center;
-  padding:30px;
-  opacity:0.6;
+  margin-top:40px;
+  padding:20px;
+  color:#666;
   font-size:12px;
 }
 </style>
@@ -72,40 +69,34 @@ footer{
 <body>
 
 <header>
-<h1>NeoImage SaaS</h1>
-<p>Plateforme d’outils d’images gratuits</p>
+<h1>Image Tools Pro</h1>
+<p>Convert • Compress • Optimize tes images en un clic</p>
 </header>
 
-<div class="grid">
+<div class="container">
 
 <div class="card">
-<h3>Convertisseur</h3>
-<p>WEBP / PNG / JPG</p>
-<a class="btn" href="converter.html">Ouvrir</a>
+<h3>WebP Converter</h3>
+<p>Convert WebP → JPG / PNG</p>
+<a href="converter.html">Ouvrir</a>
 </div>
 
 <div class="card">
-<h3>Resize Pro</h3>
-<p>Redimensionner images</p>
-<a class="btn" href="resize.html">Ouvrir</a>
+<h3>Image Compressor</h3>
+<p>Réduis la taille de tes images</p>
+<a href="compress.html">Ouvrir</a>
 </div>
 
 <div class="card">
-<h3>Compression</h3>
-<p>Réduire taille image</p>
-<a class="btn" href="compress.html">Ouvrir</a>
-</div>
-
-<div class="card">
-<h3>All Tools</h3>
-<p>Hub central</p>
-<a class="btn" href="tools.html">Voir</a>
+<h3>Resize Image</h3>
+<p>Redimensionne tes images facilement</p>
+<a href="#">Bientôt</a>
 </div>
 
 </div>
 
 <footer>
-© 2026 NeoImage SaaS • Built for speed & simplicity
+© 2026 Image Tools Pro - GitHub Pages
 </footer>
 
 </body>
