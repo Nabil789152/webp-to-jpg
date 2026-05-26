@@ -2,43 +2,79 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NeoImage Tools - Outils gratuits d’images</title>
-
-<meta name="description" content="Convertissez, compressez et optimisez vos images gratuitement en ligne. WEBP, PNG, JPG tools.">
+<title>NeoImage SaaS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <style>
-body{margin:0;font-family:Arial;background:#05070d;color:#e6fff9;text-align:center}
-nav{padding:15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #222}
-.logo{color:#00ffcc;font-weight:bold}
-a{color:#e6fff9;text-decoration:none;margin:0 10px;opacity:.8}
-a:hover{color:#00ffcc}
-.hero{padding:70px 20px}
-h1{font-size:42px;background:linear-gradient(90deg,#00ffcc,#7c4dff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;padding:40px}
-.card{background:rgba(255,255,255,0.05);padding:20px;border-radius:12px;border:1px solid #222}
-.card:hover{border-color:#00ffcc}
-.btn{display:inline-block;margin-top:10px;padding:10px 15px;background:#00ffcc;color:#000;border-radius:8px;font-weight:bold}
-footer{padding:30px;font-size:12px;opacity:.6}
+body{
+  margin:0;
+  font-family:Arial;
+  background:#05070d;
+  color:#e6fff9;
+}
+
+header{
+  text-align:center;
+  padding:40px 20px;
+}
+
+h1{
+  color:#00ffcc;
+  font-size:40px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:20px;
+  padding:20px;
+  max-width:1000px;
+  margin:auto;
+}
+
+.card{
+  background:rgba(255,255,255,0.05);
+  padding:20px;
+  border-radius:12px;
+  border:1px solid rgba(0,255,204,0.2);
+  transition:0.3s;
+}
+
+.card:hover{
+  transform:scale(1.03);
+  border-color:#00ffcc;
+}
+
+a{
+  text-decoration:none;
+  color:#e6fff9;
+}
+
+.btn{
+  display:inline-block;
+  margin-top:10px;
+  padding:10px 15px;
+  background:linear-gradient(90deg,#00ffcc,#7c4dff);
+  border-radius:8px;
+  color:black;
+  font-weight:bold;
+}
+
+footer{
+  text-align:center;
+  padding:30px;
+  opacity:0.6;
+  font-size:12px;
+}
 </style>
 </head>
 
 <body>
 
-<nav>
-<div class="logo">NEO IMAGE TOOLS</div>
-<div>
-<a href="index.html">Home</a>
-<a href="converter.html">Convert</a>
-<a href="compress.html">Compress</a>
-<a href="resize.html">Resize</a>
-</div>
-</nav>
-
-<div class="hero">
-<h1>Outils d’images gratuits</h1>
-<p>Convertissez, compressez et optimisez vos images en ligne</p>
-</div>
+<header>
+<h1>NeoImage SaaS</h1>
+<p>Plateforme d’outils d’images gratuits</p>
+</header>
 
 <div class="grid">
 
@@ -49,25 +85,28 @@ footer{padding:30px;font-size:12px;opacity:.6}
 </div>
 
 <div class="card">
+<h3>Resize Pro</h3>
+<p>Redimensionner images</p>
+<a class="btn" href="resize.html">Ouvrir</a>
+</div>
+
+<div class="card">
 <h3>Compression</h3>
 <p>Réduire taille image</p>
 <a class="btn" href="compress.html">Ouvrir</a>
 </div>
 
 <div class="card">
-<h3>Resize</h3>
-<p>Redimensionner image</p>
-<a class="btn" href="resize.html">Ouvrir</a>
+<h3>All Tools</h3>
+<p>Hub central</p>
+<a class="btn" href="tools.html">Voir</a>
 </div>
 
 </div>
 
-<footer>© 2026 NeoImage Tools</footer>
+<footer>
+© 2026 NeoImage SaaS • Built for speed & simplicity
+</footer>
 
 </body>
 </html>
-<footer>
-<a href="privacy.html">Privacy</a> |
-<a href="about.html">About</a> |
-<a href="contact.html">Contact</a>
-</footer>
