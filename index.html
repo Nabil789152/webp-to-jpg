@@ -1,174 +1,115 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta name="google-site-verification" content="pPeiDYEz2rvCMHlg0FN2j-7RsRyCoyf81ud1eh74CSk" />
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Convertisseur WEBP vers JPG gratuit en ligne | Outil rapide et SEO</title>
+<title>Convertisseur d’images en ligne | WEBP PNG JPG Tool</title>
 
-<meta name="description" content="Convertissez vos images WEBP en JPG gratuitement en ligne. Outil rapide, sécurisé, sans installation, avec compression, ZIP et redimensionnement." />
-<meta name="keywords" content="webp to jpg, convertisseur webp jpg, image converter, convertir webp en jpg gratuit, jpg converter online" />
-<meta name="author" content="Nabil Tools" />
+<meta name="description" content="Convertissez WEBP, PNG, JPG gratuitement en ligne. Compression, conversion multiple et ZIP." />
+<meta name="keywords" content="webp to jpg, png to jpg, image converter, compress image, jpg converter online" />
 <link rel="canonical" href="https://nabil789152.github.io/webp-to-jpg/" />
-
-<!-- Open Graph -->
-<meta property="og:title" content="Convertisseur WEBP vers JPG gratuit" />
-<meta property="og:description" content="Outil gratuit pour convertir WEBP en JPG en ligne rapidement." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://nabil789152.github.io/webp-to-jpg/" />
-
-<!-- Schema.org -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "WEBP to JPG Converter",
-  "url": "https://nabil789152.github.io/webp-to-jpg/",
-  "description": "Outil gratuit de conversion WEBP vers JPG avec compression et ZIP.",
-  "applicationCategory": "Utility"
-}
-</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <style>
 :root{
   --primary:#00c853;
-  --dark:#0f1720;
+  --bg:#0b1f14;
   --card:#121a24;
   --text:#e8f5e9;
   --muted:#9ccc9c;
 }
-
 body{
   margin:0;
-  font-family:Arial, sans-serif;
-  background:linear-gradient(135deg,#07130b,#0b1f14);
+  font-family:Arial;
+  background:linear-gradient(135deg,#06130b,#0b1f14);
   color:var(--text);
   text-align:center;
 }
-
 .container{
-  max-width:980px;
+  max-width:1000px;
   margin:40px auto;
-  background:rgba(18,26,36,0.85);
   padding:25px;
+  background:rgba(18,26,36,0.9);
   border-radius:18px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.4);
-  border:1px solid rgba(0,200,83,0.2);
 }
-
-h1{
-  color:var(--primary);
-  margin-bottom:5px;
-}
-
-h2{
-  font-size:16px;
-  font-weight:normal;
-  color:var(--muted);
-}
-
+h1{color:var(--primary)}
 .dropzone{
-  margin:20px 0;
-  padding:40px;
+  padding:35px;
   border:2px dashed var(--primary);
-  border-radius:16px;
+  border-radius:12px;
+  margin:20px 0;
   cursor:pointer;
-  transition:0.3s;
-  background:rgba(0,200,83,0.05);
 }
-
-.dropzone:hover{
-  background:rgba(0,200,83,0.12);
-}
-
 .controls{
   display:flex;
-  justify-content:center;
   flex-wrap:wrap;
-  gap:12px;
-  margin:20px 0;
+  gap:10px;
+  justify-content:center;
+  margin:15px 0;
 }
-
-input,select,button{
+select,input,button{
   padding:10px;
-  border-radius:10px;
+  border-radius:8px;
   border:none;
-  outline:none;
 }
-
 button{
   background:var(--primary);
   color:white;
   cursor:pointer;
-  font-weight:bold;
 }
-
-button:hover{
-  background:#00e676;
-}
-
 #preview{
   display:flex;
   flex-wrap:wrap;
-  gap:12px;
+  gap:10px;
   justify-content:center;
-  margin-top:20px;
 }
-
 .card{
-  width:160px;
+  width:150px;
   background:var(--card);
-  border:1px solid rgba(0,200,83,0.2);
   padding:10px;
-  border-radius:14px;
+  border-radius:10px;
 }
-
-.card img{max-width:100%;border-radius:10px}
-small{color:var(--muted);display:block;margin-top:5px}
-
-footer{
-  margin-top:30px;
-  font-size:12px;
-  color:var(--muted);
-}
+.card img{max-width:100%;border-radius:8px}
+small{color:var(--muted)}
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
-<h1>Convertisseur WEBP → JPG gratuit</h1>
-<h2>Outil en ligne rapide, sécurisé et sans installation</h2>
+<h1>Image Converter Pro</h1>
+<p>WEBP • PNG • JPG • Compression • ZIP</p>
 
-<div class="dropzone" id="dropzone">Glissez vos images ici ou cliquez</div>
-<input type="file" id="upload" accept="image/*" multiple hidden>
+<div class="dropzone" id="dropzone">Glissez vos images ou cliquez</div>
+<input type="file" id="upload" multiple accept="image/*" hidden>
 
 <div class="controls">
+<select id="mode">
+<option value="jpg">Convertir en JPG</option>
+<option value="png">Convertir en PNG</option>
+<option value="webp">Convertir en WEBP</option>
+<option value="compress">Compression JPG</option>
+</select>
+
 <label>Qualité
 <select id="quality">
 <option value="1">100%</option>
 <option value="0.9" selected>90%</option>
 <option value="0.8">80%</option>
 <option value="0.6">60%</option>
-</select></label>
+</select>
+</label>
 
 <label>Largeur max
 <input type="number" id="resize" placeholder="1200">
 </label>
 
-<button onclick="convertImages()">Convertir</button>
-<button onclick="downloadZip()">Télécharger ZIP</button>
+<button onclick="processImages()">Convertir</button>
+<button onclick="downloadZip()">ZIP</button>
 </div>
 
 <div id="preview"></div>
-
-<footer>
-© 2026 WEBP Converter Tool - Gratuit en ligne
-</footer>
-
 </div>
 
 <script>
@@ -184,29 +125,29 @@ function loadFiles(list){
   converted=[];
 
   files.forEach(file=>{
-    const reader=new FileReader();
-    reader.onload=e=>{
+    const r=new FileReader();
+    r.onload=e=>{
       const div=document.createElement('div');
       div.className='card';
       div.innerHTML=`<img src="${e.target.result}"><small>${file.name}</small>`;
       preview.appendChild(div);
     };
-    reader.readAsDataURL(file);
+    r.readAsDataURL(file);
   });
 }
 
 upload.addEventListener('change',e=>loadFiles(e.target.files));
 dropzone.onclick=()=>upload.click();
 dropzone.addEventListener('dragover',e=>e.preventDefault());
-dropzone.addEventListener('drop',e=>{
-  e.preventDefault();
-  loadFiles(e.dataTransfer.files);
-});
+dropzone.addEventListener('drop',e=>{e.preventDefault();loadFiles(e.dataTransfer.files);});
 
-function convertImages(){
+dropzone.addEventListener('click',()=>upload.click());
+
+function processImages(){
   if(!files.length) return alert('Sélectionnez des images');
-  converted=[];
 
+  converted=[];
+  const mode=document.getElementById('mode').value;
   const quality=parseFloat(document.getElementById('quality').value);
   const maxWidth=parseInt(document.getElementById('resize').value);
 
@@ -225,15 +166,21 @@ function convertImages(){
         canvas.height=h;
         canvas.getContext('2d').drawImage(img,0,0,w,h);
 
+        let type='image/jpeg';
+        let ext='.jpg';
+
+        if(mode==='png'){type='image/png';ext='.png';}
+        if(mode==='webp'){type='image/webp';ext='.webp';}
+
         canvas.toBlob(blob=>{
-          const name=file.name.replace(/\.[^.]+$/,'')+'.jpg';
+          const name=file.name.replace(/\.[^.]+$/,'')+ext;
           converted.push({name,blob});
 
           const a=document.createElement('a');
           a.href=URL.createObjectURL(blob);
           a.download=name;
           a.click();
-        },'image/jpeg',quality);
+        },type,quality);
       };
     };
     reader.readAsDataURL(file);
@@ -247,7 +194,7 @@ async function downloadZip(){
   const blob=await zip.generateAsync({type:'blob'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob);
-  a.download='images-jpg.zip';
+  a.download='converted-images.zip';
   a.click();
 }
 </script>
