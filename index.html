@@ -3,201 +3,183 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Convertisseur d’images en ligne | WEBP PNG JPG Tool</title>
+<title>NeoImage Tools - Outils gratuits de conversion et compression d'images</title>
 
-<meta name="description" content="Convertissez WEBP, PNG, JPG gratuitement en ligne. Compression, conversion multiple et ZIP." />
-<meta name="keywords" content="webp to jpg, png to jpg, image converter, compress image, jpg converter online" />
+<meta name="description" content="NeoImage Tools est une plateforme gratuite d'outils d'images : conversion WEBP, PNG, JPG, compression et optimisation en ligne." />
+<meta name="keywords" content="image tools, webp to jpg, png converter, image compressor online, free image tools" />
 <link rel="canonical" href="https://nabil789152.github.io/webp-to-jpg/" />
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <style>
 :root{
-  --primary:#00c853;
-  --bg:#0b1f14;
-  --card:#121a24;
-  --text:#e8f5e9;
-  --muted:#9ccc9c;
+  --neon:#00ffcc;
+  --neon2:#7c4dff;
+  --bg:#05070d;
+  --card:rgba(255,255,255,0.05);
+  --text:#e6fff9;
+  --muted:#9aa7b2;
 }
+
 body{
   margin:0;
-  font-family:Arial;
-  background:linear-gradient(135deg,#06130b,#0b1f14);
+  font-family:Arial, sans-serif;
+  background:radial-gradient(circle at top,#0b1020,#05070d);
   color:var(--text);
+}
+
+/* NAV */
+nav{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 30px;
+  border-bottom:1px solid rgba(255,255,255,0.08);
+}
+
+nav .logo{
+  font-weight:bold;
+  color:var(--neon);
+  letter-spacing:1px;
+}
+
+nav a{
+  color:var(--text);
+  text-decoration:none;
+  margin-left:15px;
+  opacity:0.8;
+}
+nav a:hover{opacity:1;color:var(--neon)}
+
+/* HERO */
+.hero{
   text-align:center;
+  padding:80px 20px 40px;
 }
-.container{
-  max-width:1000px;
-  margin:40px auto;
-  padding:25px;
-  background:rgba(18,26,36,0.9);
-  border-radius:18px;
+.hero h1{
+  font-size:48px;
+  margin:0;
+  background:linear-gradient(90deg,var(--neon),var(--neon2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
-h1{color:var(--primary)}
-.dropzone{
-  padding:35px;
-  border:2px dashed var(--primary);
-  border-radius:12px;
-  margin:20px 0;
-  cursor:pointer;
+.hero p{
+  color:var(--muted);
+  font-size:18px;
+  margin-top:10px;
 }
-.controls{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  justify-content:center;
-  margin:15px 0;
+
+/* BUTTONS */
+.cta{
+  margin-top:25px;
 }
-select,input,button{
-  padding:10px;
-  border-radius:8px;
-  border:none;
-}
-button{
-  background:var(--primary);
-  color:white;
-  cursor:pointer;
-}
-#preview{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  justify-content:center;
-}
-.card{
-  width:150px;
-  background:var(--card);
-  padding:10px;
+.cta a{
+  display:inline-block;
+  padding:12px 18px;
+  margin:8px;
   border-radius:10px;
+  text-decoration:none;
+  font-weight:bold;
 }
-.card img{max-width:100%;border-radius:8px}
-small{color:var(--muted)}
+
+.btn-primary{
+  background:linear-gradient(90deg,var(--neon),var(--neon2));
+  color:#000;
+}
+.btn-secondary{
+  border:1px solid rgba(0,255,204,0.4);
+  color:var(--neon);
+}
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:20px;
+  padding:40px;
+  max-width:1100px;
+  margin:auto;
+}
+
+.card{
+  background:var(--card);
+  padding:20px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,0.08);
+  transition:0.3s;
+}
+.card:hover{
+  transform:translateY(-5px);
+  border-color:rgba(0,255,204,0.4);
+}
+.card h3{
+  color:var(--neon);
+}
+.card p{
+  color:var(--muted);
+  font-size:14px;
+}
+
+footer{
+  text-align:center;
+  padding:30px;
+  font-size:12px;
+  color:var(--muted);
+  border-top:1px solid rgba(255,255,255,0.08);
+}
 </style>
 </head>
 
 <body>
-<div class="container">
 
-<h1>Image Converter Pro</h1>
-<p>WEBP • PNG • JPG • Compression • ZIP</p>
+<nav>
+  <div class="logo">NEO IMAGE TOOLS</div>
+  <div>
+    <a href="#tools">Outils</a>
+    <a href="#about">À propos</a>
+  </div>
+</nav>
 
-<div class="dropzone" id="dropzone">Glissez vos images ou cliquez</div>
-<input type="file" id="upload" multiple accept="image/*" hidden>
+<section class="hero">
+  <h1>Outils d’images gratuits & rapides</h1>
+  <p>Convertissez, compressez et optimisez vos images en ligne sans installation</p>
 
-<div class="controls">
-<select id="mode">
-<option value="jpg">Convertir en JPG</option>
-<option value="png">Convertir en PNG</option>
-<option value="webp">Convertir en WEBP</option>
-<option value="compress">Compression JPG</option>
-</select>
+  <div class="cta">
+    <a class="btn-primary" href="#tools">Commencer</a>
+    <a class="btn-secondary" href="converter.html">Ouvrir le convertisseur</a>
+  </div>
+</section>
 
-<label>Qualité
-<select id="quality">
-<option value="1">100%</option>
-<option value="0.9" selected>90%</option>
-<option value="0.8">80%</option>
-<option value="0.6">60%</option>
-</select>
-</label>
+<section id="tools" class="grid">
 
-<label>Largeur max
-<input type="number" id="resize" placeholder="1200">
-</label>
+  <div class="card">
+    <h3>Convertisseur d’images</h3>
+    <p>WEBP, PNG, JPG - conversion rapide et gratuite</p>
+    <a class="btn-secondary" href="converter.html">Utiliser</a>
+  </div>
 
-<button onclick="processImages()">Convertir</button>
-<button onclick="downloadZip()">ZIP</button>
-</div>
+  <div class="card">
+    <h3>Compression d’images</h3>
+    <p>Réduisez la taille sans perdre de qualité</p>
+    <a class="btn-secondary" href="compress.html">Utiliser</a>
+  </div>
 
-<div id="preview"></div>
-</div>
+  <div class="card">
+    <h3>Redimensionnement</h3>
+    <p>Ajustez la taille de vos images facilement</p>
+    <a class="btn-secondary" href="resize.html">Utiliser</a>
+  </div>
 
-<script>
-const upload=document.getElementById('upload');
-const dropzone=document.getElementById('dropzone');
-const preview=document.getElementById('preview');
-let files=[];
-let converted=[];
+</section>
 
-function loadFiles(list){
-  files=[...list];
-  preview.innerHTML='';
-  converted=[];
+<section id="about" style="text-align:center;padding:40px;max-width:800px;margin:auto;">
+  <h2 style="color:var(--neon)">À propos</h2>
+  <p style="color:var(--muted)">
+    NeoImage Tools est une plateforme gratuite d’outils en ligne permettant de convertir, compresser et optimiser des images rapidement et sans installation.
+  </p>
+</section>
 
-  files.forEach(file=>{
-    const r=new FileReader();
-    r.onload=e=>{
-      const div=document.createElement('div');
-      div.className='card';
-      div.innerHTML=`<img src="${e.target.result}"><small>${file.name}</small>`;
-      preview.appendChild(div);
-    };
-    r.readAsDataURL(file);
-  });
-}
-
-upload.addEventListener('change',e=>loadFiles(e.target.files));
-dropzone.onclick=()=>upload.click();
-dropzone.addEventListener('dragover',e=>e.preventDefault());
-dropzone.addEventListener('drop',e=>{e.preventDefault();loadFiles(e.dataTransfer.files);});
-
-dropzone.addEventListener('click',()=>upload.click());
-
-function processImages(){
-  if(!files.length) return alert('Sélectionnez des images');
-
-  converted=[];
-  const mode=document.getElementById('mode').value;
-  const quality=parseFloat(document.getElementById('quality').value);
-  const maxWidth=parseInt(document.getElementById('resize').value);
-
-  files.forEach(file=>{
-    const reader=new FileReader();
-    reader.onload=e=>{
-      const img=new Image();
-      img.src=e.target.result;
-
-      img.onload=()=>{
-        let w=img.width,h=img.height;
-        if(maxWidth && w>maxWidth){h=Math.round(h*(maxWidth/w));w=maxWidth;}
-
-        const canvas=document.createElement('canvas');
-        canvas.width=w;
-        canvas.height=h;
-        canvas.getContext('2d').drawImage(img,0,0,w,h);
-
-        let type='image/jpeg';
-        let ext='.jpg';
-
-        if(mode==='png'){type='image/png';ext='.png';}
-        if(mode==='webp'){type='image/webp';ext='.webp';}
-
-        canvas.toBlob(blob=>{
-          const name=file.name.replace(/\.[^.]+$/,'')+ext;
-          converted.push({name,blob});
-
-          const a=document.createElement('a');
-          a.href=URL.createObjectURL(blob);
-          a.download=name;
-          a.click();
-        },type,quality);
-      };
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-async function downloadZip(){
-  if(!converted.length) return alert('Convertissez d’abord');
-  const zip=new JSZip();
-  converted.forEach(f=>zip.file(f.name,f.blob));
-  const blob=await zip.generateAsync({type:'blob'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='converted-images.zip';
-  a.click();
-}
-</script>
+<footer>
+© 2026 NeoImage Tools - Free Image Processing Platform
+</footer>
 
 </body>
 </html>
