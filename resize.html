@@ -1,47 +1,202 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Resize</title>
+<title>Resize Pro Max</title>
+
 <style>
-body{background:#05070d;color:#fff;text-align:center;font-family:Arial}
+body{
+  background:#05070d;
+  color:#e6fff9;
+  font-family:Arial;
+  text-align:center;
+  margin:0;
+}
+
+h2{
+  color:#00ffcc;
+  margin-top:20px;
+}
+
+.container{
+  max-width:800px;
+  margin:auto;
+  padding:20px;
+}
+
+.box{
+  background:rgba(255,255,255,0.05);
+  padding:15px;
+  margin:10px 0;
+  border-radius:12px;
+  border:1px solid rgba(0,255,204,0.2);
+}
+
+label{
+  display:block;
+  margin-bottom:5px;
+  color:#00ffcc;
+}
+
+input{
+  padding:10px;
+  width:80%;
+  border-radius:8px;
+  border:none;
+  text-align:center;
+}
+
+small{
+  color:#9fffe6;
+}
+
+button{
+  margin-top:15px;
+  padding:12px 20px;
+  background:linear-gradient(90deg,#00ffcc,#7c4dff);
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+#preview{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+
+img{
+  max-width:250px;
+  border-radius:10px;
+  border:1px solid #00ffcc;
+}
+
+.info{
+  font-size:14px;
+  color:#9fffe6;
+}
+
 </style>
 </head>
+
 <body>
 
-<h2>Resize Images</h2>
+<h2>RESIZE IMAGE PRO MAX</h2>
 
-<input type="file" id="file" multiple>
-<input type="number" id="w" placeholder="Largeur">
-<button onclick="go()">Resize</button>
+<div class="container">
+
+<input type="file" id="file" accept="image/*">
+
+<div class="box">
+<label>Largeur actuelle</label>
+<input type="text" id="currentW" readonly>
+<small>Pixel (px)</small>
+</div>
+
+<div class="box">
+<label>Hauteur actuelle</label>
+<input type="text" id="currentH" readonly>
+<small>Pixel (px)</small>
+</div>
+
+<div class="box">
+<label>Nouvelle largeur</label>
+<input type="number" id="newW" placeholder="ex: 800">
+<small>Pixel (px)</small>
+</div>
+
+<div class="box">
+<label>
+<input type="checkbox" id="lock" checked>
+ Garder les proportions
+</label>
+</div>
+
+<button onclick="resize()">Modifier image</button>
+
+<div id="preview"></div>
+
+</div>
 
 <script>
-function go(){
-let files=document.getElementById("file").files;
-let w=parseInt(document.getElementById("w").value);
 
-for(let f of files){
-let r=new FileReader();
-r.onload=e=>{
 let img=new Image();
-img.src=e.target.result;
+
+document.getElementById("file").onchange=(e)=>{
+const reader=new FileReader();
+
+reader.onload=ev=>{
+img.src=ev.target.result;
+
 img.onload=()=>{
-let h=img.height*(w/img.width);
-let c=document.createElement("canvas");
-c.width=w;
-c.height=h;
-c.getContext("2d").drawImage(img,0,0,w,h);
-c.toBlob(b=>{
-let a=document.createElement("a");
-a.href=URL.createObjectURL(b);
-a.download="resized.jpg";
-a.click();
-});
+
+document.getElementById("currentW").value=img.width + " px";
+document.getElementById("currentH").value=img.height + " px";
+
+/* preview original */
+document.getElementById("preview").innerHTML=`
+<div>
+<p class="info">Original</p>
+<img src="${img.src}">
+</div>
+`;
 };
+
 };
-r.readAsDataURL(f);
+
+reader.readAsDataURL(e.target.files[0]);
+};
+
+function resize(){
+
+if(!img.src){
+alert("Ajoute une image");
+return;
 }
+
+let w=parseInt(document.getElementById("newW").value);
+let lock=document.getElementById("lock").checked;
+
+if(!w){
+alert("Entre une largeur");
+return;
 }
+
+let h;
+
+if(lock){
+h=img.height*(w/img.width);
+} else {
+h=img.height; // simple mode (tu peux upgrader après)
+}
+
+let canvas=document.createElement("canvas");
+canvas.width=w;
+canvas.height=h;
+
+canvas.getContext("2d").drawImage(img,0,0,w,h);
+
+canvas.toBlob(blob=>{
+let url=URL.createObjectURL(blob);
+
+document.getElementById("preview").innerHTML+=`
+<div>
+<p class="info">Résultat</p>
+<img src="${url}">
+<br><br>
+<a href="${url}" download="resized.jpg">
+<button>Télécharger</button>
+</a>
+</div>
+`;
+
+},"image/jpeg");
+
+}
+
 </script>
 
 </body>
