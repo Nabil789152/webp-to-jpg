@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Resize Pro Max</title>
+<title>Resize Pro Preview</title>
 
 <style>
 body{
@@ -50,6 +50,27 @@ small{
   color:#9fffe6;
 }
 
+/* IMAGE PREVIEW */
+.preview{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-top:20px;
+}
+
+.preview img{
+  max-width:300px;
+  border-radius:10px;
+  border:1px solid #00ffcc;
+}
+
+.info{
+  font-size:14px;
+  color:#9fffe6;
+  margin-top:5px;
+}
+
 button{
   margin-top:15px;
   padding:12px 20px;
@@ -59,32 +80,12 @@ button{
   font-weight:bold;
   cursor:pointer;
 }
-
-#preview{
-  display:flex;
-  justify-content:center;
-  gap:20px;
-  margin-top:20px;
-  flex-wrap:wrap;
-}
-
-img{
-  max-width:250px;
-  border-radius:10px;
-  border:1px solid #00ffcc;
-}
-
-.info{
-  font-size:14px;
-  color:#9fffe6;
-}
-
 </style>
 </head>
 
 <body>
 
-<h2>RESIZE IMAGE PRO MAX</h2>
+<h2>RESIZE IMAGE PRO</h2>
 
 <div class="container">
 
@@ -93,31 +94,25 @@ img{
 <div class="box">
 <label>Largeur actuelle</label>
 <input type="text" id="currentW" readonly>
-<small>Pixel (px)</small>
+<small>Unité : Pixels (px)</small>
 </div>
 
 <div class="box">
 <label>Hauteur actuelle</label>
 <input type="text" id="currentH" readonly>
-<small>Pixel (px)</small>
+<small>Unité : Pixels (px)</small>
 </div>
 
 <div class="box">
 <label>Nouvelle largeur</label>
-<input type="number" id="newW" placeholder="ex: 800">
-<small>Pixel (px)</small>
-</div>
-
-<div class="box">
-<label>
-<input type="checkbox" id="lock" checked>
- Garder les proportions
-</label>
+<input type="number" id="newW" placeholder="Ex: 800">
+<small>Unité : Pixels (px)</small>
 </div>
 
 <button onclick="resize()">Modifier image</button>
 
-<div id="preview"></div>
+<!-- PREVIEW -->
+<div class="preview" id="preview"></div>
 
 </div>
 
@@ -136,10 +131,10 @@ img.onload=()=>{
 document.getElementById("currentW").value=img.width + " px";
 document.getElementById("currentH").value=img.height + " px";
 
-/* preview original */
+/* PREVIEW ORIGINAL */
 document.getElementById("preview").innerHTML=`
 <div>
-<p class="info">Original</p>
+<p class="info">Image originale (${img.width}px × ${img.height}px)</p>
 <img src="${img.src}">
 </div>
 `;
@@ -158,20 +153,13 @@ return;
 }
 
 let w=parseInt(document.getElementById("newW").value);
-let lock=document.getElementById("lock").checked;
 
 if(!w){
-alert("Entre une largeur");
+alert("Entre une largeur en pixels");
 return;
 }
 
-let h;
-
-if(lock){
-h=img.height*(w/img.width);
-} else {
-h=img.height; // simple mode (tu peux upgrader après)
-}
+let h=img.height*(w/img.width);
 
 let canvas=document.createElement("canvas");
 canvas.width=w;
@@ -182,9 +170,10 @@ canvas.getContext("2d").drawImage(img,0,0,w,h);
 canvas.toBlob(blob=>{
 let url=URL.createObjectURL(blob);
 
+/* AJOUT PREVIEW RESULTAT */
 document.getElementById("preview").innerHTML+=`
 <div>
-<p class="info">Résultat</p>
+<p class="info">Résultat (${w}px × ${Math.round(h)}px)</p>
 <img src="${url}">
 <br><br>
 <a href="${url}" download="resized.jpg">
