@@ -1,9 +1,19 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>WebP to JPG Converter Free Online</title>
+
 <meta name="description" content="Free online WebP to JPG and PNG converter. Convert WebP images instantly with fast and easy image conversion tools.">
+<meta name="robots" content="index, follow">
+
+<meta property="og:title" content="WebP to JPG Converter">
+<meta property="og:description" content="Convert WebP images to JPG or PNG online for free. Fast and secure tool.">
+<meta property="og:type" content="website">
+
 <style>
 body{
   margin:0;
@@ -57,19 +67,32 @@ button{
   border-radius:10px;
   border:1px solid #00ffcc;
 }
+
+footer{
+  margin-top:40px;
+  padding:20px;
+  color:#9fffe6;
+  font-size:13px;
+  border-top:1px solid rgba(255,255,255,0.1);
+}
+footer a{
+  color:#00ffcc;
+  text-decoration:none;
+  margin:0 5px;
+}
 </style>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="index, follow">
-<meta charset="UTF-8">
+
 </head>
 
 <body>
 
 <h1>WebP to JPG Converter</h1>
+
 <p>
 Convert WebP images to JPG or PNG online for free. 
 Fast, simple and secure image conversion tool.
 </p>
+
 <p>Convert WebP → JPG / PNG</p>
 
 <div class="container">
@@ -91,36 +114,41 @@ Fast, simple and secure image conversion tool.
 
 </div>
 
-<!-- IMPORTANT : 1 SEUL AFFICHE -->
+<!-- PREVIEW -->
 <div class="preview" id="preview"></div>
 
 </div>
 
+<!-- FOOTER (CORRIGÉ) -->
+<footer>
+<a href="privacy.html">Privacy Policy</a> |
+<a href="contact.html">Contact</a> |
+<a href="about.html">About</a>
+</footer>
+
 <script>
 
-let img=new Image();
+let img = new Image();
 
 /* LOAD IMAGE + DETECTION */
-document.getElementById("file").onchange=(e)=>{
-const file=e.target.files[0];
-if(!file) return;
+document.getElementById("file").onchange = (e) => {
+const file = e.target.files[0];
+if (!file) return;
 
-if(file.type!=="image/webp"){
+if (file.type !== "image/webp") {
 alert("Seuls les fichiers WebP sont autorisés");
 return;
 }
 
-document.getElementById("detected").innerText="Format détecté : WEBP";
+document.getElementById("detected").innerText = "Format détecté : WEBP";
 
-const reader=new FileReader();
+const reader = new FileReader();
 
-reader.onload=ev=>{
-img.src=ev.target.result;
+reader.onload = ev => {
+img.src = ev.target.result;
 
-img.onload=()=>{
-
-/* ❌ IMPORTANT : ON REMPLACE (PAS +=) */
-document.getElementById("preview").innerHTML=`
+img.onload = () => {
+document.getElementById("preview").innerHTML = `
 <div>
 <p>Image originale (WEBP)</p>
 <img src="${img.src}">
@@ -140,20 +168,19 @@ alert("Ajoute une image WebP");
 return;
 }
 
-let format=document.getElementById("format").value;
+let format = document.getElementById("format").value;
 
-let canvas=document.createElement("canvas");
-canvas.width=img.width;
-canvas.height=img.height;
+let canvas = document.createElement("canvas");
+canvas.width = img.width;
+canvas.height = img.height;
 
 canvas.getContext("2d").drawImage(img,0,0);
 
-canvas.toBlob(blob=>{
+canvas.toBlob(blob => {
 
-let url=URL.createObjectURL(blob);
+let url = URL.createObjectURL(blob);
 
-/* ❌ IMPORTANT : ON REMPLACE TOUJOURS (PAS +=) */
-document.getElementById("preview").innerHTML=`
+document.getElementById("preview").innerHTML = `
 <div>
 <p>Image convertie</p>
 <img src="${url}">
@@ -164,7 +191,7 @@ document.getElementById("preview").innerHTML=`
 </div>
 `;
 
-},format);
+}, format);
 
 }
 
@@ -172,8 +199,3 @@ document.getElementById("preview").innerHTML=`
 
 </body>
 </html>
-<footer>
-<a href="privacy.html">Privacy Policy</a> |
-<a href="contact.html">Contact</a> |
-<a href="about.html">About</a>
-</footer>
