@@ -1,85 +1,152 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
-<link rel="icon" type="image/png" href="./favicon.png">
-<meta charset="UTF-8">
-<title>Image Tools Pro</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#05070d;
-  color:#e6fff9;
-  text-align:center;
-}
+  <link rel="icon" type="image/png" href="./favicon.png">
 
-header{
-  padding:60px 20px;
-}
+  <title>Image Tools Pro</title>
 
-h1{
-  color:#00ffcc;
-  font-size:42px;
-  margin-bottom:10px;
-}
+  <style>
+    body{
+      margin:0;
+      font-family:Arial;
+      background:#05070d;
+      color:#e6fff9;
+      text-align:center;
+    }
 
-p{
-  color:#9fffe6;
-  font-size:16px;
-}
+    header{
+      padding:60px 20px;
+    }
 
-.container{
-  max-width:1000px;
-  margin:auto;
-  padding:20px;
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-  gap:20px;
-}
+    h1{
+      color:#00ffcc;
+      font-size:42px;
+      margin-bottom:10px;
+    }
 
-.card{
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(0,255,204,0.2);
-  border-radius:14px;
-  padding:25px;
-  transition:0.3s;
-}
+    p{
+      color:#9fffe6;
+      font-size:16px;
+    }
 
-.card:hover{
-  transform:scale(1.05);
-  border-color:#00ffcc;
-}
+    /* 🔎 SEARCH */
+    .search-box{
+      max-width:1000px;
+      margin:20px auto;
+      padding:0 20px;
+    }
 
-h3{
-  color:#00ffcc;
-}
+    .search-box input{
+      width:100%;
+      padding:12px;
+      border-radius:8px;
+      border:none;
+      outline:none;
+      font-size:15px;
+    }
 
-a{
-  display:inline-block;
-  margin-top:12px;
-  padding:10px 18px;
-  background:linear-gradient(90deg,#00ffcc,#7c4dff);
-  color:#000;
-  text-decoration:none;
-  border-radius:8px;
-  font-weight:bold;
-}
+    .container{
+      max-width:1000px;
+      margin:auto;
+      padding:20px;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+      gap:20px;
+    }
 
-a:hover{
-  opacity:0.9;
-}
+    .card{
+      background:rgba(255,255,255,0.05);
+      border:1px solid rgba(0,255,204,0.2);
+      border-radius:14px;
+      padding:25px;
+      transition:0.3s;
+    }
 
-footer{
-  margin-top:40px;
-  padding:20px;
-  color:#666;
-  font-size:12px;
-}
-</style>
-<head>
+    .card:hover{
+      transform:scale(1.05);
+      border-color:#00ffcc;
+    }
 
-<script defer>
+    h3{
+      color:#00ffcc;
+    }
+
+    a{
+      display:inline-block;
+      margin-top:12px;
+      padding:10px 18px;
+      background:linear-gradient(90deg,#00ffcc,#7c4dff);
+      color:#000;
+      text-decoration:none;
+      border-radius:8px;
+      font-weight:bold;
+    }
+
+    footer{
+      margin-top:40px;
+      padding:20px;
+      color:#666;
+      font-size:12px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Image Tools Pro</h1>
+  <p>Convertir • Compresser • Redimensionner tes images en un clic</p>
+</header>
+
+<!-- 🔎 SEARCH BAR -->
+<div class="search-box">
+  <input 
+    type="text" 
+    id="toolSearch" 
+    placeholder="Rechercher un outil..."
+    onkeyup="searchTools()"
+  >
+</div>
+
+<div class="container">
+
+  <div class="card tool-card">
+    <h3>WebP Converter</h3>
+    <p>Convertir WebP → JPG / PNG</p>
+    <a href="converter.html">Ouvrir</a>
+  </div>
+
+  <div class="card tool-card">
+    <h3>Image Compressor</h3>
+    <p>Réduis la taille de tes images sans perte visible</p>
+    <a href="compress.html">Ouvrir</a>
+  </div>
+
+  <div class="card tool-card">
+    <h3>Resize Image</h3>
+    <p>Changer la taille de tes images facilement</p>
+    <a href="resize.html">Ouvrir</a>
+  </div>
+
+</div>
+
+<!-- FOOTER UNIQUE -->
+<footer>
+  © 2026 Image Tools Pro • GitHub Pages
+  <br><br>
+
+  <a href="about.html">About</a> |
+  <a href="contact.html">Contact</a> |
+  <a href="privacy.html">Privacy Policy</a> |
+  <a href="terms.html">Terms</a>
+</footer>
+
+<!-- SCRIPT -->
+<script>
 function searchTools() {
   let input = document.getElementById("toolSearch").value.toLowerCase();
   let cards = document.getElementsByClassName("tool-card");
@@ -97,81 +164,5 @@ function searchTools() {
 }
 </script>
 
-</head>
-
-<div class="container">
-
-  <div class="card">
-    <h3>WebP Converter</h3>
-    <p>Convertir WebP → JPG / PNG</p>
-    <a href="converter.html">Ouvrir</a>
-  </div>
-
-  <div class="card">
-    <h3>Image Compressor</h3>
-    <p>Réduis la taille de tes images sans perte visible</p>
-    <a href="compress.html">Ouvrir</a>
-  </div>
-
-  <div class="card">
-    <h3>Resize Image</h3>
-    <p>Changer la taille de tes images facilement</p>
-    <a href="resize.html">Ouvrir</a>
-  </div>
-
-</div>
-
-<!-- FOOTER UNIQUE (MODERNE + PRO) -->
-<footer style="
-  margin-top: 40px;
-  padding: 20px 15px;
-  background: #f8f9fa;
-  border-top: 1px solid #e0e0e0;
-  font-family: Arial, sans-serif;
-">
-
-  <div style="
-    max-width: 1000px;
-    margin: auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
-  ">
-
-    <div>
-      <p style="margin:0; color:#666; font-size:14px;">
-        © 2026 Image Tools Pro
-      </p>
-    </div>
-
-    <div style="display:flex; gap:15px; flex-wrap:wrap;">
-      <a href="about.html" style="text-decoration:none; color:#555; font-size:14px;">About</a>
-      <a href="contact.html" style="text-decoration:none; color:#555; font-size:14px;">Contact</a>
-      <a href="privacy.html" style="text-decoration:none; color:#555; font-size:14px;">Privacy Policy</a>
-      <a href="terms.html" style="text-decoration:none; color:#555; font-size:14px;">Terms</a>
-    </div>
-
-  </div>
-
-</footer>
-
 </body>
 </html>
-<footer class="footer">
-  <div class="footer-container">
-
-    <div class="footer-left">
-      <p>© 2026 Image Tools Pro</p>
-    </div>
-
-    <div class="footer-links">
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="privacy.html">Privacy Policy</a>
-      <a href="terms.html">Terms</a>
-    </div>
-
-  </div>
-</footer>
