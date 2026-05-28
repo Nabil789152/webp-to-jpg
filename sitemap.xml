@@ -1,17 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
-<url>
-<loc>https://nabil789152.github.io/webp-to-jpg/</loc>
-<changefreq>weekly</changefreq>
-<priority>1.0</priority>
-</url>
+  <!-- Homepage -->
+  <url>
+    <loc>https://nabil789152.github.io/webp-to-jpg/</loc>
+    <priority>1.0</priority>
+    <changefreq>daily</changefreq>
+  </url>
 
-<url><loc>https://nabil789152.github.io/webp-to-jpg/converter.html</loc></url>
-<url><loc>https://nabil789152.github.io/webp-to-jpg/compress.html</loc></url>
-<url><loc>https://nabil789152.github.io/webp-to-jpg/resize.html</loc></url>
-<url><loc>https://nabil789152.github.io/webp-to-jpg/privacy.html</loc></url>
-<url><loc>https://nabil789152.github.io/webp-to-jpg/about.html</loc></url>
-<url><loc>https://nabil789152.github.io/webp-to-jpg/contact.html</loc></url>
+  <!-- Tools -->
+  <url>
+    <loc>https://nabil789152.github.io/webp-to-jpg/converter.html</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://nabil789152.github.io/webp-to-jpg/compress.html</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://nabil789152.github.io/webp-to-jpg/resize.html</loc>
+    <priority>0.9</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <!-- SEO Articles -->
+  <url>
+    <loc>https://nabil789152.github.io/webp-to-jpg/webp-to-jpg.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://nabil789152.github.io/webp-to-jpg/compress-images.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://nabil789152.github.io/webp-to-jpg/resize-image.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://nabil789152.github.io/webp-to-jpg/best-image-formats.html</loc>
+    <priority>0.8</priority>
+    <changefreq>monthly</changefreq>
+  </url>
 
 </urlset>
