@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -5,88 +6,105 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Resize Image Online Free</title>
+<title>Resize Image Online Free | NeoImage Tools</title>
 
-<meta name="description" content="Resize images online for free. Change image dimensions easily while keeping high quality. Fast and simple image resizer tool.">
+<meta name="description" content="Resize images online for free. Change image dimensions easily while keeping high quality. Fast and secure image resizer tool.">
+
 <meta name="robots" content="index, follow">
 
+<meta property="og:title" content="Resize Image Online Free">
+<meta property="og:description" content="Resize images online while keeping high quality. Free and secure image resizer tool.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="./favicon.png">
+
+<link rel="icon" type="image/png" href="./favicon.png">
+
 <style>
+
 body{
   margin:0;
-  font-family:Arial;
-  background:#05070d;
-  color:#e6fff9;
+  font-family:Arial,sans-serif;
+  background:#f5f7fb;
+  color:#202124;
   text-align:center;
 }
 
 h1{
   margin-top:20px;
-  font-size:24px;
-  color:#00ffcc;
+  font-size:28px;
+  color:#202124;
+}
+
+p{
+  color:#5f6368;
 }
 
 .container{
   max-width:520px;
   margin:auto;
-  padding:15px;
+  padding:20px;
 }
 
 .box{
-  background:rgba(255,255,255,0.05);
-  border:1px solid rgba(0,255,204,0.2);
-  border-radius:10px;
-  padding:12px;
-  margin-top:12px;
+  background:white;
+  border:1px solid #eee;
+  border-radius:12px;
+  padding:20px;
+  margin-top:15px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
 }
 
 input{
   width:70%;
   max-width:220px;
-  padding:8px;
+  padding:10px;
   margin-top:5px;
-  border:none;
+  border:1px solid #ddd;
   border-radius:6px;
   outline:none;
 }
 
 label{
   display:block;
-  margin-top:8px;
-  color:#00ffcc;
+  margin-top:10px;
+  color:#202124;
   font-weight:bold;
-  font-size:13px;
+  font-size:14px;
 }
 
 button{
-  margin-top:12px;
-  padding:10px 16px;
-  background:linear-gradient(90deg,#00ffcc,#7c4dff);
+  margin-top:15px;
+  padding:12px 20px;
+  background:#1a73e8;
   border:none;
-  border-radius:6px;
+  border-radius:8px;
   font-weight:bold;
+  color:white;
   cursor:pointer;
 }
 
 .preview img{
-  max-width:220px;
-  margin-top:12px;
-  border-radius:8px;
-  border:1px solid #00ffcc;
+  max-width:240px;
+  margin-top:15px;
+  border-radius:10px;
+  border:1px solid #ddd;
 }
 
 footer{
-  margin-top:40px;
-  padding:20px;
-  color:#9fffe6;
-  font-size:13px;
-  border-top:1px solid rgba(255,255,255,0.1);
+  margin-top:60px;
+  padding:25px 20px;
+  background:white;
+  border-top:1px solid #eee;
+  text-align:center;
 }
 
 footer a{
-  color:#00ffcc;
+  color:#5f6368;
   text-decoration:none;
-  margin:0 5px;
+  margin:0 8px;
+  font-size:14px;
 }
+
 </style>
 
 </head>
@@ -97,6 +115,7 @@ footer a{
 
 <p>
 Resize images online for free by changing width and height in pixels.
+Fast, secure and easy image resizing tool.
 </p>
 
 <div class="container">
@@ -107,18 +126,18 @@ Resize images online for free by changing width and height in pixels.
 
 <div class="box">
 
-<label>Largeur actuelle</label>
+<label>Current Width</label>
 <input type="number" id="currentW" readonly>
 
-<label>Hauteur actuelle</label>
+<label>Current Height</label>
 <input type="number" id="currentH" readonly>
 
-<label>Nouvelle largeur</label>
+<label>New Width</label>
 <input type="number" id="newW">
 
 </div>
 
-<button onclick="resizeImage()">Redimensionner</button>
+<button onclick="resizeImage()">Resize Image</button>
 
 </div>
 
@@ -126,25 +145,20 @@ Resize images online for free by changing width and height in pixels.
 
 </div>
 
-<!-- FOOTER -->
-<footer>
-<a href="privacy.html">Privacy Policy</a> |
-<a href="contact.html">Contact</a> |
-<a href="about.html">About</a>
-</footer>
-
 <script>
 
 let img = new Image();
 
 /* LOAD IMAGE */
 document.getElementById("file").onchange = (e) => {
+
 const file = e.target.files[0];
 if (!file) return;
 
 const reader = new FileReader();
 
 reader.onload = ev => {
+
 img.src = ev.target.result;
 
 img.onload = () => {
@@ -154,28 +168,31 @@ document.getElementById("currentH").value = img.height;
 
 document.getElementById("preview").innerHTML = `
 <div>
-<p>Image originale</p>
+<p>Original Image</p>
 <img src="${img.src}" alt="Original image">
 </div>
 `;
+
 };
+
 };
 
 reader.readAsDataURL(file);
+
 };
 
 /* RESIZE IMAGE */
 function resizeImage(){
 
 if(!img.src){
-alert("Ajoute une image");
+alert("Add an image");
 return;
 }
 
 let newW = parseInt(document.getElementById("newW").value);
 
 if(!newW || newW <= 0){
-alert("Donne une largeur valide");
+alert("Enter a valid width");
 return;
 }
 
@@ -183,6 +200,7 @@ let ratio = img.height / img.width;
 let newH = Math.round(newW * ratio);
 
 let canvas = document.createElement("canvas");
+
 canvas.width = newW;
 canvas.height = newH;
 
@@ -192,14 +210,17 @@ canvas.toBlob(blob => {
 
 let url = URL.createObjectURL(blob);
 
-document.getElementById("preview").innerHTML += `
+document.getElementById("preview").innerHTML = `
 <div>
-<p>Image redimensionnée</p>
+<p>Resized Image</p>
 <img src="${url}" alt="Resized image">
+
 <br><br>
-<a href="${url}" download="resized">
-<button>Télécharger</button>
+
+<a href="${url}" download="resized-image">
+<button>Download</button>
 </a>
+
 </div>
 `;
 
@@ -208,12 +229,22 @@ document.getElementById("preview").innerHTML += `
 }
 
 </script>
-  
+
 <footer>
-<a href="privacy.html">Privacy Policy</a> |
-<a href="contact.html">Contact</a> |
+
+<p>
+© 2026 NeoImage Tools — Free Online Image Utilities
+</p>
+
+<a href="index.html">Home</a>
 <a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Privacy Policy</a>
+<a href="terms.html">Terms</a>
+<a href="sitemap.xml">Sitemap</a>
+
 </footer>
 
 </body>
 </html>
+```
