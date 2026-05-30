@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>JFIF to JPG Converter Free Online | Image Tools Pro</title>
+
+<meta name="description" content="Convert JFIF images to JPG online for free. Fast, secure and easy JFIF to JPG converter tool without software installation.">
+<meta name="robots" content="index, follow">
+
+<meta property="og:title" content="JFIF to JPG Converter">
+<meta property="og:description" content="Convert JFIF images to JPG quickly and easily online for free.">
+<meta property="og:type" content="website">
+
+<link rel="icon" type="image/png" href="./favicon.png">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial, sans-serif;
+  background:#f5f7fb;
+  color:#202124;
+  text-align:center;
+}
+
+/* HEADER */
+header{
+  padding:40px 20px 20px;
+  background:white;
+  border-bottom:1px solid #eee;
+}
+
+h1{
+  margin:0;
+  font-size:30px;
+}
+
+p{
+  color:#5f6368;
+}
+
+/* CONTAINER */
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:20px;
+}
+
+/* BOX */
+.box{
+  background:white;
+  padding:20px;
+  margin-top:15px;
+  border-radius:12px;
+  border:1px solid #eee;
+  box-shadow:0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* INPUT */
+input, select{
+  margin-top:10px;
+  padding:10px;
+}
+
+/* BUTTON */
+button{
+  margin-top:15px;
+  padding:12px 20px;
+  background:#1a73e8;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  color:white;
+  cursor:pointer;
+}
+
+/* PREVIEW */
+.preview img{
+  max-width:260px;
+  margin-top:15px;
+  border-radius:10px;
+  border:1px solid #ddd;
+}
+
+/* FOOTER */
+footer{
+  margin-top:60px;
+  padding:20px;
+  font-size:13px;
+  color:#5f6368;
+  background:white;
+  border-top:1px solid #eee;
+}
+
+footer a{
+  color:#5f6368;
+  text-decoration:none;
+  margin:0 5px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>JFIF to JPG Converter</h1>
+<p>Convert JFIF images to JPG quickly and easily online</p>
+</header>
+
+<div class="container">
+
+<div class="box">
+
+<input type="file" id="file" accept="image/*">
+
+<div class="box">
+<p id="info">Upload a JFIF image</p>
+</div>
+
+<button onclick="convert()">Convertir en JPG</button>
+
+</div>
+
+<div class="preview" id="preview"></div>
+
+</div>
+
+<script>
+
+let img = new Image();
+
+/* LOAD IMAGE */
+document.getElementById("file").onchange = (e) => {
+const file = e.target.files[0];
+if(!file) return;
+
+if(!file.type.includes("image")){
+alert("Fichier invalide");
+return;
+}
+
+const reader = new FileReader();
+
+reader.onload = ev => {
+img.src = ev.target.result;
+
+img.onload = () => {
+document.getElementById("preview").innerHTML = `
+<div>
+<p>Image originale</p>
+<img src="${img.src}">
+</div>
+`;
+};
+};
+
+reader.readAsDataURL(file);
+};
+
+/* CONVERT */
+function convert(){
+
+if(!img.src){
+alert("Ajoute une image JFIF");
+return;
+}
+
+let canvas = document.createElement("canvas");
+canvas.width = img.width;
+canvas.height = img.height;
+
+let ctx = canvas.getContext("2d");
+ctx.drawImage(img,0,0);
+
+canvas.toBlob(blob => {
+
+let url = URL.createObjectURL(blob);
+
+document.getElementById("preview").innerHTML += `
+<div>
+<p>Image convertie (JPG)</p>
+<img src="${url}">
+<br><br>
+<a href="${url}" download="image.jpg">
+<button>Télécharger</button>
+</a>
+</div>
+`;
+
+}, "image/jpeg");
+
+}
+
+</script>
+
+<!-- FOOTER -->
+<footer>
+© 2026 Image Tools Pro — Free Online Image Utilities |
+<a href="index.html">Home</a> |
+<a href="about.html">About</a> |
+<a href="contact.html">Contact</a> |
+<a href="privacy.html">Privacy Policy</a>
+</footer>
+
+</body>
+</html>
