@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Image Cropper Online Free | Crop Images Instantly</title>
+
+<meta name="description" content="Crop images online for free. Easily cut, trim and resize photos in your browser. Fast and secure image crop tool.">
+<meta name="robots" content="index, follow">
+
+<meta property="og:title" content="Free Image Cropper Online">
+<meta property="og:description" content="Crop images instantly online. No installation required.">
+<meta property="og:type" content="website">
+
+<link rel="icon" type="image/png" href="./favicon.png">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#05070d;
+  color:#e6fff9;
+  text-align:center;
+}
+
+header{
+  padding:30px 15px 10px;
+}
+
+h1{
+  color:#00ffcc;
+  font-size:26px;
+}
+
+p{
+  color:#9fffe6;
+}
+
+.container{
+  max-width:800px;
+  margin:auto;
+  padding:20px;
+}
+
+.box{
+  background:rgba(255,255,255,0.05);
+  padding:15px;
+  border-radius:12px;
+  border:1px solid rgba(0,255,204,0.2);
+  margin-top:15px;
+}
+
+input{
+  margin-top:10px;
+}
+
+button{
+  margin-top:15px;
+  padding:12px 20px;
+  background:linear-gradient(90deg,#00ffcc,#7c4dff);
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  color:#000;
+}
+
+canvas{
+  margin-top:15px;
+  max-width:100%;
+  border:1px solid #00ffcc;
+  border-radius:10px;
+}
+
+.preview img{
+  max-width:250px;
+  margin-top:15px;
+  border-radius:10px;
+  border:1px solid #00ffcc;
+}
+
+/* FOOTER */
+footer{
+  margin-top:60px;
+  padding:25px 20px;
+  background:#0b0f19;
+  border-top:1px solid rgba(255,255,255,0.08);
+}
+
+footer a{
+  color:#00ffcc;
+  text-decoration:none;
+  margin:0 8px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Image Cropper</h1>
+<p>Crop images online instantly — free and secure tool</p>
+</header>
+
+<div class="container">
+
+<div class="box">
+<input type="file" id="file" accept="image/*">
+
+<br><br>
+
+<label>Start X</label><br>
+<input type="number" id="sx" value="0">
+
+<label>Start Y</label><br>
+<input type="number" id="sy" value="0">
+
+<label>Width</label><br>
+<input type="number" id="sw">
+
+<label>Height</label><br>
+<input type="number" id="sh">
+
+<br>
+
+<button onclick="cropImage()">Crop Image</button>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<div class="preview" id="preview"></div>
+
+</div>
+
+<script>
+
+let img = new Image();
+
+/* LOAD IMAGE */
+document.getElementById("file").onchange = (e) => {
+const file = e.target.files[0];
+if(!file) return;
+
+const reader = new FileReader();
+
+reader.onload = ev => {
+img.src = ev.target.result;
+
+img.onload = () => {
+
+document.getElementById("sw").value = img.width;
+document.getElementById("sh").value = img.height;
+
+const canvas = document.getElementById("canvas");
+canvas.width = img.width;
+canvas.height = img.height;
+
+canvas.getContext("2d").drawImage(img,0,0);
+
+document.getElementById("preview").innerHTML = `
+<div>
+<p>Original Image</p>
+<img src="${img.src}">
+</div>
+`;
+};
+};
+
+reader.readAsDataURL(file);
+};
+
+/* CROP */
+function cropImage(){
+
+if(!img.src){
+alert("Ajoute une image");
+return;
+}
+
+let sx = parseInt(document.getElementById("sx").value);
+let sy = parseInt(document.getElementById("sy").value);
+let sw = parseInt(document.getElementById("sw").value);
+let sh = parseInt(document.getElementById("sh").value);
+
+if(!sw || !sh){
+alert("Dimensions invalides");
+return;
+}
+
+let canvas = document.createElement("canvas");
+canvas.width = sw;
+canvas.height = sh;
+
+let ctx = canvas.getContext("2d");
+
+ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+
+canvas.toBlob(blob => {
+
+let url = URL.createObjectURL(blob);
+
+document.getElementById("preview").innerHTML = `
+<div>
+<p>Cropped Image</p>
+<img src="${url}">
+<br><br>
+<a href="${url}" download="cropped.jpg">
+<button>Download</button>
+</a>
+</div>
+`;
+
+}, "image/jpeg");
+
+}
+
+</script>
+
+<footer>
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Privacy Policy</a>
+</footer>
+
+</body>
+</html>
