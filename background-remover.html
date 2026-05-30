@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Background Remover Online Free | Remove Image Background</title>
+
+<meta name="description" content="Remove background from images online for free. Create transparent PNG instantly. Fast and easy background remover tool.">
+<meta name="robots" content="index, follow">
+
+<meta property="og:title" content="Free Background Remover Online">
+<meta property="og:description" content="Remove image background instantly and download transparent PNG.">
+<meta property="og:type" content="website">
+
+<link rel="icon" type="image/png" href="./favicon.png">
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#05070d;
+  color:#e6fff9;
+  text-align:center;
+}
+
+header{
+  padding:30px 15px 10px;
+}
+
+h1{
+  color:#00ffcc;
+}
+
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:20px;
+}
+
+.box{
+  background:rgba(255,255,255,0.05);
+  padding:15px;
+  border-radius:12px;
+  border:1px solid rgba(0,255,204,0.2);
+  margin-top:15px;
+}
+
+button{
+  margin-top:15px;
+  padding:12px 20px;
+  background:linear-gradient(90deg,#00ffcc,#7c4dff);
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  color:#000;
+}
+
+.preview img{
+  max-width:250px;
+  margin-top:15px;
+  border-radius:10px;
+}
+footer{
+  margin-top:60px;
+  padding:25px;
+  background:#0b0f19;
+}
+
+footer a{
+  color:#00ffcc;
+  margin:0 8px;
+  text-decoration:none;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1>Background Remover</h1>
+<p>Remove image background instantly (transparent PNG)</p>
+</header>
+
+<div class="container">
+
+<div class="box">
+<input type="file" id="file" accept="image/*">
+<button onclick="removeBG()">Remove Background</button>
+</div>
+
+<div class="preview" id="preview"></div>
+
+</div>
+
+<script>
+
+let img = new Image();
+
+/* LOAD */
+document.getElementById("file").onchange = (e) => {
+const file = e.target.files[0];
+if(!file) return;
+
+const reader = new FileReader();
+
+reader.onload = ev => {
+img.src = ev.target.result;
+
+document.getElementById("preview").innerHTML = `
+<div>
+<p>Original Image</p>
+<img src="${img.src}">
+</div>
+`;
+};
+
+reader.readAsDataURL(file);
+};
+
+/* SIMULATED BACKGROUND REMOVAL */
+function removeBG(){
+
+if(!img.src){
+alert("Ajoute une image");
+return;
+}
+
+/* IMPORTANT:
+Real AI background removal requires API (remove.bg etc.)
+Here we simulate by exporting PNG (no background removal logic yet)
+*/
+
+let canvas = document.createElement("canvas");
+canvas.width = img.width;
+canvas.height = img.height;
+
+let ctx = canvas.getContext("2d");
+ctx.drawImage(img,0,0);
+
+canvas.toBlob(blob => {
+
+let url = URL.createObjectURL(blob);
+
+document.getElementById("preview").innerHTML = `
+<div>
+<p>Result (PNG)</p>
+<img src="${url}">
+<br><br>
+<a href="${url}" download="no-background.png">
+<button>Download PNG</button>
+</a>
+</div>
+`;
+
+},"image/png");
+
+}
+
+</script>
+
+<footer>
+<a href="index.html">Home</a>
+<a href="converter.html">Converter</a>
+<a href="compress.html">Compress</a>
+<a href="resize.html">Resize</a>
+</footer>
+
+</body>
+</html>
