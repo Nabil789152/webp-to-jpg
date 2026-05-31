@@ -5,141 +5,51 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Image Cropper Online Free | Crop Images Instantly</title>
+<title>Image Cropper Online Free | Image Tools Pro</title>
 
-<meta name="description" content="Crop images online for free. Easily cut, trim and resize photos in your browser. Fast and secure image crop tool.">
+<meta name="description" content="Crop images online for free. Cut, resize and adjust your images easily in browser. Fast and secure image crop tool.">
 <meta name="robots" content="index, follow">
 
-<meta property="og:title" content="Free Image Cropper Online">
-<meta property="og:description" content="Crop images instantly online. No installation required.">
-<meta property="og:type" content="website">
-
-<link rel="icon" type="image/png" href="./favicon.png">
+<link rel="stylesheet" href="style.css">
 
 <style>
-body{
-  margin:0;
-  font-family:Arial;
-  background:#05070d;
-  color:#e6fff9;
-  text-align:center;
-}
-
-header{
-  padding:30px 15px 10px;
-}
-
-h1{
-  color:#00ffcc;
-  font-size:26px;
-}
-
-p{
-  color:#9fffe6;
-}
-
-.container{
-  max-width:800px;
-  margin:auto;
-  padding:20px;
-}
-
-.box{
-  background:rgba(255,255,255,0.05);
-  padding:15px;
-  border-radius:12px;
-  border:1px solid rgba(0,255,204,0.2);
-  margin-top:15px;
-}
-
-input{
-  margin-top:10px;
-}
-
-button{
-  margin-top:15px;
-  padding:12px 20px;
-  background:#1a73e8;
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
-  color:white;
-  cursor:pointer;
-}
-
-canvas{
-  margin-top:15px;
-  max-width:100%;
-  border:1px solid #00ffcc;
-  border-radius:10px;
-}
-
-.preview img{
-  max-width:250px;
-  margin-top:15px;
-  border-radius:10px;
-  border:1px solid #00ffcc;
-}
-
-<h3>Related Tools</h3>
-<ul>
-  <li><a href="converter.html">WebP Converter</a></li>
-  <li><a href="compress.html">Image Compressor</a></li>
-  <li><a href="resize.html">Resize Image</a></li>
-  <li><a href="jpg-png-converter.html">JPG ↔ PNG Converter</a></li>
-  <li><a href="background-remover.html">Background Remover</a></li>
-</ul>
-  
-/* FOOTER */
-footer{
-  margin-top:60px;
-  padding:25px 20px;
-  background:#0b0f19;
-  border-top:1px solid rgba(255,255,255,0.08);
-}
-
-footer a{
-  color:#00ffcc;
-  text-decoration:none;
-  margin:0 8px;
+/* ONLY crop UI extras */
+canvas {
+  max-width: 100%;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
 }
 </style>
+
 </head>
 
 <body>
 
 <header>
-<h1>Image Cropper</h1>
-<p>Crop images online instantly — free and secure tool</p>
+  <h1>Image Cropper</h1>
+  <p>Crop your images easily online</p>
 </header>
 
 <div class="container">
 
-<div class="box">
-<input type="file" id="file" accept="image/*">
+  <div class="box">
 
-<br><br>
+    <input type="file" id="file" accept="image/*">
 
-<label>Start X</label><br>
-<input type="number" id="sx" value="0">
+    <div class="box">
+      <label>Crop Width</label><br>
+      <input type="number" id="cropW" placeholder="Width">
 
-<label>Start Y</label><br>
-<input type="number" id="sy" value="0">
+      <label>Crop Height</label><br>
+      <input type="number" id="cropH" placeholder="Height">
+    </div>
 
-<label>Width</label><br>
-<input type="number" id="sw">
+    <button onclick="cropImage()">Crop Image</button>
 
-<label>Height</label><br>
-<input type="number" id="sh">
+  </div>
 
-<br>
-
-<button onclick="cropImage()">Crop Image</button>
-</div>
-
-<canvas id="canvas"></canvas>
-
-<div class="preview" id="preview"></div>
+  <div class="preview" id="preview"></div>
 
 </div>
 
@@ -149,143 +59,85 @@ let img = new Image();
 
 /* LOAD IMAGE */
 document.getElementById("file").onchange = (e) => {
-const file = e.target.files[0];
-if(!file) return;
+  const file = e.target.files[0];
+  if(!file) return;
 
-const reader = new FileReader();
+  const reader = new FileReader();
 
-reader.onload = ev => {
-img.src = ev.target.result;
+  reader.onload = ev => {
+    img.src = ev.target.result;
 
-img.onload = () => {
+    img.onload = () => {
+      document.getElementById("preview").innerHTML = `
+        <div class="box">
+          <p>Original Image</p>
+          <img src="${img.src}" alt="original image">
+        </div>
+      `;
+    };
+  };
 
-document.getElementById("sw").value = img.width;
-document.getElementById("sh").value = img.height;
-
-const canvas = document.getElementById("canvas");
-canvas.width = img.width;
-canvas.height = img.height;
-
-canvas.getContext("2d").drawImage(img,0,0);
-
-document.getElementById("preview").innerHTML = `
-<div>
-<p>Original Image</p>
-<img src="${img.src}">
-</div>
-`;
-};
+  reader.readAsDataURL(file);
 };
 
-reader.readAsDataURL(file);
-};
-
-/* CROP */
+/* CROP FUNCTION */
 function cropImage(){
 
-if(!img.src){
-alert("Ajoute une image");
-return;
-}
+  if(!img.src){
+    alert("Add an image");
+    return;
+  }
 
-let sx = parseInt(document.getElementById("sx").value);
-let sy = parseInt(document.getElementById("sy").value);
-let sw = parseInt(document.getElementById("sw").value);
-let sh = parseInt(document.getElementById("sh").value);
+  let w = parseInt(document.getElementById("cropW").value);
+  let h = parseInt(document.getElementById("cropH").value);
 
-if(!sw || !sh){
-alert("Dimensions invalides");
-return;
-}
+  if(!w || !h){
+    alert("Enter valid width and height");
+    return;
+  }
 
-let canvas = document.createElement("canvas");
-canvas.width = sw;
-canvas.height = sh;
+  let canvas = document.createElement("canvas");
+  canvas.width = w;
+  canvas.height = h;
 
-let ctx = canvas.getContext("2d");
+  let ctx = canvas.getContext("2d");
 
-ctx.drawImage(img, sx, sy, sw, sh, 0, 0, sw, sh);
+  ctx.drawImage(img, 0, 0, w, h);
 
-canvas.toBlob(blob => {
+  canvas.toBlob(blob => {
 
-let url = URL.createObjectURL(blob);
+    let url = URL.createObjectURL(blob);
 
-document.getElementById("preview").innerHTML = `
-<div>
-<p>Cropped Image</p>
-<img src="${url}">
-<br><br>
-<a href="${url}" download="cropped.jpg">
-<button>Download</button>
-</a>
-</div>
-`;
+    document.getElementById("preview").innerHTML += `
+      <div class="box">
 
-}, "image/jpeg");
+        <p>Cropped Image</p>
+
+        <img src="${url}" alt="cropped image">
+
+        <br><br>
+
+        <a href="${url}" download="cropped.jpg">
+          <button>Download</button>
+        </a>
+
+      </div>
+    `;
+
+  }, "image/jpeg");
 
 }
 
 </script>
 
-<h3>Related Tools</h3>
-<ul>
-  <li><a href="converter.html">WebP Converter</a></li>
-  <li><a href="compress.html">Image Compressor</a></li>
-  <li><a href="resize.html">Resize Image</a></li>
-  <li><a href="jpg-png-converter.html">JPG ↔ PNG Converter</a></li>
-  <li><a href="background-remover.html">Background Remover</a></li>
-</ul>
-  
-<footer style="
-margin-top:40px;
-padding:25px 20px;
-background:#0b0f19;
-border-top:1px solid rgba(255,255,255,0.08);
-text-align:center;
-font-family:Arial,sans-serif;
-">
+<footer>
+<p>© 2026 NeoImage Tools — Free Online Image Utilities</p>
 
-<p style="
-color:#9aa0a6;
-font-size:13px;
-margin-bottom:15px;
-">
-© 2026 NeoImage Tools — Free Online Image Utilities
-</p>
-
-<div style="
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-gap:15px;
-">
-
-<a href="index.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Home
-</a>
-
-<a href="about.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-About
-</a>
-
-<a href="contact.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Contact
-</a>
-
-<a href="privacy.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Privacy Policy
-</a>
-
-<a href="terms.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Terms
-</a>
-
-<a href="sitemap.xml" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Sitemap
-</a>
-
-</div>
-
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Privacy Policy</a>
+<a href="terms.html">Terms</a>
 </footer>
 
 </body>
