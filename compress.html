@@ -5,283 +5,132 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compress Image Online Free | Image Tools Pro</title>
+<title>Image Compressor Online Free | Image Tools Pro</title>
 
 <meta name="description" content="Compress images online for free. Reduce image size instantly while keeping high quality. Fast and secure image compressor tool.">
 <meta name="robots" content="index, follow">
 
-<meta property="og:title" content="Compress Image Online Free">
-<meta property="og:description" content="Reduce image size online while keeping quality. Free and fast image compressor tool.">
-<meta property="og:type" content="website">
-<meta property="og:image" content="./favicon.png">
-
-<link rel="icon" type="image/png" href="./favicon.png">
-
-<style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#f5f7fb;
-  color:#202124;
-  text-align:center;
-}
-
-/* HEADER */
-h1{
-  margin-top:20px;
-  font-size:28px;
-  color:#202124;
-}
-
-p{
-  color:#5f6368;
-}
-
-/* CONTAINER */
-.container{
-  max-width:800px;
-  margin:auto;
-  padding:20px;
-}
-
-/* BOX */
-.box{
-  background:white;
-  padding:20px;
-  margin:15px 0;
-  border-radius:12px;
-  border:1px solid #eee;
-  box-shadow:0 2px 10px rgba(0,0,0,0.05);
-}
-
-/* INPUT */
-input[type="file"]{
-  margin-top:10px;
-}
-
-input[type="range"]{
-  width:80%;
-}
-
-/* BUTTON */
-button{
-  margin-top:15px;
-  padding:12px 20px;
-  background:#1a73e8;
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
-  color:white;
-  cursor:pointer;
-}
-
-/* PREVIEW */
-.preview{
-  display:flex;
-  justify-content:center;
-  gap:20px;
-  flex-wrap:wrap;
-  margin-top:20px;
-}
-
-.preview img{
-  max-width:280px;
-  border-radius:10px;
-  border:1px solid #ddd;
-}
-
-.info{
-  font-size:14px;
-  color:#5f6368;
-  margin-top:5px;
-}
-
-<h3>Related Tools</h3>
-<ul>
-  <li><a href="converter.html">WebP Converter</a></li>
-  <li><a href="compress.html">Image Compressor</a></li>
-  <li><a href="resize.html">Resize Image</a></li>
-  <li><a href="jpg-png-converter.html">JPG ↔ PNG Converter</a></li>
-  <li><a href="background-remover.html">Background Remover</a></li>
-</ul>
-  
-/* FOOTER */
-footer{
-  margin-top:60px;
-  padding:20px;
-  font-size:13px;
-  color:#5f6368;
-  background:white;
-  border-top:1px solid #eee;
-}
-
-footer a{
-  color:#5f6368;
-  text-decoration:none;
-  margin:0 5px;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<h1>Compress Image Online</h1>
-<p>Reduce image file size instantly while keeping good quality.</p>
+<header>
+  <h1>Image Compressor</h1>
+  <p>Reduce image size without losing quality</p>
+</header>
 
 <div class="container">
 
-<input type="file" id="file" accept="image/*">
+  <div class="box">
 
-<div class="box">
-<label>Qualité de compression</label><br>
-<input type="range" id="quality" min="10" max="100" value="70">
-<br>
-<small id="qtext">Qualité : 70%</small>
+    <input type="file" id="file" accept="image/*">
+
+    <div class="box">
+      <label>Compression quality</label><br>
+      <input type="range" id="quality" min="10" max="100" value="70">
+      <br>
+      <small id="qtext">Quality: 70%</small>
+    </div>
+
+    <button onclick="compress()">Compress Image</button>
+
+  </div>
+
+  <div class="preview" id="preview"></div>
+
 </div>
-
-<button onclick="compress()">Compresser</button>
-
-<div class="preview" id="preview"></div>
-
-</div>
-
 
 <script>
 
 let img = new Image();
 let originalSize = 0;
 
-/* SLIDER */
+/* QUALITY SLIDER */
 document.getElementById("quality").oninput = (e) => {
-document.getElementById("qtext").innerText = "Qualité : " + e.target.value + "%";
+  document.getElementById("qtext").innerText = "Quality: " + e.target.value + "%";
 };
 
 /* LOAD IMAGE */
 document.getElementById("file").onchange = (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
 
-const file = e.target.files[0];
-if(!file) return;
+  originalSize = (file.size / 1024).toFixed(2);
 
-originalSize = (file.size / 1024).toFixed(2);
+  const reader = new FileReader();
 
-const reader = new FileReader();
+  reader.onload = ev => {
+    img.src = ev.target.result;
 
-reader.onload = ev => {
-img.src = ev.target.result;
+    img.onload = () => {
+      document.getElementById("preview").innerHTML = `
+        <div class="box">
+          <p>Original Image (${originalSize} KB)</p>
+          <img src="${img.src}" alt="original image">
+        </div>
+      `;
+    };
+  };
 
-img.onload = () => {
-document.getElementById("preview").innerHTML = `
-<div>
-<p class="info">Image originale (${originalSize} KB)</p>
-<img src="${img.src}" alt="Original image">
-</div>
-`;
-};
-};
-
-reader.readAsDataURL(file);
+  reader.readAsDataURL(file);
 };
 
 /* COMPRESS */
 function compress(){
 
-if(!img.src){
-alert("Ajoute une image");
-return;
-}
+  if(!img.src){
+    alert("Please add an image");
+    return;
+  }
 
-let q = document.getElementById("quality").value / 100;
+  let q = document.getElementById("quality").value / 100;
 
-let canvas = document.createElement("canvas");
-canvas.width = img.width;
-canvas.height = img.height;
+  let canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
 
-canvas.getContext("2d").drawImage(img,0,0);
+  canvas.getContext("2d").drawImage(img, 0, 0);
 
-canvas.toBlob(blob => {
+  canvas.toBlob(blob => {
 
-let newSize = (blob.size / 1024).toFixed(2);
-let reduction = (100 - (newSize / originalSize * 100)).toFixed(1);
+    let newSize = (blob.size / 1024).toFixed(2);
+    let reduction = (100 - (newSize / originalSize * 100)).toFixed(1);
 
-let url = URL.createObjectURL(blob);
+    let url = URL.createObjectURL(blob);
 
-/* IMPORTANT: replace content */
-document.getElementById("preview").innerHTML = `
-<div>
+    document.getElementById("preview").innerHTML += `
+      <div class="box">
 
-<p class="info">Image compressée</p>
+        <p>Compressed Image</p>
 
-<img src="${url}" alt="Compressed image">
+        <img src="${url}" alt="compressed image">
 
-<p class="info">Taille : ${newSize} KB</p>
-<p class="info">Réduction : ${reduction}%</p>
+        <p>Size: ${newSize} KB</p>
+        <p>Reduction: ${reduction}%</p>
 
-<a href="${url}" download="compressed.jpg">
-<button>Télécharger</button>
-</a>
+        <a href="${url}" download="compressed.jpg">
+          <button>Download</button>
+        </a>
 
-</div>
-`;
+      </div>
+    `;
 
-},"image/jpeg",q);
+  }, "image/jpeg", q);
 
 }
 
 </script>
 
-<!-- FOOTER -->
-<footer style="
-margin-top:40px;
-padding:25px 20px;
-background:#0b0f19;
-border-top:1px solid rgba(255,255,255,0.08);
-text-align:center;
-font-family:Arial,sans-serif;
-">
+<footer>
+<p>© 2026 NeoImage Tools — Free Online Image Utilities</p>
 
-<p style="
-color:#9aa0a6;
-font-size:13px;
-margin-bottom:15px;
-">
-© 2026 NeoImage Tools — Free Online Image Utilities
-</p>
-
-<div style="
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-gap:15px;
-">
-
-<a href="index.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Home
-</a>
-
-<a href="about.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-About
-</a>
-
-<a href="contact.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Contact
-</a>
-
-<a href="privacy.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Privacy Policy
-</a>
-
-<a href="terms.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Terms
-</a>
-
-<a href="sitemap.xml" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Sitemap
-</a>
-
-</div>
-
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Privacy Policy</a>
+<a href="terms.html">Terms</a>
 </footer>
 
-  
 </body>
 </html>
