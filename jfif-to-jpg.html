@@ -5,125 +5,36 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>JFIF to JPG Converter Free Online | Image Tools Pro</title>
+<title>JFIF to JPG Converter Online Free | Image Tools Pro</title>
 
-<meta name="description" content="Convert JFIF images to JPG online for free. Fast, secure and easy JFIF to JPG converter tool without software installation.">
+<meta name="description" content="Convert JFIF images to JPG online for free. Fast, secure and easy JFIF to JPG converter tool.">
 <meta name="robots" content="index, follow">
 
-<meta property="og:title" content="JFIF to JPG Converter">
-<meta property="og:description" content="Convert JFIF images to JPG quickly and easily online for free.">
-<meta property="og:type" content="website">
-
-<link rel="icon" type="image/png" href="./favicon.png">
-
-<style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#f5f7fb;
-  color:#202124;
-  text-align:center;
-}
-
-/* HEADER */
-header{
-  padding:40px 20px 20px;
-  background:white;
-  border-bottom:1px solid #eee;
-}
-
-h1{
-  margin:0;
-  font-size:30px;
-}
-
-p{
-  color:#5f6368;
-}
-
-/* CONTAINER */
-.container{
-  max-width:700px;
-  margin:auto;
-  padding:20px;
-}
-
-/* BOX */
-.box{
-  background:white;
-  padding:20px;
-  margin-top:15px;
-  border-radius:12px;
-  border:1px solid #eee;
-  box-shadow:0 2px 10px rgba(0,0,0,0.05);
-}
-
-/* INPUT */
-input, select{
-  margin-top:10px;
-  padding:10px;
-}
-
-/* BUTTON */
-button{
-  margin-top:15px;
-  padding:12px 20px;
-  background:#1a73e8;
-  border:none;
-  border-radius:8px;
-  font-weight:bold;
-  color:white;
-  cursor:pointer;
-}
-
-/* PREVIEW */
-.preview img{
-  max-width:260px;
-  margin-top:15px;
-  border-radius:10px;
-  border:1px solid #ddd;
-}
-
-/* FOOTER */
-footer{
-  margin-top:60px;
-  padding:20px;
-  font-size:13px;
-  color:#5f6368;
-  background:white;
-  border-top:1px solid #eee;
-}
-
-footer a{
-  color:#5f6368;
-  text-decoration:none;
-  margin:0 5px;
-}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
-<h1>JFIF to JPG Converter</h1>
-<p>Convert JFIF images to JPG quickly and easily online</p>
+  <h1>JFIF to JPG Converter</h1>
+  <p>Convert JFIF images to JPG instantly</p>
 </header>
 
 <div class="container">
 
-<div class="box">
+  <div class="box">
 
-<input type="file" id="file" accept="image/*">
+    <input type="file" id="file" accept="image/jpeg,image/jfif">
 
-<div class="box">
-<p id="info">Upload a JFIF image</p>
-</div>
+    <div class="box">
+      <p id="info">Format détecté : -</p>
+    </div>
 
-<button onclick="convert()">Convertir en JPG</button>
+    <button onclick="convert()">Convert to JPG</button>
 
-</div>
+  </div>
 
-<div class="preview" id="preview"></div>
+  <div class="preview" id="preview"></div>
 
 </div>
 
@@ -133,128 +44,86 @@ let img = new Image();
 
 /* LOAD IMAGE */
 document.getElementById("file").onchange = (e) => {
-const file = e.target.files[0];
-if(!file) return;
 
-if(!file.type.includes("image")){
-alert("Fichier invalide");
-return;
-}
+  const file = e.target.files[0];
+  if(!file) return;
 
-const reader = new FileReader();
+  const type = file.type.toLowerCase();
 
-reader.onload = ev => {
-img.src = ev.target.result;
+  if(!type.includes("jpeg") && !type.includes("jfif")){
+    alert("Please upload a JFIF or JPG image");
+    return;
+  }
 
-img.onload = () => {
-document.getElementById("preview").innerHTML = `
-<div>
-<p>Image originale</p>
-<img src="${img.src}">
-</div>
-`;
-};
-};
+  document.getElementById("info").innerText = "Format détecté : " + file.type;
 
-reader.readAsDataURL(file);
+  const reader = new FileReader();
+
+  reader.onload = ev => {
+    img.src = ev.target.result;
+
+    img.onload = () => {
+      document.getElementById("preview").innerHTML = `
+        <div class="box">
+          <p>Original Image</p>
+          <img src="${img.src}" alt="original image">
+        </div>
+      `;
+    };
+  };
+
+  reader.readAsDataURL(file);
 };
 
 /* CONVERT */
 function convert(){
 
-if(!img.src){
-alert("Ajoute une image JFIF");
-return;
-}
+  if(!img.src){
+    alert("Please upload an image");
+    return;
+  }
 
-let canvas = document.createElement("canvas");
-canvas.width = img.width;
-canvas.height = img.height;
+  let canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
 
-let ctx = canvas.getContext("2d");
-ctx.drawImage(img,0,0);
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
 
-canvas.toBlob(blob => {
+  canvas.toBlob(blob => {
 
-let url = URL.createObjectURL(blob);
+    let url = URL.createObjectURL(blob);
 
-document.getElementById("preview").innerHTML += `
-<div>
-<p>Image convertie (JPG)</p>
-<img src="${url}">
-<br><br>
-<a href="${url}" download="image.jpg">
-<button>Télécharger</button>
-</a>
-</div>
-`;
+    document.getElementById("preview").innerHTML += `
+      <div class="box">
 
-}, "image/jpeg");
+        <p>Converted JPG</p>
+
+        <img src="${url}" alt="converted image">
+
+        <br><br>
+
+        <a href="${url}" download="converted.jpg">
+          <button>Download JPG</button>
+        </a>
+
+      </div>
+    `;
+
+  }, "image/jpeg", 0.92);
 
 }
 
 </script>
-  
-<h3>Related Tools</h3>
-<ul>
-  <li><a href="converter.html">WebP Converter</a></li>
-  <li><a href="compress.html">Image Compressor</a></li>
-  <li><a href="resize.html">Resize Image</a></li>
-  <li><a href="jpg-png-converter.html">JPG ↔ PNG Converter</a></li>
-  <li><a href="background-remover.html">Background Remover</a></li>
-</ul>
-  
-<!-- FOOTER -->
-<footer style="
-margin-top:40px;
-padding:25px 20px;
-background:#0b0f19;
-border-top:1px solid rgba(255,255,255,0.08);
-text-align:center;
-font-family:Arial,sans-serif;
-">
 
-<p style="
-color:#9aa0a6;
-font-size:13px;
-margin-bottom:15px;
-">
-© 2026 NeoImage Tools — Free Online Image Utilities
-</p>
+<footer>
+<p>© 2026 Image Tools Pro — Free Online Image Utilities</p>
 
-<div style="
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-gap:15px;
-">
-
-<a href="index.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Home
-</a>
-
-<a href="about.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-About
-</a>
-
-<a href="contact.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Contact
-</a>
-
-<a href="privacy.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Privacy Policy
-</a>
-
-<a href="terms.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Terms
-</a>
-
-<a href="sitemap.xml" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Sitemap
-</a>
-
-</div>
-
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Privacy Policy</a>
+<a href="terms.html">Terms</a>
 </footer>
 
 </body>
