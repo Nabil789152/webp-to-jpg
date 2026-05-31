@@ -4,8 +4,4 @@ Allow: /
 # Sitemap
 Sitemap: https://nabil789152.github.io/webp-to-jpg/sitemap.xml
 
-# Bloquer rien d’important (site public)
-Disallow:
-
-# Crawl delay (optionnel, peut être ignoré par Google)
-Crawl-delay: 0
+# Bloquer rien d’important (site tools = tout indexable)
