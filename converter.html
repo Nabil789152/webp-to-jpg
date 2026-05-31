@@ -5,114 +5,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>WebP to JPG Converter Free Online | Image Tools Pro</title>
+<title>WebP Converter Online Free | Image Tools Pro</title>
 
 <meta name="description" content="Convert WebP images to JPG or PNG online for free. Fast, secure and easy image conversion tool.">
 <meta name="robots" content="index, follow">
 
-<meta property="og:title" content="WebP to JPG Converter">
-<meta property="og:description" content="Convert WebP images to JPG or PNG online for free.">
-<meta property="og:type" content="website">
-<meta property="og:image" content="./favicon.png">
-
-<link rel="icon" type="image/png" href="./favicon.png">
-
-<style>
-body{
-  margin:0;
-  font-family:Arial, sans-serif;
-  background:#f5f7fb;
-  color:#202124;
-  text-align:center;
-}
-
-/* HEADER (same index style) */
-header{
-  padding:50px 20px 20px;
-  background:white;
-  border-bottom:1px solid #eee;
-}
-
-h1{
-  color:#202124;
-  font-size:34px;
-  margin-bottom:10px;
-}
-
-p{
-  color:#5f6368;
-}
-
-/* CONTAINER */
-.container{
-  max-width:700px;
-  margin:auto;
-  padding:20px;
-}
-
-/* BOX */
-.box{
-  background:white;
-  padding:15px;
-  border-radius:12px;
-  border:1px solid #eee;
-  margin-top:15px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.05);
-}
-
-/* INPUT */
-input, select{
-  margin-top:10px;
-  padding:10px;
-}
-
-/* BUTTON (same index blue style) */
-button{
-  margin-top:15px;
-  padding:10px 18px;
-  background:#1a73e8;
-  border:none;
-  border-radius:6px;
-  font-weight:500;
-  color:white;
-  cursor:pointer;
-}
-
-/* PREVIEW */
-.preview img{
-  max-width:250px;
-  margin-top:15px;
-  border-radius:10px;
-  border:1px solid #ddd;
-}
-
-/* FOOTER (UNIFIED like index) */
-footer{
-  margin-top:60px;
-  padding:20px;
-  color:#5f6368;
-  font-size:13px;
-  background:white;
-  border-top:1px solid #eee;
-}
-
-footer a{
-  color:#5f6368;
-  text-decoration:none;
-  margin:0 5px;
-}
-</style>
-
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
   <h1>WebP Converter</h1>
-  <p>Convert WebP images to JPG or PNG online for free</p>
+  <p>Convert WebP images to JPG or PNG instantly</p>
 </header>
-
-<p>Fast, simple and secure image conversion tool</p>
 
 <div class="container">
 
@@ -129,7 +35,7 @@ footer a{
       <option value="image/png">PNG</option>
     </select>
 
-    <button onclick="convert()">Convertir</button>
+    <button onclick="convert()">Convert</button>
 
   </div>
 
@@ -141,167 +47,87 @@ footer a{
 
 let img = new Image();
 
-/* LOAD */
+/* LOAD IMAGE */
 document.getElementById("file").onchange = (e) => {
-const file = e.target.files[0];
-if (!file) return;
 
-if (file.type !== "image/webp") {
-alert("Seuls les fichiers WebP sont autorisés");
-return;
-}
+  const file = e.target.files[0];
+  if(!file) return;
 
-document.getElementById("detected").innerText = "Format détecté : WEBP";
+  if(file.type !== "image/webp"){
+    alert("Only WebP files are allowed");
+    return;
+  }
 
-const reader = new FileReader();
+  document.getElementById("detected").innerText = "Format détecté : WEBP";
 
-reader.onload = ev => {
-img.src = ev.target.result;
+  const reader = new FileReader();
 
-img.onload = () => {
-document.getElementById("preview").innerHTML = `
-<div>
-<p>Image originale (WEBP)</p>
-<img src="${img.src}" alt="Original WebP">
-</div>
-`;
-};
-};
+  reader.onload = ev => {
+    img.src = ev.target.result;
 
-reader.readAsDataURL(file);
+    img.onload = () => {
+      document.getElementById("preview").innerHTML = `
+        <div class="box">
+          <p>Original Image (WEBP)</p>
+          <img src="${img.src}" alt="original image">
+        </div>
+      `;
+    };
+  };
+
+  reader.readAsDataURL(file);
 };
 
 /* CONVERT */
 function convert(){
 
-if(!img.src){
-alert("Ajoute une image WebP");
-return;
-}
+  if(!img.src){
+    alert("Add a WebP image");
+    return;
+  }
 
-let format = document.getElementById("format").value;
+  let format = document.getElementById("format").value;
 
-let canvas = document.createElement("canvas");
-canvas.width = img.width;
-canvas.height = img.height;
+  let canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
 
-canvas.getContext("2d").drawImage(img,0,0);
+  canvas.getContext("2d").drawImage(img, 0, 0);
 
-canvas.toBlob(blob => {
+  canvas.toBlob(blob => {
 
-let url = URL.createObjectURL(blob);
+    let url = URL.createObjectURL(blob);
 
-document.getElementById("preview").innerHTML += `
-<div>
-<p>Image convertie</p>
-<img src="${url}" alt="Converted image">
-<br><br>
-<a href="${url}" download="converted">
-<button>Télécharger</button>
-</a>
-</div>
-`;
+    document.getElementById("preview").innerHTML = `
+      <div class="box">
 
-}, format);
+        <p>Converted Image</p>
+
+        <img src="${url}" alt="converted image">
+
+        <br><br>
+
+        <a href="${url}" download="converted">
+          <button>Download</button>
+        </a>
+
+      </div>
+    `;
+
+  }, format);
 
 }
 
 </script>
 
-<!-- Related Tools -->  
-  
-<section style="max-width:900px;margin:60px auto;padding:0 20px;text-align:center;">
-  <h2 style="color:#202124;">Related Tools</h2>
+<footer>
+<p>© 2026 NeoImage Tools — Free Online Image Utilities</p>
 
-  <p style="color:#5f6368;">
-    Convert, compress, resize and edit images online for free.
-  </p>
-
-  <div style="
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:12px;
-    margin-top:20px;
-  ">
-
-    <a href="compress.html" style="
-      padding:10px 18px;
-      background:#1a73e8;
-      color:white;
-      text-decoration:none;
-      border-radius:6px;
-      font-weight:500;
-    ">
-      Image Compressor
-    </a>
-
-    <a href="resize.html" style="
-      padding:10px 18px;
-      background:#1a73e8;
-      color:white;
-      text-decoration:none;
-      border-radius:6px;
-      font-weight:500;
-    ">
-      Resize Image
-    </a>
-
-    <a href="jpg-png-converter.html" style="
-      padding:10px 18px;
-      background:#1a73e8;
-      color:white;
-      text-decoration:none;
-      border-radius:6px;
-      font-weight:500;
-    ">
-      JPG ↔ PNG
-    </a>
-
-    <a href="background-remover.html" style="
-      padding:10px 18px;
-      background:#1a73e8;
-      color:white;
-      text-decoration:none;
-      border-radius:6px;
-      font-weight:500;
-    ">
-      Background Remover
-    </a>
-
-  </div>
-</section>
-<!-- FOOTER (same as index.html) -->
-<footer style="
-margin-top:60px;
-padding:20px;
-font-size:13px;
-color:#5f6368;
-background:white;
-border-top:1px solid #eee;
-text-align:center;
-">
-
-<p style="margin-bottom:10px;">
-© 2026 NeoImage Tools — Free Online Image Utilities
-</p>
-
-<div style="
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-gap:12px;
-">
-
-<a href="index.html" style="color:#5f6368;text-decoration:none;">Home</a>
-<a href="about.html" style="color:#5f6368;text-decoration:none;">About</a>
-<a href="contact.html" style="color:#5f6368;text-decoration:none;">Contact</a>
-<a href="privacy.html" style="color:#5f6368;text-decoration:none;">Privacy Policy</a>
-<a href="terms.html" style="color:#5f6368;text-decoration:none;">Terms</a>
-<a href="sitemap.xml" style="color:#5f6368;text-decoration:none;">Sitemap</a>
-
-</div>
-
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Privacy Policy</a>
+<a href="terms.html">Terms</a>
 </footer>
 
 </body>
