@@ -1,39 +1,195 @@
 <!DOCTYPE html>
 <html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <title>Redimensionner une image facilement</title>
-  <meta name="description" content="Guide simple pour redimensionner une image pour Instagram, Facebook ou un site web.">
 
-  <style>
-    body{font-family:Arial;background:#f5f7fb;margin:0;color:#202124;padding:40px;}
-    h1{color:#1a73e8;}
-    .box{max-width:800px;margin:auto;background:white;padding:20px;border-radius:10px;}
-  </style>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Resize Image Online Free | Image Tools Pro</title>
+
+<meta name="description" content="Resize images online for free. Change image dimensions easily while keeping high quality. Fast and simple image resizer tool.">
+<meta name="robots" content="index, follow">
+
+<meta property="og:title" content="Resize Image Online Free">
+<meta property="og:description" content="Resize images quickly and easily online for free.">
+<meta property="og:type" content="website">
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+.container{
+  max-width:700px;
+  margin:auto;
+  padding:20px;
+}
+
+.preview img{
+  max-width:260px;
+  margin-top:15px;
+  border-radius:10px;
+  border:1px solid #ddd;
+}
+
+.small{
+  font-size:13px;
+  color:#5f6368;
+}
+</style>
+
 </head>
 
 <body>
 
+<!-- HEADER -->
+<header>
+  <h1>Resize Image</h1>
+  <p>Change image dimensions easily online</p>
+</header>
+
+<!-- MAIN -->
+<div class="container">
+
 <div class="box">
 
-<h1>Comment redimensionner une image facilement ?</h1>
+<input type="file" id="file" accept="image/*">
 
-<p>Redimensionner une image est utile pour les réseaux sociaux et les sites web.</p>
+<div class="box">
+<p class="small">Original size: <span id="sizeInfo">-</span></p>
+</div>
 
-<h2>Étapes simples :</h2>
+<label>Nouvelle largeur (px)</label>
+<input type="number" id="newWidth" placeholder="ex: 800">
 
-<ul>
-  <li>Ouvrir Resize Tool</li>
-  <li>Choisir votre image</li>
-  <li>Entrer la taille souhaitée</li>
-  <li>Télécharger</li>
-</ul>
-
-<p>✔ Instagram  
-✔ Facebook  
-✔ Sites web</p>
+<button onclick="resizeImage()">Redimensionner</button>
 
 </div>
+
+<!-- PREVIEW -->
+<div class="preview" id="preview"></div>
+
+</div>
+
+<script>
+
+let img = new Image();
+
+/* LOAD IMAGE */
+document.getElementById("file").onchange = (e) => {
+const file = e.target.files[0];
+if(!file) return;
+
+const reader = new FileReader();
+
+reader.onload = ev => {
+img.src = ev.target.result;
+
+img.onload = () => {
+document.getElementById("sizeInfo").innerText = img.width + " x " + img.height;
+
+document.getElementById("preview").innerHTML = `
+<div>
+<p>Image originale</p>
+<img src="${img.src}" alt="original image">
+</div>
+`;
+};
+};
+
+reader.readAsDataURL(file);
+};
+
+/* RESIZE */
+function resizeImage(){
+
+if(!img.src){
+alert("Ajoute une image !");
+return;
+}
+
+let newW = parseInt(document.getElementById("newWidth").value);
+
+if(!newW || newW <= 0){
+alert("Donne une largeur valide !");
+return;
+}
+
+let ratio = img.height / img.width;
+let newH = Math.round(newW * ratio);
+
+let canvas = document.createElement("canvas");
+canvas.width = newW;
+canvas.height = newH;
+
+canvas.getContext("2d").drawImage(img,0,0,newW,newH);
+
+canvas.toBlob(blob => {
+
+let url = URL.createObjectURL(blob);
+
+document.getElementById("preview").innerHTML += `
+<div>
+
+<p>Image redimensionnée</p>
+
+<img src="${url}" alt="resized image">
+
+<br><br>
+
+<a href="${url}" download="resized.jpg">
+<button>Télécharger</button>
+</a>
+
+</div>
+`;
+
+}, "image/jpeg", 0.9);
+
+}
+
+</script>
+
+<!-- RELATED TOOLS -->
+<section style="
+max-width:900px;
+margin:60px auto;
+padding:0 20px;
+text-align:center;
+">
+
+<h2>Related Tools</h2>
+
+<p>All image tools in one place</p>
+
+<div style="
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:10px;
+margin-top:20px;
+">
+
+<a class="btn" href="converter.html">WebP Converter</a>
+<a class="btn" href="compress.html">Image Compressor</a>
+<a class="btn" href="jpg-png-converter.html">JPG ↔ PNG</a>
+<a class="btn" href="background-remover.html">Background Remover</a>
+
+</div>
+
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 NeoImage Tools — Free Online Image Utilities</p>
+
+  <div>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="terms.html">Terms</a>
+    <a href="sitemap.xml">Sitemap</a>
+  </div>
+</footer>
 
 </body>
 </html>
