@@ -2,160 +2,37 @@
 <html lang="fr">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Free online image tools to convert WebP to JPG, compress images and resize photos quickly and securely.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<meta name="keywords" content="webp to jpg, image compressor, resize image, online image tools">
+<title>Image Tools Pro | Free Online Image Converter, Compressor & Cropper</title>
 
+<meta name="description" content="Free online image tools to convert WebP, compress images, resize, crop and optimize photos instantly. Fast, secure and browser-based tools.">
+<meta name="keywords" content="image tools, webp converter, image compressor, resize image, crop image, jpg png converter">
 <meta name="robots" content="index, follow">
+
 <meta property="og:title" content="Image Tools Pro">
-<meta property="og:description" content="Free online tools to convert, compress and resize images.">
+<meta property="og:description" content="Free online tools to convert, compress, resize and crop images.">
 <meta property="og:type" content="website">
 <meta property="og:image" content="./favicon.png">
-  <link rel="icon" type="image/png" href="./favicon.png">
 
-  <title>Image Tools Pro</title>
+<link rel="icon" type="image/png" href="./favicon.png">
 
-  <style>
-    body{
-      margin:0;
-      font-family:Arial, sans-serif;
-      background:#f5f7fb;
-      color:#202124;
-      text-align:center;
-    }
-
-    /* HEADER */
-    header{
-      padding:50px 20px 20px;
-      background:white;
-      border-bottom:1px solid #eee;
-    }
-
-    h1{
-      color:#202124;
-      font-size:34px;
-      margin-bottom:10px;
-    }
-
-    p{
-      color:#5f6368;
-      font-size:16px;
-    }
-
-    /* SEARCH */
-    .search-wrapper{
-      max-width:900px;
-      margin:20px auto;
-      padding:0 20px;
-    }
-
-    .search-box{
-      display:flex;
-      align-items:center;
-      background:#fff;
-      border-radius:28px;
-      padding:10px 15px;
-      box-shadow:0 2px 10px rgba(0,0,0,0.08);
-      transition:0.3s;
-    }
-
-    .search-box:hover{
-      box-shadow:0 4px 18px rgba(0,0,0,0.12);
-    }
-
-    .search-box:focus-within{
-      box-shadow:0 6px 20px rgba(0,0,0,0.18);
-    }
-
-    .icon{
-      margin-right:10px;
-      color:#5f6368;
-    }
-
-    .search-box input{
-      width:100%;
-      border:none;
-      outline:none;
-      font-size:16px;
-      background:transparent;
-    }
-
-    /* CARDS */
-    .container{
-      max-width:1000px;
-      margin:40px auto;
-      padding:0 20px;
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-      gap:20px;
-    }
-
-    .card{
-      background:white;
-      border:1px solid #eee;
-      border-radius:14px;
-      padding:25px;
-      transition:0.3s;
-      box-shadow:0 2px 10px rgba(0,0,0,0.05);
-    }
-
-    .card:hover{
-      transform:translateY(-5px);
-      box-shadow:0 8px 20px rgba(0,0,0,0.1);
-    }
-
-    h3{
-      color:#202124;
-    }
-
-    a{
-      display:inline-block;
-      margin-top:12px;
-      padding:10px 18px;
-      background:#1a73e8;
-      color:white;
-      text-decoration:none;
-      border-radius:6px;
-      font-weight:500;
-    }
-
-    /* FOOTER */
-    footer{
-      margin-top:60px;
-      padding:20px;
-      color:#5f6368;
-      font-size:13px;
-      background:white;
-      border-top:1px solid #eee;
-    }
-
-    footer a{
-      color:#5f6368;
-      text-decoration:none;
-      margin:0 5px;
-    }
-  </style>
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
 <header>
   <h1>Image Tools Pro</h1>
-  <p>Convertir • Compresser • Redimensionner tes images en un clic</p>
+  <p>Convert • Compress • Resize • Crop images online for free</p>
 </header>
 
-<!-- 🔎 SEARCH BAR -->
+<!-- SEARCH -->
 <div class="search-wrapper">
   <div class="search-box">
     <span class="icon">🔍</span>
-    <input 
-      type="text" 
-      id="toolSearch"
-      placeholder="Rechercher un outil..."
-      onkeyup="searchTools()"
-    >
+    <input type="text" id="toolSearch" placeholder="Search tools..." onkeyup="searchTools()">
   </div>
 </div>
 
@@ -164,106 +41,85 @@
 
   <div class="card tool-card">
     <h3>WebP Converter</h3>
-    <p>Convertir WebP → JPG / PNG</p>
-    <a href="converter.html">Ouvrir</a>
+    <p>Convert WebP to JPG / PNG</p>
+    <a href="converter.html">Open</a>
   </div>
 
   <div class="card tool-card">
     <h3>Image Compressor</h3>
-    <p>Réduis la taille de tes images sans perte visible</p>
-    <a href="compress.html">Ouvrir</a>
+    <p>Reduce image size without quality loss</p>
+    <a href="compress.html">Open</a>
   </div>
 
   <div class="card tool-card">
-    <h3>Resize Image</h3>
-    <p>Changer la taille de tes images facilement</p>
-    <a href="resize.html">Ouvrir</a>
+    <h3>Image Resizer</h3>
+    <p>Resize images easily online</p>
+    <a href="resize.html">Open</a>
+  </div>
+
+  <div class="card tool-card">
+    <h3>Image Cropper</h3>
+    <p>Crop images instantly in browser</p>
+    <a href="image-cropper.html">Open</a>
+  </div>
+
+  <div class="card tool-card">
+    <h3>JPG ↔ PNG Converter</h3>
+    <p>Convert between JPG and PNG formats</p>
+    <a href="jpg-png-converter.html">Open</a>
+  </div>
+
+  <div class="card tool-card">
+    <h3>Background Remover</h3>
+    <p>Remove image background easily</p>
+    <a href="background-remover.html">Open</a>
   </div>
 
 </div>
-<section style="
-  max-width:900px;
-  margin:60px auto;
-  padding:0 20px;
-  text-align:left;
-">
 
-  <h2 style="color:#202124;">Free Online Image Tools</h2>
+<!-- CONTENT SEO -->
+<section style="max-width:900px;margin:60px auto;padding:0 20px;text-align:left;">
+
+  <h2>Free Online Image Tools</h2>
 
   <p>
-    Image Tools Pro helps you convert, compress and resize images directly in your browser.
-    Our tools are fast, secure and easy to use without installing software.
+    Image Tools Pro is a free online platform that allows you to convert, compress, resize and crop images directly in your browser.
+    No installation required.
   </p>
 
   <p>
-    You can convert WebP images to JPG or PNG, reduce image size for websites,
-    and resize pictures for social media, blogs or professional use.
-  </p>
-
-  <p>
-    All tools work online and files are processed locally in your browser for better privacy and speed.
+    Our tools are designed for fast performance, privacy and SEO optimization of your images for websites and social media.
   </p>
 
 </section>
-<section style="
-  max-width:900px;
-  margin:60px auto;
-  padding:0 20px;
-">
 
-  <h2>Why Choose Image Tools Pro?</h2>
+<section style="max-width:900px;margin:60px auto;padding:0 20px;">
+
+  <h2>Why choose us?</h2>
 
   <p>✔ Fast browser-based tools</p>
-  <p>✔ No software installation required</p>
-  <p>✔ Privacy-friendly image processing</p>
-  <p>✔ Free and easy to use</p>
+  <p>✔ No installation required</p>
+  <p>✔ Privacy-friendly processing</p>
+  <p>✔ Free forever</p>
 
 </section>
 
-<section style="
-  max-width:900px;
-  margin:60px auto;
-  padding:0 20px;
-  text-align:left;
-">
+<!-- FAQ -->
+<section style="max-width:900px;margin:60px auto;padding:0 20px;text-align:left;">
 
-  <h2>Guides & Articles</h2>
+<h2>FAQ</h2>
 
-  <ul>
-    <li><a href="webp-to-jpg.html">How to convert WebP to JPG</a></li>
-    <li><a href="compress-images.html">How to compress images</a></li>
-    <li><a href="resize.html">How to resize images</a></li>
-    <li><a href="best-image-formats.html">Best image formats</a></li>
-  </ul>
+<h3>Is this tool free?</h3>
+<p>Yes, all tools are completely free.</p>
 
-</section>
-<section style="
-  max-width:900px;
-  margin:60px auto;
-  padding:0 20px;
-  text-align:left;
-">
+<h3>Are my images uploaded?</h3>
+<p>No, everything runs in your browser.</p>
 
-  <h2>Frequently Asked Questions (FAQ)</h2>
-
-  <h3>1. Is Image Tools Pro free to use?</h3>
-  <p>Yes, all tools are completely free and available online without registration.</p>
-
-  <h3>2. Do I need to install any software?</h3>
-  <p>No, everything works directly in your browser.</p>
-
-  <h3>3. Are my images stored on your servers?</h3>
-  <p>No, all processing is done locally in your browser for privacy and security.</p>
-
-  <h3>4. What formats are supported?</h3>
-  <p>We support WebP, JPG, and PNG formats.</p>
-
-  <h3>5. Is there a file size limit?</h3>
-  <p>There is no strict limit, but very large files may depend on your browser performance.</p>
+<h3>What formats are supported?</h3>
+<p>JPG, PNG, WebP and more.</p>
 
 </section>
 
-<!-- SCRIPT -->
 <script>
 function searchTools() {
   let input = document.getElementById("toolSearch").value.toLowerCase();
@@ -281,166 +137,16 @@ function searchTools() {
   }
 }
 </script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Is Image Tools Pro free to use?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes, all tools are completely free and available online without registration."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Do I need to install any software?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No, everything works directly in your browser."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Are my images stored on your servers?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "No, all processing is done locally in your browser for privacy and security."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "What formats are supported?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "We support WebP, JPG, and PNG formats."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Is there a file size limit?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "There is no strict limit, but very large files may depend on your browser performance."
-      }
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Image Tools Pro",
-  "url": "https://nabil789152.github.io/webp-to-jpg/",
-  "logo": "https://nabil789152.github.io/webp-to-jpg/favicon.png",
-  "description": "Free online image tools to convert WebP to JPG, compress images and resize photos quickly and securely.",
-  "sameAs": []
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  "name": "Image Tools Pro",
-  "url": "https://nabil789152.github.io/webp-to-jpg/",
-  "potentialAction": {
-    "@type": "SearchAction",
-    "target": "https://nabil789152.github.io/webp-to-jpg/?q={search_term_string}",
-    "query-input": "required name=search_term_string"
-  }
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-    {
-      "@type": "ListItem",
-      "position": 1,
-      "name": "Home",
-      "item": "https://nabil789152.github.io/webp-to-jpg/"
-    },
-    {
-      "@type": "ListItem",
-      "position": 2,
-      "name": "Image Tools",
-      "item": "https://nabil789152.github.io/webp-to-jpg/"
-    }
-  ]
-}
-</script>
-
- <section style="max-width:900px;margin:60px auto;padding:0 20px;text-align:center;">
-  <h2>All Image Tools</h2>
-
-  <p>
-    Convert, compress, resize and edit images online for free.
-  </p>
-
-  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:20px;">
-    <a href="converter.html">WebP Converter</a>
-    <a href="compress.html">Image Compressor</a>
-    <a href="resize.html">Resize Image</a>
-    <a href="jpg-png-converter.html">JPG ↔ PNG</a>
-    <a href="background-remover.html">Background Remover</a>
-  </div>
-</section> 
 
 <!-- FOOTER -->
-<footer style="
-margin-top:40px;
-padding:25px 20px;
-background:#0b0f19;
-border-top:1px solid rgba(255,255,255,0.08);
-text-align:center;
-font-family:Arial,sans-serif;
-">
+<footer>
+<p>© 2026 Image Tools Pro — Free Online Image Utilities</p>
 
-<p style="
-color:#9aa0a6;
-font-size:13px;
-margin-bottom:15px;
-">
-© 2026 NeoImage Tools — Free Online Image Utilities
-</p>
-
-<div style="
-display:flex;
-justify-content:center;
-flex-wrap:wrap;
-gap:15px;
-">
-
-<a href="index.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Home
-</a>
-
-<a href="about.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-About
-</a>
-
-<a href="contact.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Contact
-</a>
-
-<a href="privacy.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Privacy Policy
-</a>
-
-<a href="terms.html" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Terms
-</a>
-
-<a href="sitemap.xml" style="color:#00ffcc;text-decoration:none;font-size:14px;">
-Sitemap
-</a>
-
-</div>
-
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Privacy Policy</a>
+<a href="terms.html">Terms</a>
 </footer>
 
 </body>
