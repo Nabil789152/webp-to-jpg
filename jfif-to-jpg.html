@@ -5,9 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>JFIF to JPG Converter Online Free | Image Tools Pro</title>
+<title>Convertisseur JFIF en JPG en ligne gratuit | Image Tools Pro</title>
 
-<meta name="description" content="Convert JFIF images to JPG online for free. Fast, secure and easy JFIF to JPG converter tool.">
+<meta name="description" content="Convertissez vos images JFIF en JPG gratuitement en ligne. Outil rapide, sécurisé et facile d'utilisation.">
 <meta name="robots" content="index, follow">
 
 <link rel="stylesheet" href="style.css">
@@ -16,8 +16,8 @@
 <body>
 
 <header>
-  <h1>JFIF to JPG Converter</h1>
-  <p>Convert JFIF images to JPG instantly</p>
+  <h1>Convertisseur JFIF en JPG</h1>
+  <p>Convertir des images JFIF en JPG instantanément</p>
 </header>
 
 <div class="container">
@@ -30,7 +30,7 @@
       <p id="info">Format détecté : -</p>
     </div>
 
-    <button onclick="convert()">Convert to JPG</button>
+    <button onclick="convert()">Convertir en JPG</button>
 
   </div>
 
@@ -42,7 +42,7 @@
 
 let img = new Image();
 
-/* LOAD IMAGE */
+/* CHARGEMENT IMAGE */
 document.getElementById("file").onchange = (e) => {
 
   const file = e.target.files[0];
@@ -51,7 +51,7 @@ document.getElementById("file").onchange = (e) => {
   const type = file.type.toLowerCase();
 
   if(!type.includes("jpeg") && !type.includes("jfif")){
-    alert("Please upload a JFIF or JPG image");
+    alert("Veuillez importer une image JFIF ou JPG");
     return;
   }
 
@@ -65,8 +65,8 @@ document.getElementById("file").onchange = (e) => {
     img.onload = () => {
       document.getElementById("preview").innerHTML = `
         <div class="box">
-          <p>Original Image</p>
-          <img src="${img.src}" alt="original image">
+          <p>Image originale</p>
+          <img src="${img.src}" alt="image originale">
         </div>
       `;
     };
@@ -75,11 +75,11 @@ document.getElementById("file").onchange = (e) => {
   reader.readAsDataURL(file);
 };
 
-/* CONVERT */
+/* CONVERSION */
 function convert(){
 
   if(!img.src){
-    alert("Please upload an image");
+    alert("Veuillez ajouter une image");
     return;
   }
 
@@ -97,14 +97,14 @@ function convert(){
     document.getElementById("preview").innerHTML += `
       <div class="box">
 
-        <p>Converted JPG</p>
+        <p>Image convertie en JPG</p>
 
-        <img src="${url}" alt="converted image">
+        <img src="${url}" alt="image convertie">
 
         <br><br>
 
-        <a href="${url}" download="converted.jpg">
-          <button>Download JPG</button>
+        <a href="${url}" download="image-convertie.jpg">
+          <button>Télécharger JPG</button>
         </a>
 
       </div>
@@ -117,13 +117,13 @@ function convert(){
 </script>
 
 <footer>
-<p>© 2026 Image Tools Pro — Free Online Image Utilities</p>
+<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
 
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
+<a href="index.html">Accueil</a>
+<a href="about.html">À propos</a>
 <a href="contact.html">Contact</a>
-<a href="privacy.html">Privacy Policy</a>
-<a href="terms.html">Terms</a>
+<a href="privacy.html">Politique de confidentialité</a>
+<a href="terms.html">Conditions d’utilisation</a>
 </footer>
 
 </body>
