@@ -5,59 +5,129 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Contact - Image Tools Pro</title>
+<title>Contact | Image Tools Pro</title>
 
-<meta name="description" content="Contact Image Tools Pro for support, feedback or questions about our free online image tools.">
-<meta name="robots" content="index, follow">
+<meta name="description" content="Contactez Image Tools Pro pour toute question ou suggestion.">
 
+<link rel="icon" type="image/png" href="./favicon.png">
 <link rel="stylesheet" href="style.css">
+
+<style>
+.contact-box{
+  max-width:600px;
+  margin:60px auto;
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,0.08);
+  text-align:left;
+}
+
+.contact-box label{
+  display:block;
+  margin-top:15px;
+  font-weight:bold;
+}
+
+.contact-box input,
+.contact-box textarea{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border:1px solid #ddd;
+  border-radius:6px;
+}
+
+.contact-box button{
+  margin-top:20px;
+  width:100%;
+}
+
+/* champ anti-spam caché */
+.hidden-field{
+  display:none;
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <h1>Contact Us</h1>
-  <p>We are here to help you</p>
+  <h1>Contact</h1>
+  <p>Une question ? Une suggestion ? Écrivez-nous</p>
 </header>
 
-<div class="container">
+<div class="contact-box">
 
-  <div class="box" style="text-align:left;">
+  <form onsubmit="return validateForm()">
 
-    <h2>📩 Get in touch</h2>
-    <p>
-      If you have any questions, suggestions or technical issues,
-      feel free to contact us using the email below.
-    </p>
+    <label>Nom</label>
+    <input type="text" id="name" required>
 
-    <h2>✉️ Email</h2>
-    <p>
-      <a href="mailto:contact@neoimage-tools.com">contact@neoimage-tools.com</a>
-    </p>
+    <label>Email</label>
+    <input type="email" id="email" required>
 
-    <h2>💡 Feedback</h2>
-    <p>
-      We always improve our tools based on user feedback.
-      Your opinion is important for us.
-    </p>
+    <label>Message</label>
+    <textarea id="message" rows="5" required></textarea>
 
-    <h2>⏱ Response time</h2>
-    <p>
-      We usually reply within 24–48 hours.
-    </p>
+    <!-- 🔒 anti-spam invisible (bots remplissent ça) -->
+    <div class="hidden-field">
+      <label>Ne pas remplir</label>
+      <input type="text" id="website">
+    </div>
 
-  </div>
+    <!-- 🔐 question anti-spam simple -->
+    <label>Combien font 3 + 4 ?</label>
+    <input type="number" id="human" required>
+
+    <button type="submit">Envoyer</button>
+
+  </form>
+
+  <p id="status" style="margin-top:15px;"></p>
 
 </div>
 
-<footer>
-<p>© 2026 NeoImage Tools — Free Online Image Utilities</p>
+<script>
+function validateForm() {
+  let name = document.getElementById("name").value;
+  let email = document.getElementById("email").value;
+  let message = document.getElementById("message").value;
 
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
+  let trap = document.getElementById("website").value;
+  let human = document.getElementById("human").value;
+
+  let status = document.getElementById("status");
+
+  // anti-spam 1 : champ caché
+  if (trap !== "") {
+    status.innerHTML = "Spam détecté ❌";
+    return false;
+  }
+
+  // anti-spam 2 : question simple
+  if (parseInt(human) !== 7) {
+    status.innerHTML = "Réponse anti-spam incorrecte ❌";
+    return false;
+  }
+
+  // simulation d’envoi (GitHub Pages ne supporte pas backend)
+  status.innerHTML = "Message envoyé avec succès ✔ (simulation)";
+
+  document.querySelector("form").reset();
+
+  return false; // empêche reload
+}
+</script>
+
+<footer>
+<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
+
+<a href="index.html">Accueil</a>
+<a href="about.html">À propos</a>
 <a href="contact.html">Contact</a>
-<a href="privacy.html">Privacy Policy</a>
-<a href="terms.html">Terms</a>
+<a href="privacy.html">Politique de confidentialité</a>
+<a href="terms.html">Conditions d’utilisation</a>
 </footer>
 
 </body>
