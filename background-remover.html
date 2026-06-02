@@ -1,13 +1,14 @@
 <!DOCTYPE html>
+
 <html lang="fr">
 
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Background Remover Free Online | Image Tools Pro</title>
+<title>Background Remover (En développement) | NeoImage Tools</title>
 
-<meta name="description" content="Remove image background online for free. Fast, simple and secure background remover tool.">
+<meta name="description" content="L'outil de suppression d'arrière-plan est actuellement en développement et sera bientôt disponible.">
 <meta name="robots" content="index, follow">
 
 <link rel="stylesheet" href="style.css">
@@ -16,78 +17,37 @@
 <body>
 
 <header>
-  <h1>Background Remover</h1>
-  <p>Remove image background instantly online</p>
+  <h1>Background Remover (En développement)</h1>
+  <p>Cet outil sera bientôt disponible.</p>
 </header>
 
 <div class="container">
 
   <div class="box">
+    <h2>🚧 Fonctionnalité en préparation</h2>
 
-    <input type="file" id="file" accept="image/*">
+```
+<p>
+  Nous travaillons actuellement sur un outil de suppression automatique
+  d'arrière-plan pour vos images.
+</p>
 
-    <button onclick="removeBg()">Remove Background</button>
+<p>
+  Revenez prochainement pour profiter de cette fonctionnalité gratuitement.
+</p>
+
+<button disabled>Coming Soon</button>
+```
 
   </div>
 
-  <div class="preview" id="preview"></div>
-
 </div>
-
-<script>
-let img = new Image();
-
-/* LOAD IMAGE */
-document.getElementById("file").onchange = (e) => {
-const file = e.target.files[0];
-if(!file) return;
-
-const reader = new FileReader();
-
-reader.onload = ev => {
-img.src = ev.target.result;
-
-img.onload = () => {
-document.getElementById("preview").innerHTML = `
-<div>
-<p>Original Image</p>
-<img src="${img.src}" alt="original">
-</div>
-`;
-};
-};
-
-reader.readAsDataURL(file);
-};
-
-/* SIMPLE FAKE BG REMOVER (client-side demo) */
-function removeBg(){
-
-if(!img.src){
-alert("Ajoute une image");
-return;
-}
-
-/* NOTE: vrai background removal nécessite API */
-document.getElementById("preview").innerHTML += `
-<div>
-<p>Background Removed (demo)</p>
-<img src="${img.src}" alt="result">
-<p style="color:#999;">(API nécessaire pour suppression réelle)</p>
-</div>
-`;
-
-}
-</script>
 
 <footer>
 <p>© 2026 NeoImage Tools — Free Online Image Utilities</p>
 
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
-<a href="contact.html">Contact</a>
-<a href="privacy.html">Privacy Policy</a>
-<a href="terms.html">Terms</a>
+<a href="index.html">Home</a> <a href="about.html">About</a> <a href="contact.html">Contact</a> <a href="privacy.html">Privacy Policy</a> <a href="terms.html">Terms</a>
+
 </footer>
 
 </body>
