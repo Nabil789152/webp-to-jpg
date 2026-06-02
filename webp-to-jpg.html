@@ -5,13 +5,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>WebP to JPG Converter Online Free | Image Tools Pro</title>
+<title>Convertisseur WebP en JPG en ligne gratuit | Image Tools Pro</title>
 
-<meta name="description" content="Convert WebP images to JPG or PNG online for free. Fast, secure and easy WebP converter tool.">
+<meta name="description" content="Convertissez des images WebP en JPG ou PNG en ligne gratuitement. Outil rapide, sécurisé et simple à utiliser.">
 <meta name="robots" content="index, follow">
 
-<meta property="og:title" content="WebP to JPG Converter">
-<meta property="og:description" content="Convert WebP images to JPG or PNG instantly online. Free tool.">
+<meta property="og:title" content="Convertisseur WebP en JPG">
+<meta property="og:description" content="Convertissez vos images WebP en JPG ou PNG instantanément en ligne.">
 <meta property="og:type" content="website">
 
 <link rel="stylesheet" href="style.css">
@@ -45,10 +45,10 @@
 
 <body>
 
-<!-- HEADER (IMPORTANT: même style que index.html) -->
+<!-- HEADER -->
 <header>
-  <h1>WebP to JPG Converter</h1>
-  <p>Convert WebP images to JPG or PNG instantly</p>
+  <h1>Convertisseur WebP</h1>
+  <p>Convertissez vos images WebP en JPG ou PNG instantanément</p>
 </header>
 
 <!-- MAIN -->
@@ -67,7 +67,7 @@
 
 <br><br>
 
-<button onclick="convert()">Convertir</button>
+<button onclick="convert()">Convertir l’image</button>
 
 </div>
 
@@ -80,17 +80,17 @@
 
 let img = new Image();
 
-/* LOAD IMAGE */
+/* CHARGEMENT IMAGE */
 document.getElementById("file").onchange = (e) => {
 const file = e.target.files[0];
 if(!file) return;
 
 if(file.type !== "image/webp"){
-alert("Seuls les fichiers WebP sont autorisés");
+alert("Veuillez sélectionner une image WebP");
 return;
 }
 
-document.getElementById("detected").innerText = "Format détecté : WEBP";
+document.getElementById("detected").innerText = "Format détecté : WebP";
 
 const reader = new FileReader();
 
@@ -101,7 +101,7 @@ img.onload = () => {
 document.getElementById("preview").innerHTML = `
 <div class="box">
 <p>Image originale</p>
-<img src="${img.src}" alt="webp image">
+<img src="${img.src}" alt="image webp originale">
 </div>
 `;
 };
@@ -110,11 +110,11 @@ document.getElementById("preview").innerHTML = `
 reader.readAsDataURL(file);
 };
 
-/* CONVERT */
+/* CONVERSION */
 function convert(){
 
 if(!img.src){
-alert("Ajoute une image WebP");
+alert("Veuillez ajouter une image WebP");
 return;
 }
 
@@ -135,11 +135,11 @@ document.getElementById("preview").innerHTML += `
 
 <p>Image convertie</p>
 
-<img src="${url}" alt="converted image">
+<img src="${url}" alt="image convertie">
 
 <br><br>
 
-<a href="${url}" download="converted">
+<a href="${url}" download="image-convertie">
 <button>Télécharger</button>
 </a>
 
@@ -152,32 +152,32 @@ document.getElementById("preview").innerHTML += `
 
 </script>
 
-<!-- RELATED TOOLS (version propre index-style) -->
+<!-- RELATED TOOLS -->
 <section style="max-width:900px;margin:60px auto;padding:0 20px;text-align:center;">
-  <h2>Related Tools</h2>
+  <h2>Outils associés</h2>
 
-  <p>Convert, compress and resize images online for free.</p>
+  <p>Convertissez, compressez et redimensionnez vos images gratuitement</p>
 
   <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:20px;">
 
-    <a href="compress.html">Image Compressor</a>
-    <a href="resize.html">Resize Image</a>
+    <a href="compress.html">Compresser image</a>
+    <a href="resize.html">Redimensionner</a>
     <a href="jpg-png-converter.html">JPG ↔ PNG</a>
-    <a href="background-remover.html">Background Remover</a>
+    <a href="background-remover.html">Suppression fond</a>
 
   </div>
 </section>
 
-<!-- FOOTER UNIFORME -->
+<!-- FOOTER -->
 <footer>
-  <p>© 2026 NeoImage Tools — Free Online Image Utilities</p>
+  <p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
 
   <div>
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
+    <a href="index.html">Accueil</a>
+    <a href="about.html">À propos</a>
     <a href="contact.html">Contact</a>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Confidentialité</a>
+    <a href="terms.html">Conditions</a>
     <a href="sitemap.xml">Sitemap</a>
   </div>
 </footer>
