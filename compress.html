@@ -5,9 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Image Compressor Online Free | Image Tools Pro</title>
+<title>Compresseur d’images en ligne gratuit | Image Tools Pro</title>
 
-<meta name="description" content="Compress images online for free. Reduce image size instantly while keeping high quality. Fast and secure image compressor tool.">
+<meta name="description" content="Compressez vos images en ligne gratuitement. Réduisez la taille des images instantanément tout en gardant une bonne qualité. Outil rapide et sécurisé.">
 <meta name="robots" content="index, follow">
 
 <link rel="stylesheet" href="style.css">
@@ -16,8 +16,8 @@
 <body>
 
 <header>
-  <h1>Image Compressor</h1>
-  <p>Reduce image size without losing quality</p>
+  <h1>Compresseur d’images</h1>
+  <p>Réduire la taille des images sans perte de qualité</p>
 </header>
 
 <div class="container">
@@ -27,13 +27,13 @@
     <input type="file" id="file" accept="image/*">
 
     <div class="box">
-      <label>Compression quality</label><br>
+      <label>Qualité de compression</label><br>
       <input type="range" id="quality" min="10" max="100" value="70">
       <br>
-      <small id="qtext">Quality: 70%</small>
+      <small id="qtext">Qualité : 70%</small>
     </div>
 
-    <button onclick="compress()">Compress Image</button>
+    <button onclick="compress()">Compresser l’image</button>
 
   </div>
 
@@ -46,12 +46,12 @@
 let img = new Image();
 let originalSize = 0;
 
-/* QUALITY SLIDER */
+/* SLIDER QUALITÉ */
 document.getElementById("quality").oninput = (e) => {
-  document.getElementById("qtext").innerText = "Quality: " + e.target.value + "%";
+  document.getElementById("qtext").innerText = "Qualité : " + e.target.value + "%";
 };
 
-/* LOAD IMAGE */
+/* CHARGEMENT IMAGE */
 document.getElementById("file").onchange = (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -66,8 +66,8 @@ document.getElementById("file").onchange = (e) => {
     img.onload = () => {
       document.getElementById("preview").innerHTML = `
         <div class="box">
-          <p>Original Image (${originalSize} KB)</p>
-          <img src="${img.src}" alt="original image">
+          <p>Image originale (${originalSize} KB)</p>
+          <img src="${img.src}" alt="image originale">
         </div>
       `;
     };
@@ -76,11 +76,11 @@ document.getElementById("file").onchange = (e) => {
   reader.readAsDataURL(file);
 };
 
-/* COMPRESS */
+/* COMPRESSION */
 function compress(){
 
   if(!img.src){
-    alert("Please add an image");
+    alert("Veuillez ajouter une image");
     return;
   }
 
@@ -102,15 +102,15 @@ function compress(){
     document.getElementById("preview").innerHTML += `
       <div class="box">
 
-        <p>Compressed Image</p>
+        <p>Image compressée</p>
 
-        <img src="${url}" alt="compressed image">
+        <img src="${url}" alt="image compressée">
 
-        <p>Size: ${newSize} KB</p>
-        <p>Reduction: ${reduction}%</p>
+        <p>Taille : ${newSize} KB</p>
+        <p>Réduction : ${reduction}%</p>
 
-        <a href="${url}" download="compressed.jpg">
-          <button>Download</button>
+        <a href="${url}" download="image-compressee.jpg">
+          <button>Télécharger</button>
         </a>
 
       </div>
@@ -123,13 +123,13 @@ function compress(){
 </script>
 
 <footer>
-<p>© 2026 NeoImage Tools — Free Online Image Utilities</p>
+<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
 
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
+<a href="index.html">Accueil</a>
+<a href="about.html">À propos</a>
 <a href="contact.html">Contact</a>
-<a href="privacy.html">Privacy Policy</a>
-<a href="terms.html">Terms</a>
+<a href="privacy.html">Politique de confidentialité</a>
+<a href="terms.html">Conditions d’utilisation</a>
 </footer>
 
 </body>
