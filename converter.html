@@ -5,9 +5,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>WebP Converter Online Free | Image Tools Pro</title>
+<title>Convertisseur WebP en ligne gratuit | Image Tools Pro</title>
 
-<meta name="description" content="Convert WebP images to JPG or PNG online for free. Fast, secure and easy image conversion tool.">
+<meta name="description" content="Convertissez vos images WebP en JPG ou PNG gratuitement en ligne. Outil rapide, sécurisé et facile d'utilisation.">
 <meta name="robots" content="index, follow">
 
 <link rel="stylesheet" href="style.css">
@@ -16,8 +16,8 @@
 <body>
 
 <header>
-  <h1>WebP Converter</h1>
-  <p>Convert WebP images to JPG or PNG instantly</p>
+  <h1>Convertisseur WebP</h1>
+  <p>Convertir des images WebP en JPG ou PNG instantanément</p>
 </header>
 
 <div class="container">
@@ -35,7 +35,7 @@
       <option value="image/png">PNG</option>
     </select>
 
-    <button onclick="convert()">Convert</button>
+    <button onclick="convert()">Convertir</button>
 
   </div>
 
@@ -47,14 +47,14 @@
 
 let img = new Image();
 
-/* LOAD IMAGE */
+/* CHARGEMENT DE L'IMAGE */
 document.getElementById("file").onchange = (e) => {
 
   const file = e.target.files[0];
   if(!file) return;
 
   if(file.type !== "image/webp"){
-    alert("Only WebP files are allowed");
+    alert("Seuls les fichiers WebP sont acceptés");
     return;
   }
 
@@ -68,8 +68,8 @@ document.getElementById("file").onchange = (e) => {
     img.onload = () => {
       document.getElementById("preview").innerHTML = `
         <div class="box">
-          <p>Original Image (WEBP)</p>
-          <img src="${img.src}" alt="original image">
+          <p>Image originale (WEBP)</p>
+          <img src="${img.src}" alt="image originale WebP">
         </div>
       `;
     };
@@ -78,11 +78,11 @@ document.getElementById("file").onchange = (e) => {
   reader.readAsDataURL(file);
 };
 
-/* CONVERT */
+/* CONVERSION */
 function convert(){
 
   if(!img.src){
-    alert("Add a WebP image");
+    alert("Veuillez ajouter une image WebP");
     return;
   }
 
@@ -101,14 +101,14 @@ function convert(){
     document.getElementById("preview").innerHTML = `
       <div class="box">
 
-        <p>Converted Image</p>
+        <p>Image convertie</p>
 
-        <img src="${url}" alt="converted image">
+        <img src="${url}" alt="image convertie">
 
         <br><br>
 
-        <a href="${url}" download="converted">
-          <button>Download</button>
+        <a href="${url}" download="image-convertie">
+          <button>Télécharger</button>
         </a>
 
       </div>
@@ -121,13 +121,13 @@ function convert(){
 </script>
 
 <footer>
-<p>© 2026 NeoImage Tools — Free Online Image Utilities</p>
+<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
 
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
+<a href="index.html">Accueil</a>
+<a href="about.html">À propos</a>
 <a href="contact.html">Contact</a>
-<a href="privacy.html">Privacy Policy</a>
-<a href="terms.html">Terms</a>
+<a href="privacy.html">Politique de confidentialité</a>
+<a href="terms.html">Conditions d’utilisation</a>
 </footer>
 
 </body>
