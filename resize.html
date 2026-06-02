@@ -5,13 +5,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Resize Image Online Free | Image Tools Pro</title>
+<title>Redimensionner une image en ligne gratuit | Image Tools Pro</title>
 
-<meta name="description" content="Resize images online for free. Change image dimensions easily while keeping high quality. Fast and simple image resizer tool.">
+<meta name="description" content="Redimensionnez vos images en ligne gratuitement. Changez les dimensions facilement tout en gardant une bonne qualité. Outil rapide et simple.">
 <meta name="robots" content="index, follow">
 
-<meta property="og:title" content="Resize Image Online Free">
-<meta property="og:description" content="Resize images quickly and easily online for free.">
+<meta property="og:title" content="Redimensionner une image en ligne gratuit">
+<meta property="og:description" content="Redimensionnez vos images rapidement et facilement en ligne gratuitement.">
 <meta property="og:type" content="website">
 
 <link rel="stylesheet" href="style.css">
@@ -40,10 +40,10 @@
 
 <body>
 
-<!-- HEADER (comme index.html = blanc) -->
+<!-- HEADER -->
 <header>
-  <h1>Resize Image</h1>
-  <p>Change image dimensions easily online</p>
+  <h1>Redimensionner une image</h1>
+  <p>Changer les dimensions d’une image facilement en ligne</p>
 </header>
 
 <!-- MAIN -->
@@ -55,12 +55,12 @@
 
 <div class="box">
 <p class="small">
-Original size: <span id="sizeInfo">-</span>
+Taille originale : <span id="sizeInfo">-</span>
 </p>
 </div>
 
 <label>Nouvelle largeur (px)</label><br>
-<input type="number" id="newWidth" placeholder="ex: 800">
+<input type="number" id="newWidth" placeholder="ex : 800">
 
 <br><br>
 
@@ -77,7 +77,7 @@ Original size: <span id="sizeInfo">-</span>
 
 let img = new Image();
 
-/* LOAD IMAGE */
+/* CHARGEMENT IMAGE */
 document.getElementById("file").onchange = (e) => {
 const file = e.target.files[0];
 if(!file) return;
@@ -94,7 +94,7 @@ img.width + " x " + img.height;
 document.getElementById("preview").innerHTML = `
 <div>
 <p>Image originale</p>
-<img src="${img.src}" alt="original image">
+<img src="${img.src}" alt="image originale">
 </div>
 `;
 };
@@ -103,18 +103,18 @@ document.getElementById("preview").innerHTML = `
 reader.readAsDataURL(file);
 };
 
-/* RESIZE FUNCTION */
+/* REDIMENSIONNEMENT */
 function resizeImage(){
 
 if(!img.src){
-alert("Ajoute une image !");
+alert("Veuillez ajouter une image !");
 return;
 }
 
 let newW = parseInt(document.getElementById("newWidth").value);
 
 if(!newW || newW <= 0){
-alert("Largeur invalide !");
+alert("Veuillez entrer une largeur valide !");
 return;
 }
 
@@ -136,11 +136,11 @@ document.getElementById("preview").innerHTML += `
 
 <p>Image redimensionnée</p>
 
-<img src="${url}" alt="resized image">
+<img src="${url}" alt="image redimensionnée">
 
 <br><br>
 
-<a href="${url}" download="resized.jpg">
+<a href="${url}" download="image-redimensionnee.jpg">
 <button>Télécharger</button>
 </a>
 
@@ -153,16 +153,16 @@ document.getElementById("preview").innerHTML += `
 
 </script>
 
-<!-- FOOTER UNIFORME (IMPORTANT SEO + TRUST) -->
+<!-- FOOTER -->
 <footer>
-  <p>© 2026 NeoImage Tools — Free Online Image Utilities</p>
+  <p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
 
   <div>
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
+    <a href="index.html">Accueil</a>
+    <a href="about.html">À propos</a>
     <a href="contact.html">Contact</a>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Politique de confidentialité</a>
+    <a href="terms.html">Conditions d’utilisation</a>
     <a href="sitemap.xml">Sitemap</a>
   </div>
 </footer>
