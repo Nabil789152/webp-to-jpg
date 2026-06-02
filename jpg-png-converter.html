@@ -5,13 +5,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>JPG ↔ PNG Converter Free Online | Image Tools Pro</title>
+<title>Convertisseur JPG ↔ PNG gratuit en ligne | Image Tools Pro</title>
 
-<meta name="description" content="Convert JPG to PNG or PNG to JPG online for free. Fast, secure and high-quality image converter tool.">
+<meta name="description" content="Convertissez vos images JPG en PNG ou PNG en JPG gratuitement en ligne. Outil rapide, sécurisé et sans perte de qualité.">
 <meta name="robots" content="index, follow">
 
-<meta property="og:title" content="JPG ↔ PNG Converter">
-<meta property="og:description" content="Convert JPG and PNG images instantly online for free.">
+<meta property="og:title" content="Convertisseur JPG ↔ PNG">
+<meta property="og:description" content="Convertissez JPG et PNG instantanément en ligne gratuitement.">
 <meta property="og:type" content="website">
 
 <link rel="stylesheet" href="style.css">
@@ -42,8 +42,8 @@
 
 <!-- HEADER -->
 <header>
-  <h1>JPG ↔ PNG Converter</h1>
-  <p>Convert JPG to PNG or PNG to JPG instantly</p>
+  <h1>Convertisseur JPG ↔ PNG</h1>
+  <p>Convertir JPG en PNG ou PNG en JPG instantanément</p>
 </header>
 
 <!-- MAIN -->
@@ -75,7 +75,7 @@
 
 let img = new Image();
 
-/* LOAD FILE */
+/* CHARGEMENT IMAGE */
 document.getElementById("file").onchange = (e) => {
 const file = e.target.files[0];
 if(!file) return;
@@ -91,7 +91,7 @@ img.onload = () => {
 document.getElementById("preview").innerHTML = `
 <div>
 <p>Image originale</p>
-<img src="${img.src}" alt="original image">
+<img src="${img.src}" alt="image originale">
 </div>
 `;
 };
@@ -100,11 +100,11 @@ document.getElementById("preview").innerHTML = `
 reader.readAsDataURL(file);
 };
 
-/* CONVERT */
+/* CONVERSION */
 function convert(){
 
 if(!img.src){
-alert("Ajoute une image !");
+alert("Veuillez ajouter une image !");
 return;
 }
 
@@ -125,11 +125,11 @@ document.getElementById("preview").innerHTML += `
 
 <p>Image convertie</p>
 
-<img src="${url}" alt="converted image">
+<img src="${url}" alt="image convertie">
 
 <br><br>
 
-<a href="${url}" download="converted">
+<a href="${url}" download="image-convertie">
 <button>Télécharger</button>
 </a>
 
@@ -142,7 +142,7 @@ document.getElementById("preview").innerHTML += `
 
 </script>
 
-<!-- RELATED TOOLS (boutons bleus style index.html) -->
+<!-- RELATED TOOLS -->
 <section style="
 max-width:900px;
 margin:60px auto;
@@ -150,9 +150,9 @@ padding:0 20px;
 text-align:center;
 ">
 
-<h2>Related Tools</h2>
+<h2>Autres outils</h2>
 
-<p>All image tools in one place</p>
+<p>Tous vos outils d’images en un seul endroit</p>
 
 <div style="
 display:flex;
@@ -162,25 +162,25 @@ gap:10px;
 margin-top:20px;
 ">
 
-<a class="btn" href="converter.html">WebP Converter</a>
-<a class="btn" href="compress.html">Image Compressor</a>
-<a class="btn" href="resize.html">Resize Image</a>
-<a class="btn" href="background-remover.html">Background Remover</a>
+<a class="btn" href="converter.html">Convertisseur WebP</a>
+<a class="btn" href="compress.html">Compresseur d’images</a>
+<a class="btn" href="resize.html">Redimensionner image</a>
+<a class="btn" href="background-remover.html">Suppression d’arrière-plan</a>
 
 </div>
 
 </section>
 
-<!-- FOOTER UNIFORME -->
+<!-- FOOTER -->
 <footer>
-  <p>© 2026 NeoImage Tools — Free Online Image Utilities</p>
+  <p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
 
   <div>
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
+    <a href="index.html">Accueil</a>
+    <a href="about.html">À propos</a>
     <a href="contact.html">Contact</a>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="terms.html">Terms</a>
+    <a href="privacy.html">Politique de confidentialité</a>
+    <a href="terms.html">Conditions d’utilisation</a>
     <a href="sitemap.xml">Sitemap</a>
   </div>
 </footer>
