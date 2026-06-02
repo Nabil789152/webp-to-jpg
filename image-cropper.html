@@ -5,15 +5,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Image Cropper Online Free | Image Tools Pro</title>
+<title>Recadrage d’images en ligne gratuit | Image Tools Pro</title>
 
-<meta name="description" content="Crop images online for free. Cut, resize and adjust your images easily in browser. Fast and secure image crop tool.">
+<meta name="description" content="Recadrez vos images en ligne gratuitement. Coupez et ajustez vos images facilement dans le navigateur. Outil rapide et sécurisé.">
 <meta name="robots" content="index, follow">
 
 <link rel="stylesheet" href="style.css">
 
 <style>
-/* ONLY crop UI extras */
+/* styles spécifiques au cropper */
 canvas {
   max-width: 100%;
   margin-top: 10px;
@@ -27,8 +27,8 @@ canvas {
 <body>
 
 <header>
-  <h1>Image Cropper</h1>
-  <p>Crop your images easily online</p>
+  <h1>Recadreur d’images</h1>
+  <p>Recadrez vos images facilement en ligne</p>
 </header>
 
 <div class="container">
@@ -38,14 +38,14 @@ canvas {
     <input type="file" id="file" accept="image/*">
 
     <div class="box">
-      <label>Crop Width</label><br>
-      <input type="number" id="cropW" placeholder="Width">
+      <label>Largeur du recadrage</label><br>
+      <input type="number" id="cropW" placeholder="Largeur">
 
-      <label>Crop Height</label><br>
-      <input type="number" id="cropH" placeholder="Height">
+      <label>Hauteur du recadrage</label><br>
+      <input type="number" id="cropH" placeholder="Hauteur">
     </div>
 
-    <button onclick="cropImage()">Crop Image</button>
+    <button onclick="cropImage()">Recadrer l’image</button>
 
   </div>
 
@@ -57,7 +57,7 @@ canvas {
 
 let img = new Image();
 
-/* LOAD IMAGE */
+/* CHARGEMENT IMAGE */
 document.getElementById("file").onchange = (e) => {
   const file = e.target.files[0];
   if(!file) return;
@@ -70,8 +70,8 @@ document.getElementById("file").onchange = (e) => {
     img.onload = () => {
       document.getElementById("preview").innerHTML = `
         <div class="box">
-          <p>Original Image</p>
-          <img src="${img.src}" alt="original image">
+          <p>Image originale</p>
+          <img src="${img.src}" alt="image originale">
         </div>
       `;
     };
@@ -80,11 +80,11 @@ document.getElementById("file").onchange = (e) => {
   reader.readAsDataURL(file);
 };
 
-/* CROP FUNCTION */
+/* RECADRAGE */
 function cropImage(){
 
   if(!img.src){
-    alert("Add an image");
+    alert("Veuillez ajouter une image");
     return;
   }
 
@@ -92,7 +92,7 @@ function cropImage(){
   let h = parseInt(document.getElementById("cropH").value);
 
   if(!w || !h){
-    alert("Enter valid width and height");
+    alert("Veuillez entrer une largeur et une hauteur valides");
     return;
   }
 
@@ -111,14 +111,14 @@ function cropImage(){
     document.getElementById("preview").innerHTML += `
       <div class="box">
 
-        <p>Cropped Image</p>
+        <p>Image recadrée</p>
 
-        <img src="${url}" alt="cropped image">
+        <img src="${url}" alt="image recadrée">
 
         <br><br>
 
-        <a href="${url}" download="cropped.jpg">
-          <button>Download</button>
+        <a href="${url}" download="image-recadree.jpg">
+          <button>Télécharger</button>
         </a>
 
       </div>
@@ -131,13 +131,13 @@ function cropImage(){
 </script>
 
 <footer>
-<p>© 2026 NeoImage Tools — Free Online Image Utilities</p>
+<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
 
-<a href="index.html">Home</a>
-<a href="about.html">About</a>
+<a href="index.html">Accueil</a>
+<a href="about.html">À propos</a>
 <a href="contact.html">Contact</a>
-<a href="privacy.html">Privacy Policy</a>
-<a href="terms.html">Terms</a>
+<a href="privacy.html">Politique de confidentialité</a>
+<a href="terms.html">Conditions d’utilisation</a>
 </footer>
 
 </body>
