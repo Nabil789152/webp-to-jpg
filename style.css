@@ -148,3 +148,7 @@ footer a{
   border-radius: 10px;
   display: block;
 }
+
+.tool-card {
+  overflow: hidden;
+}
