@@ -140,3 +140,8 @@ footer a{
   font-size:16px;
   background:transparent;
 }
+
+.tool-card img {
+  height: 160px;
+  object-fit: cover;
+}
