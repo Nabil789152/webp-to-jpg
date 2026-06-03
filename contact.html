@@ -43,11 +43,18 @@
   width:100%;
 }
 
-/* champ anti-spam caché */
+/* anti-spam caché */
 .hidden-field{
   display:none;
 }
+
+#status{
+  margin-top:15px;
+  font-weight:bold;
+  text-align:center;
+}
 </style>
+
 </head>
 
 <body>
@@ -59,65 +66,66 @@
 
 <div class="contact-box">
 
-  <form onsubmit="return validateForm()">
+  <!-- ✅ FORMPSREE ICI -->
+  <form id="contactForm" action="https://formspree.io/f/mojzqevb" method="POST">
 
     <label>Nom</label>
-    <input type="text" id="name" required>
+    <input type="text" name="name" required>
 
     <label>Email</label>
-    <input type="email" id="email" required>
+    <input type="email" name="email" required>
 
     <label>Message</label>
-    <textarea id="message" rows="5" required></textarea>
+    <textarea name="message" rows="5" required></textarea>
 
-    <!-- 🔒 anti-spam invisible (bots remplissent ça) -->
+    <!-- 🔒 honeypot anti-spam -->
     <div class="hidden-field">
-      <label>Ne pas remplir</label>
-      <input type="text" id="website">
+      <input type="text" name="website">
     </div>
-
-    <!-- 🔐 question anti-spam simple -->
-    <label>Combien font 3 + 4 ?</label>
-    <input type="number" id="human" required>
 
     <button type="submit">Envoyer</button>
 
   </form>
 
-  <p id="status" style="margin-top:15px;"></p>
+  <p id="status"></p>
 
 </div>
 
 <script>
-function validateForm() {
-  let name = document.getElementById("name").value;
-  let email = document.getElementById("email").value;
-  let message = document.getElementById("message").value;
+const form = document.getElementById("contactForm");
+const status = document.getElementById("status");
 
-  let trap = document.getElementById("website").value;
-  let human = document.getElementById("human").value;
+form.addEventListener("submit", async function(e){
+  e.preventDefault();
 
-  let status = document.getElementById("status");
+  let formData = new FormData(form);
 
-  // anti-spam 1 : champ caché
-  if (trap !== "") {
-    status.innerHTML = "Spam détecté ❌";
-    return false;
+  // anti-spam simple (honeypot)
+  if(formData.get("website")){
+    status.innerText = "Spam détecté ❌";
+    return;
   }
 
-  // anti-spam 2 : question simple
-  if (parseInt(human) !== 7) {
-    status.innerHTML = "Réponse anti-spam incorrecte ❌";
-    return false;
+  status.innerText = "Envoi en cours...";
+
+  try {
+    let response = await fetch(form.action, {
+      method: "POST",
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    });
+
+    if(response.ok){
+      status.innerText = "Message envoyé avec succès ✔";
+      form.reset();
+    } else {
+      status.innerText = "Erreur lors de l'envoi ❌";
+    }
+
+  } catch(error){
+    status.innerText = "Erreur réseau ❌";
   }
-
-  // simulation d’envoi (GitHub Pages ne supporte pas backend)
-  status.innerHTML = "Message envoyé avec succès ✔ (simulation)";
-
-  document.querySelector("form").reset();
-
-  return false; // empêche reload
-}
+});
 </script>
 
 <footer>
