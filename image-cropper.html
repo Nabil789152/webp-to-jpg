@@ -13,12 +13,21 @@
 <link rel="stylesheet" href="style.css">
 
 <style>
-/* styles spécifiques au cropper */
 canvas {
   max-width: 100%;
   margin-top: 10px;
   border-radius: 10px;
   border: 1px solid #ddd;
+}
+
+/* ligne largeur + hauteur */
+.crop-row{
+  display:flex;
+  gap:10px;
+}
+
+.crop-row div{
+  flex:1;
 }
 </style>
 
@@ -38,11 +47,23 @@ canvas {
     <input type="file" id="file" accept="image/*">
 
     <div class="box">
-      <label>Largeur du recadrage</label><br>
-      <input type="number" id="cropW" placeholder="Largeur">
+      <p><b>Taille originale :</b> <span id="origSize">-</span> px</p>
+    </div>
 
-      <label>Hauteur du recadrage</label><br>
-      <input type="number" id="cropH" placeholder="Hauteur">
+    <div class="box">
+
+      <label>Dimensions du recadrage (px)</label>
+
+      <div class="crop-row">
+        <div>
+          <input type="number" id="cropW" placeholder="Largeur (px)">
+        </div>
+
+        <div>
+          <input type="number" id="cropH" placeholder="Hauteur (px)">
+        </div>
+      </div>
+
     </div>
 
     <button onclick="cropImage()">Recadrer l’image</button>
@@ -68,6 +89,11 @@ document.getElementById("file").onchange = (e) => {
     img.src = ev.target.result;
 
     img.onload = () => {
+
+      // afficher taille originale en px
+      document.getElementById("origSize").innerText =
+        img.width + " x " + img.height;
+
       document.getElementById("preview").innerHTML = `
         <div class="box">
           <p>Image originale</p>
@@ -92,7 +118,7 @@ function cropImage(){
   let h = parseInt(document.getElementById("cropH").value);
 
   if(!w || !h){
-    alert("Veuillez entrer une largeur et une hauteur valides");
+    alert("Veuillez entrer largeur et hauteur en px");
     return;
   }
 
@@ -101,7 +127,6 @@ function cropImage(){
   canvas.height = h;
 
   let ctx = canvas.getContext("2d");
-
   ctx.drawImage(img, 0, 0, w, h);
 
   canvas.toBlob(blob => {
@@ -111,7 +136,7 @@ function cropImage(){
     document.getElementById("preview").innerHTML += `
       <div class="box">
 
-        <p>Image recadrée</p>
+        <p>Image recadrée (${w}px × ${h}px)</p>
 
         <img src="${url}" alt="image recadrée">
 
