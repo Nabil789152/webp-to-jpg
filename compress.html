@@ -29,9 +29,15 @@
     <div class="box">
       <label>Qualité de compression</label><br>
       <input type="range" id="quality" min="10" max="100" value="70">
-      <br>
-      <small id="qtext">Qualité : 70%</small>
-    </div>
+
+  <br>
+  <small id="qtext">Qualité : 70%</small>
+
+  <br><br>
+  <small>
+    Dimensions originales : <span id="imgSize">-</span>
+  </small>
+</div>
 
     <button onclick="compress()">Compresser l’image</button>
 
@@ -64,13 +70,17 @@ document.getElementById("file").onchange = (e) => {
     img.src = ev.target.result;
 
     img.onload = () => {
-      document.getElementById("preview").innerHTML = `
-        <div class="box">
-          <p>Image originale (${originalSize} KB)</p>
-          <img src="${img.src}" alt="image originale">
-        </div>
-      `;
-    };
+
+  // 👇 dimensions en px
+  document.getElementById("imgSize").innerText =
+    img.width + " × " + img.height + " px";
+
+  document.getElementById("preview").innerHTML = `
+    <div class="box">
+      <p>Original Image (${originalSize} KB)</p>
+      <img src="${img.src}" alt="original image">
+    </div>
+  `;
   };
 
   reader.readAsDataURL(file);
