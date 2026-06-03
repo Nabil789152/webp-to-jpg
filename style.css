@@ -1,6 +1,10 @@
- /* =========================
+/* =========================
    GLOBAL STYLE - IMAGE TOOLS PRO
    ========================= */
+
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -10,7 +14,10 @@ body {
   text-align: center;
 }
 
-/* HEADER */
+/* =========================
+   HEADER
+   ========================= */
+
 header {
   padding: 40px 20px 20px;
   background: white;
@@ -30,7 +37,10 @@ p {
   color: #5f6368;
 }
 
-/* LINKS */
+/* =========================
+   LINKS & BUTTONS
+   ========================= */
+
 a {
   color: #1a73e8;
   text-decoration: none;
@@ -40,7 +50,6 @@ a:hover {
   text-decoration: underline;
 }
 
-/* BUTTON */
 button {
   margin-top: 15px;
   padding: 12px 20px;
@@ -57,30 +66,36 @@ button:hover {
   background: #1558b0;
 }
 
-/* INPUTS */
-input, select {
+/* =========================
+   INPUTS
+   ========================= */
+
+input,
+select,
+textarea {
   margin-top: 10px;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 6px;
   outline: none;
+  width: 100%;
+  max-width: 100%;
 }
 
 /* =========================
-   GRID PRINCIPAL
+   LAYOUT INDEX (CARDS)
    ========================= */
 
-/* centrer contenu des pages outils */
-.box {
-  max-width: 700px;
-  margin: 15px auto;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+.container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 20px;
 }
 
-/* RESPONSIVE */
+/* RESPONSIVE INDEX */
 @media (max-width: 900px) {
   .container {
     grid-template-columns: repeat(2, 1fr);
@@ -94,7 +109,7 @@ input, select {
 }
 
 /* =========================
-   CARDS UNIQUES (IMPORTANT)
+   TOOL CARDS (INDEX)
    ========================= */
 
 .tool-card {
@@ -105,7 +120,6 @@ input, select {
   display: flex;
   flex-direction: column;
   text-align: center;
-  height: 100%;
   transition: 0.3s;
 }
 
@@ -114,23 +128,20 @@ input, select {
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 
-/* IMAGES */
 .tool-card img {
   width: 100%;
-  height: 140px;
+  height: 150px;
   object-fit: cover;
   border-radius: 10px;
-  display: block;
-  background: #f5f7fb;
+  margin-bottom: 10px;
 }
 
-/* TEXTES */
 .tool-card h3 {
   margin: 10px 0 5px;
 }
 
 .tool-card p {
-  margin: 0 0 15px;
+  margin: 0 0 10px;
   color: #5f6368;
 }
 
@@ -145,6 +156,8 @@ input, select {
   border-radius: 28px;
   padding: 10px 15px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  max-width: 500px;
+  margin: 20px auto;
 }
 
 .search-box input {
@@ -153,6 +166,20 @@ input, select {
   width: 100%;
   font-size: 16px;
   background: transparent;
+}
+
+/* =========================
+   BOX (PAGES OUTILS)
+   ========================= */
+
+.box {
+  max-width: 700px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  text-align: center;
 }
 
 /* =========================
@@ -183,4 +210,13 @@ footer {
 footer a {
   color: #5f6368;
   margin: 0 6px;
+}
+
+/* =========================
+   UTILITIES
+   ========================= */
+
+.small {
+  font-size: 13px;
+  color: #5f6368;
 }
