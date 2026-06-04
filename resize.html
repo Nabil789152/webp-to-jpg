@@ -52,7 +52,7 @@ const preview = document.getElementById("preview");
 const widthInput = document.getElementById("newWidth");
 
 /* =========================
-   HANDLE FILE
+   HANDLE FILE (CENTRAL)
 ========================= */
 function handleFile(file) {
   if (!file) return;
@@ -79,30 +79,56 @@ function handleFile(file) {
   reader.readAsDataURL(file);
 }
 
-/* INPUT FILE */
+/* =========================
+   FILE INPUT CLICK
+========================= */
 fileInput.addEventListener("change", (e) => {
   handleFile(e.target.files[0]);
 });
 
-/* DRAG & DROP */
+/* =========================
+   DRAG ENTER (IMPORTANT)
+========================= */
+dropZone.addEventListener("dragenter", (e) => {
+  e.preventDefault();
+  dropZone.classList.add("drag-active");
+});
+
+/* =========================
+   DRAG OVER (IMPORTANT)
+========================= */
 dropZone.addEventListener("dragover", (e) => {
   e.preventDefault();
   dropZone.classList.add("drag-active");
 });
 
-dropZone.addEventListener("dragleave", () => {
-  dropZone.classList.remove("drag-active");
+/* =========================
+   DRAG LEAVE
+========================= */
+dropZone.addEventListener("dragleave", (e) => {
+  e.preventDefault();
+
+  // évite flicker (sortie interne)
+  if (!dropZone.contains(e.relatedTarget)) {
+    dropZone.classList.remove("drag-active");
+  }
 });
 
+/* =========================
+   DROP
+========================= */
 dropZone.addEventListener("drop", (e) => {
   e.preventDefault();
   dropZone.classList.remove("drag-active");
 
-  handleFile(e.dataTransfer.files[0]);
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+
+  handleFile(file);
 });
 
 /* =========================
-   RESIZE
+   RESIZE FUNCTION
 ========================= */
 window.resizeImage = function () {
 
@@ -125,7 +151,8 @@ window.resizeImage = function () {
   canvas.width = newW;
   canvas.height = newH;
 
-  canvas.getContext("2d").drawImage(img, 0, 0, newW, newH);
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0, newW, newH);
 
   canvas.toBlob(blob => {
 
