@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Converter</title>
+
+<title>Convertisseur WebP | Image Tools Pro</title>
+
 <link rel="stylesheet" href="style.css">
 </head>
 
@@ -11,90 +14,121 @@
 
 <header>
   <h1>Convertisseur WebP</h1>
-  <p>Upload → Convertir → Télécharger</p>
+  <p>Convertir WebP en JPG ou PNG</p>
 </header>
 
-<div class="box">
+<div class="container">
 
-  <input type="file" id="file" accept="image/webp">
+  <div class="box">
 
-  <p id="detected">Format : -</p>
+    <input type="file" id="file" accept="image/webp">
 
-  <select id="format">
-    <option value="image/jpeg">JPG</option>
-    <option value="image/png">PNG</option>
-  </select>
+    <p id="detected">Format détecté : -</p>
 
-  <button onclick="convert()">Convertir</button>
+    <select id="format">
+      <option value="image/jpeg">JPG</option>
+      <option value="image/png">PNG</option>
+    </select>
+
+    <button onclick="convert()">Convertir</button>
+
+  </div>
+
+  <div class="preview" id="preview"></div>
 
 </div>
 
-<div class="preview" id="preview"></div>
-
 <script>
-let img = new Image();
-let originalFileName = "";
+document.addEventListener("DOMContentLoaded", () => {
 
-/* FILE UPLOAD */
-document.getElementById("file").addEventListener("change", function(e){
+  let img = new Image();
+  let originalFileName = "";
 
-  const file = e.target.files[0];
-  if(!file) return;
+  const fileInput = document.getElementById("file");
+  const detected = document.getElementById("detected");
+  const preview = document.getElementById("preview");
 
-  originalFileName = file.name.replace(/\.[^/.]+$/, "");
+  // =========================
+  // LOAD IMAGE
+  // =========================
+  fileInput.addEventListener("change", (e) => {
 
-  document.getElementById("detected").textContent = "Format détecté : " + file.type;
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const reader = new FileReader();
+    // nom sans extension
+    originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
-  reader.onload = function(ev){
-    img.src = ev.target.result;
+    detected.innerText = "Format détecté : " + file.type;
 
-    img.onload = function(){
-      document.getElementById("preview").innerHTML =
-        `<div class="box">
-          <p>Image originale</p>
-          <img src="${img.src}" style="max-width:100%;border-radius:10px;">
-        </div>`;
+    const reader = new FileReader();
+
+    reader.onload = (ev) => {
+
+      img = new Image();
+
+      img.onload = () => {
+        preview.innerHTML = `
+          <div class="box">
+            <p>Image originale</p>
+            <img src="${img.src}" style="max-width:100%;border-radius:10px;">
+          </div>
+        `;
+      };
+
+      img.src = ev.target.result;
     };
+
+    reader.readAsDataURL(file);
+  });
+
+  // =========================
+  // CONVERT FUNCTION
+  // =========================
+  window.convert = function () {
+
+    if (!img.src) {
+      alert("Ajoute une image !");
+      return;
+    }
+
+    const format = document.getElementById("format").value;
+
+    const canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+
+    canvas.toBlob((blob) => {
+
+      if (!blob) {
+        alert("Erreur de conversion");
+        return;
+      }
+
+      const url = URL.createObjectURL(blob);
+
+      const ext = format === "image/png" ? "png" : "jpg";
+
+      preview.innerHTML = `
+        <div class="box">
+          <p>Image convertie</p>
+
+          <img src="${url}" style="max-width:100%;border-radius:10px;">
+
+          <br><br>
+
+          <a href="${url}" download="${originalFileName}-converted.${ext}">
+            <button>Télécharger</button>
+          </a>
+        </div>
+      `;
+    }, format, 0.92);
   };
 
-  reader.readAsDataURL(file);
 });
-
-/* CONVERT */
-function convert(){
-
-  if(!img.src){
-    alert("Veuillez choisir une image !");
-    return;
-  }
-
-  let format = document.getElementById("format").value;
-
-  let canvas = document.createElement("canvas");
-  canvas.width = img.width;
-  canvas.height = img.height;
-
-  canvas.getContext("2d").drawImage(img,0,0);
-
-  canvas.toBlob(blob => {
-
-    let url = URL.createObjectURL(blob);
-    let ext = format === "image/png" ? "png" : "jpg";
-
-    document.getElementById("preview").innerHTML +=
-      `<div class="box">
-        <p>Image convertie</p>
-        <img src="${url}" style="max-width:100%;border-radius:10px;">
-        <br><br>
-        <a download="${originalFileName}-converted.${ext}" href="${url}">
-          <button>Télécharger</button>
-        </a>
-      </div>`;
-
-  }, format);
-}
 </script>
 
 </body>
