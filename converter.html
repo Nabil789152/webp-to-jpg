@@ -1,89 +1,95 @@
 <script>
 
-let img = new Image();
-let originalFileName = "";
+window.addEventListener("DOMContentLoaded", () => {
 
-/* CHARGEMENT DE L'IMAGE */
-document.getElementById("file").onchange = (e) => {
+  let img = new Image();
+  let originalFileName = "";
 
-  const file = e.target.files[0];
-  if (!file) return;
+  const fileInput = document.getElementById("file");
+  const detected = document.getElementById("detected");
+  const preview = document.getElementById("preview");
+  const formatSelect = document.getElementById("format");
 
-  if (file.type !== "image/webp") {
-    alert("Seuls les fichiers WebP sont acceptés");
-    return;
-  }
+  /* CHARGEMENT IMAGE */
+  fileInput.onchange = (e) => {
 
-  // 👉 nom propre sans extension
-  originalFileName = file.name.replace(/\.[^/.]+$/, "");
+    const file = e.target.files[0];
+    if (!file) return;
 
-  document.getElementById("detected").innerText = "Format détecté : WEBP";
-
-  const reader = new FileReader();
-
-  reader.onload = ev => {
-    img.src = ev.target.result;
-
-    img.onload = () => {
-      document.getElementById("preview").innerHTML = `
-        <div class="box">
-          <p>Image originale (WEBP)</p>
-          <img src="${img.src}" alt="image originale WebP">
-        </div>
-      `;
-    };
-  };
-
-  reader.readAsDataURL(file);
-};
-
-/* CONVERSION */
-function convert() {
-
-  if (!img.src) {
-    alert("Veuillez ajouter une image WebP");
-    return;
-  }
-
-  let format = document.getElementById("format").value;
-
-  let canvas = document.createElement("canvas");
-  canvas.width = img.width;
-  canvas.height = img.height;
-
-  let ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0);
-
-  canvas.toBlob(blob => {
-
-    if (!blob) {
-      alert("Erreur de conversion");
+    if (file.type !== "image/webp") {
+      alert("Seuls les fichiers WebP sont acceptés");
       return;
     }
 
-    let url = URL.createObjectURL(blob);
+    originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
-    // 👉 extension propre
-    let ext = format === "image/png" ? "png" : "jpg";
+    detected.innerText = "Format détecté : WEBP";
 
-    document.getElementById("preview").innerHTML = `
-      <div class="box">
+    const reader = new FileReader();
 
-        <p>Image convertie</p>
+    reader.onload = ev => {
+      img.src = ev.target.result;
 
-        <img src="${url}" alt="image convertie">
+      img.onload = () => {
+        preview.innerHTML = `
+          <div class="box">
+            <p>Image originale (WEBP)</p>
+            <img src="${img.src}" alt="image originale WebP">
+          </div>
+        `;
+      };
+    };
 
-        <br><br>
+    reader.readAsDataURL(file);
+  };
 
-        <a href="${url}" download="${originalFileName}-converted.${ext}">
-          <button>Télécharger</button>
-        </a>
+  /* CONVERSION */
+  window.convert = function () {
 
-      </div>
-    `;
+    if (!img.src) {
+      alert("Veuillez ajouter une image WebP");
+      return;
+    }
 
-  }, format, 0.92);
+    let format = formatSelect.value;
 
-}
+    let canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    let ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+
+    canvas.toBlob(blob => {
+
+      if (!blob) {
+        alert("Erreur de conversion");
+        return;
+      }
+
+      let url = URL.createObjectURL(blob);
+      let ext = format === "image/png" ? "png" : "jpg";
+
+      preview.innerHTML = `
+        <div class="box">
+
+          <p>Image convertie</p>
+
+          <img src="${url}" alt="image convertie">
+
+          <br><br>
+
+          <a href="${url}" download="${originalFileName}-converted.${ext}">
+            <button>Télécharger</button>
+          </a>
+
+        </div>
+      `;
+
+    }, format, 0.92);
+
+  };
+
+});
 
 </script>
