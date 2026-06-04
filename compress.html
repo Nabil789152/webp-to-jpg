@@ -1,29 +1,65 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Compresseur d’images | Image Tools Pro</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h1>Compresser une image</h1>
+  <p>Réduis la taille sans perdre trop de qualité</p>
+</header>
+
+<div class="container">
+
+  <div class="box" id="dropZone">
+
+    <input type="file" id="file" accept="image/*">
+
+    <br><br>
+
+    <label>Qualité</label>
+    <input type="range" id="quality" min="10" max="100" value="70">
+    <small id="qtext">Qualité : 70%</small>
+
+    <br><br>
+
+    <small>Taille originale : <span id="imgSize">-</span></small>
+
+    <br><br>
+
+    <button onclick="compress()">Compresser</button>
+
+  </div>
+
+  <div class="preview" id="preview"></div>
+
+</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
 let img = new Image();
+let originalSize = 0;
 let originalFileName = "";
 
 const fileInput = document.getElementById("file");
-const dropZone = document.querySelector(".box");
+const dropZone = document.getElementById("dropZone");
 const preview = document.getElementById("preview");
-const detected = document.getElementById("detected");
+const qtext = document.getElementById("qtext");
+const sizeInfo = document.getElementById("imgSize");
 
-/* =========================
-   FILE + DRAG & DROP
-========================= */
-
+/* HANDLE FILE */
 function handleFile(file) {
   if (!file) return;
 
-  if (file.type !== "image/webp") {
-    alert("Seuls les fichiers WebP sont acceptés");
-    return;
-  }
-
+  originalSize = file.size / 1024;
   originalFileName = file.name.replace(/\.[^/.]+$/, "");
-
-  detected.innerText = "Format détecté : WEBP";
 
   const reader = new FileReader();
 
@@ -31,9 +67,11 @@ function handleFile(file) {
     img.src = ev.target.result;
 
     img.onload = () => {
+      sizeInfo.innerText = img.width + " × " + img.height + " px";
+
       preview.innerHTML = `
         <div class="box">
-          <p>Image originale (WEBP)</p>
+          <p>Image originale (${originalSize.toFixed(2)} KB)</p>
           <img src="${img.src}" style="max-width:100%;border-radius:10px;">
         </div>
       `;
@@ -43,12 +81,12 @@ function handleFile(file) {
   reader.readAsDataURL(file);
 }
 
-/* FILE INPUT */
+/* INPUT */
 fileInput.addEventListener("change", (e) => {
   handleFile(e.target.files[0]);
 });
 
-/* DRAG ENTER */
+/* DRAG & DROP */
 dropZone.addEventListener("dragover", (e) => {
   e.preventDefault();
   dropZone.classList.add("drag-active");
@@ -58,7 +96,6 @@ dropZone.addEventListener("dragleave", () => {
   dropZone.classList.remove("drag-active");
 });
 
-/* DROP */
 dropZone.addEventListener("drop", (e) => {
   e.preventDefault();
   dropZone.classList.remove("drag-active");
@@ -66,45 +103,52 @@ dropZone.addEventListener("drop", (e) => {
   handleFile(e.dataTransfer.files[0]);
 });
 
-/* =========================
-   CONVERT
-========================= */
+/* SLIDER */
+document.getElementById("quality").oninput = (e) => {
+  qtext.innerText = "Qualité : " + e.target.value + "%";
+};
 
-window.convert = function () {
+/* COMPRESS */
+window.compress = function () {
 
   if (!img.src) {
     alert("Ajoute une image !");
     return;
   }
 
-  let format = document.getElementById("format").value;
+  let q = document.getElementById("quality").value / 100;
 
   let canvas = document.createElement("canvas");
   canvas.width = img.width;
   canvas.height = img.height;
 
-  let ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0);
+  canvas.getContext("2d").drawImage(img, 0, 0);
 
   canvas.toBlob(blob => {
 
+    let newSize = blob.size / 1024;
+    let reduction = (100 - (newSize / originalSize * 100)).toFixed(1);
+
     let url = URL.createObjectURL(blob);
-    let ext = format === "image/png" ? "png" : "jpg";
 
     preview.innerHTML += `
       <div class="box">
-        <p>Image convertie</p>
+        <p>Image compressée</p>
         <img src="${url}" style="max-width:100%;border-radius:10px;">
-        <br><br>
-        <a href="${url}" download="${originalFileName}-converted.${ext}">
+        <p>Taille : ${newSize.toFixed(2)} KB</p>
+        <p>Réduction : ${reduction}%</p>
+        <a href="${url}" download="${originalFileName}-compressed.jpg">
           <button>Télécharger</button>
         </a>
       </div>
     `;
 
-  }, format);
+  }, "image/jpeg", q);
 
 };
 
 });
 </script>
+
+</body>
+</html>
