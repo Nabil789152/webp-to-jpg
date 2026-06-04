@@ -17,7 +17,6 @@
 
 <div class="container">
 
-  <!-- DROP ZONE -->
   <div class="box" id="dropZone">
 
     <input type="file" id="file" accept="image/*">
@@ -36,7 +35,6 @@
 
   </div>
 
-  <!-- PREVIEW -->
   <div class="preview" id="preview"></div>
 
 </div>
@@ -47,9 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
 let img = new Image();
 let originalFileName = "";
 
-/* =========================
-   ELEMENTS
-========================= */
 const fileInput = document.getElementById("file");
 const dropZone = document.getElementById("dropZone");
 const sizeInfo = document.getElementById("sizeInfo");
@@ -57,13 +52,9 @@ const preview = document.getElementById("preview");
 const widthInput = document.getElementById("newWidth");
 
 /* =========================
-   LOAD FILE
+   HANDLE FILE
 ========================= */
-fileInput.addEventListener("change", handleFile);
-
-function handleFile(fileObj) {
-
-  const file = fileObj.target ? fileObj.target.files[0] : fileObj;
+function handleFile(file) {
   if (!file) return;
 
   originalFileName = file.name.replace(/\.[^/.]+$/, "");
@@ -88,33 +79,30 @@ function handleFile(fileObj) {
   reader.readAsDataURL(file);
 }
 
-/* =========================
-   DRAG & DROP SAFE
-========================= */
-if (dropZone) {
+/* INPUT FILE */
+fileInput.addEventListener("change", (e) => {
+  handleFile(e.target.files[0]);
+});
 
-  dropZone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropZone.classList.add("drag-active");
-  });
+/* DRAG & DROP */
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropZone.classList.add("drag-active");
+});
 
-  dropZone.addEventListener("dragleave", () => {
-    dropZone.classList.remove("drag-active");
-  });
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("drag-active");
+});
 
-  dropZone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropZone.classList.remove("drag-active");
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropZone.classList.remove("drag-active");
 
-    const file = e.dataTransfer.files[0];
-    if (!file) return;
-
-    handleFile(file);
-  });
-}
+  handleFile(e.dataTransfer.files[0]);
+});
 
 /* =========================
-   RESIZE FUNCTION
+   RESIZE
 ========================= */
 window.resizeImage = function () {
 
@@ -137,15 +125,9 @@ window.resizeImage = function () {
   canvas.width = newW;
   canvas.height = newH;
 
-  let ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0, newW, newH);
+  canvas.getContext("2d").drawImage(img, 0, 0, newW, newH);
 
   canvas.toBlob(blob => {
-
-    if (!blob) {
-      alert("Erreur de conversion");
-      return;
-    }
 
     let url = URL.createObjectURL(blob);
 
@@ -153,9 +135,7 @@ window.resizeImage = function () {
       <div class="box">
         <p>Image redimensionnée</p>
         <img src="${url}" style="max-width:100%;border-radius:10px;">
-
         <br><br>
-
         <a href="${url}" download="${originalFileName}-resized.jpg">
           <button>Télécharger</button>
         </a>
