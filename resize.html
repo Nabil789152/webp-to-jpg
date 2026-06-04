@@ -3,13 +3,51 @@
 let img = new Image();
 let originalFileName = "";
 
-/* CHARGEMENT IMAGE */
-document.getElementById("file").onchange = (e) => {
+/* ELEMENTS */
+const fileInput = document.getElementById("file");
+const dropZone = document.getElementById("dropZone");
 
+/* CLICK DROPZONE */
+if (dropZone) {
+  dropZone.addEventListener("click", () => fileInput.click());
+
+  /* DRAG OVER */
+  dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropZone.classList.add("dragover");
+  });
+
+  /* DRAG LEAVE */
+  dropZone.addEventListener("dragleave", () => {
+    dropZone.classList.remove("dragover");
+  });
+
+  /* DROP */
+  dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropZone.classList.remove("dragover");
+
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  });
+}
+
+/* INPUT FILE */
+fileInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
+  if (file) handleFile(file);
+});
+
+/* CENTRAL FILE HANDLER */
+function handleFile(file) {
+
   if (!file) return;
 
-  // 👉 nom propre sans extension
+  if (!file.type.startsWith("image/")) {
+    alert("Veuillez choisir une image !");
+    return;
+  }
+
   originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
   const reader = new FileReader();
@@ -18,22 +56,24 @@ document.getElementById("file").onchange = (e) => {
     img.src = ev.target.result;
 
     img.onload = () => {
+
       document.getElementById("sizeInfo").innerText =
         img.width + " × " + img.height + " px";
 
       document.getElementById("preview").innerHTML = `
         <div class="box">
           <p>Image originale</p>
-          <img src="${img.src}" alt="image originale">
+          <img src="${img.src}" alt="image originale"
+               style="max-width:100%;border-radius:10px;">
         </div>
       `;
     };
   };
 
   reader.readAsDataURL(file);
-};
+}
 
-/* REDIMENSIONNEMENT */
+/* RESIZE */
 function resizeImage() {
 
   if (!img.src) {
@@ -72,7 +112,8 @@ function resizeImage() {
 
         <p>Image redimensionnée</p>
 
-        <img src="${url}" alt="image redimensionnée">
+        <img src="${url}" alt="image redimensionnée"
+             style="max-width:100%;border-radius:10px;">
 
         <br><br>
 
