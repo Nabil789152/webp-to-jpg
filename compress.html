@@ -3,173 +3,183 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compresseur d’images</title>
 
-<title>Compresseur d’images | Image Tools Pro</title>
-<link rel="stylesheet" href="style.css">
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+}
+
+/* HEADER */
+header{
+    background:#1e88e5;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+header h1{
+    margin:0;
+    font-size:24px;
+}
+
+/* CONTAINER */
+.container{
+    max-width:900px;
+    margin:40px auto;
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* INPUT FILE */
+input[type="file"]{
+    width:100%;
+    margin-bottom:15px;
+}
+
+/* QUALITY SLIDER */
+label{
+    font-weight:bold;
+    display:block;
+    margin-top:15px;
+}
+
+input[type="range"]{
+    width:100%;
+}
+
+/* BUTTON */
+button{
+    margin-top:20px;
+    width:100%;
+    padding:12px;
+    background:#1e88e5;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1565c0;
+}
+
+/* INFO */
+.info{
+    margin-top:10px;
+    font-size:14px;
+    color:#555;
+}
+
+/* PREVIEW */
+.preview{
+    margin-top:20px;
+    text-align:center;
+}
+
+.preview img{
+    max-width:100%;
+    border-radius:10px;
+    margin-top:10px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* FOOTER */
+footer{
+    text-align:center;
+    padding:20px;
+    margin-top:40px;
+    background:#222;
+    color:#aaa;
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <h1>Compresser une image</h1>
-  <p>Glisse-dépose ou sélectionne une image</p>
+    <h1>Compresseur d’Images</h1>
 </header>
 
 <div class="container">
 
-  <!-- DROP ZONE -->
-  <div class="box" id="dropZone">
+    <input type="file" id="imageInput" accept="image/*">
 
-    <input type="file" id="file" accept="image/*">
+    <label>Qualité de compression (JPEG)</label>
+    <input type="range" id="quality" min="0.1" max="1" step="0.1" value="0.7">
+    <div class="info">Qualité actuelle : <span id="qValue">0.7</span></div>
 
-    <br><br>
+    <button onclick="compressImage()">Compresser l’image</button>
 
-    <label>Qualité</label>
-    <input type="range" id="quality" min="10" max="100" value="70">
+    <div class="preview">
+        <h3>Aperçu compressé :</h3>
+        <img id="output">
+    </div>
 
-    <small id="qtext">Qualité : 70%</small>
-
-    <br><br>
-
-    <small>Dimensions : <span id="imgSize">-</span></small>
-
-    <br><br>
-
-    <button onclick="compress()">Compresser</button>
-
-  </div>
-
-  <!-- PREVIEW -->
-  <div class="preview" id="preview"></div>
+    <button id="downloadBtn" style="display:none;">Télécharger l’image compressée</button>
 
 </div>
 
+<footer>
+    © 2026 - Outils Image Pro | Développé par Nabil
+</footer>
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+let originalImage = new Image();
 
-  let img = new Image();
-  let originalSize = 0;
-  let originalFileName = "";
+const qualitySlider = document.getElementById("quality");
+const qValue = document.getElementById("qValue");
 
-  const fileInput = document.getElementById("file");
-  const dropZone = document.getElementById("dropZone");
+qualitySlider.addEventListener("input", function(){
+    qValue.textContent = qualitySlider.value;
+});
 
-  /* =========================
-     SLIDER
-  ========================= */
-  document.getElementById("quality").addEventListener("input", (e) => {
-    document.getElementById("qtext").textContent =
-      "Qualité : " + e.target.value + "%";
-  });
-
-  /* =========================
-     LOAD FILE (COMMON)
-  ========================= */
-  function handleFile(file) {
-
-    if (!file) return;
-
-    originalSize = file.size / 1024;
-    originalFileName = file.name.replace(/\.[^/.]+$/, "");
+document.getElementById("imageInput").addEventListener("change", function(e){
+    const file = e.target.files[0];
+    if(!file) return;
 
     const reader = new FileReader();
-
-    reader.onload = ev => {
-      img.src = ev.target.result;
-
-      img.onload = () => {
-
-        document.getElementById("imgSize").textContent =
-          img.width + " × " + img.height + " px";
-
-        document.getElementById("preview").innerHTML = `
-          <div class="box">
-            <p>Image originale (${originalSize.toFixed(2)} KB)</p>
-            <img src="${img.src}" style="max-width:100%;border-radius:10px;">
-          </div>
-        `;
-      };
+    reader.onload = function(event){
+        originalImage.src = event.target.result;
     };
-
     reader.readAsDataURL(file);
-  }
+});
 
-  /* =========================
-     FILE INPUT
-  ========================= */
-  fileInput.addEventListener("change", (e) => {
-    handleFile(e.target.files[0]);
-  });
-
-  /* =========================
-     DRAG & DROP
-  ========================= */
-  dropZone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropZone.classList.add("drag-active");
-  });
-
-  dropZone.addEventListener("dragleave", () => {
-    dropZone.classList.remove("drag-active");
-  });
-
-  dropZone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropZone.classList.remove("drag-active");
-
-    handleFile(e.dataTransfer.files[0]);
-  });
-
-  /* =========================
-     COMPRESS FUNCTION
-  ========================= */
-  window.compress = function () {
-
-    if (!img.src) {
-      alert("Ajoute une image !");
-      return;
+function compressImage(){
+    if(!originalImage.src){
+        alert("Veuillez choisir une image !");
+        return;
     }
 
-    let q = document.getElementById("quality").value / 100;
+    const quality = parseFloat(qualitySlider.value);
 
-    let canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
 
-    let ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
+    canvas.width = originalImage.width;
+    canvas.height = originalImage.height;
 
-    canvas.toBlob(blob => {
+    ctx.drawImage(originalImage, 0, 0);
 
-      if (!blob) {
-        alert("Erreur compression");
-        return;
-      }
+    const compressedDataURL = canvas.toDataURL("image/jpeg", quality);
 
-      let newSize = blob.size / 1024;
-      let reduction = (100 - (newSize / originalSize * 100)).toFixed(1);
+    document.getElementById("output").src = compressedDataURL;
 
-      let url = URL.createObjectURL(blob);
+    const downloadBtn = document.getElementById("downloadBtn");
+    downloadBtn.style.display = "block";
 
-      document.getElementById("preview").innerHTML += `
-        <div class="box">
-          <p>Image compressée</p>
-
-          <img src="${url}" style="max-width:100%;border-radius:10px;">
-
-          <p>Taille : ${newSize.toFixed(2)} KB</p>
-          <p>Réduction : ${reduction}%</p>
-
-          <a href="${url}" download="${originalFileName}-compressed.jpg">
-            <button>Télécharger</button>
-          </a>
-        </div>
-      `;
-
-    }, "image/jpeg", q);
-  };
-
-});
+    downloadBtn.onclick = function(){
+        const a = document.createElement("a");
+        a.href = compressedDataURL;
+        a.download = "compressed-image.jpg";
+        a.click();
+    };
+}
 </script>
 
 </body>
