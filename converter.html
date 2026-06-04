@@ -1,53 +1,8 @@
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Convertisseur WebP en ligne gratuit | Image Tools Pro</title>
-
-<meta name="description" content="Convertissez vos images WebP en JPG ou PNG gratuitement en ligne. Outil rapide, sécurisé et facile d'utilisation.">
-<meta name="robots" content="index, follow">
-
-<link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-<header>
-  <h1>Convertisseur WebP</h1>
-  <p>Convertir des images WebP en JPG ou PNG instantanément</p>
-</header>
-
-<div class="container">
-
-  <div class="box">
-
-    <input type="file" id="file" accept="image/webp">
-
-    <div class="box">
-      <p id="detected">Format détecté : -</p>
-    </div>
-
-    <select id="format">
-      <option value="image/jpeg">JPG</option>
-      <option value="image/png">PNG</option>
-    </select>
-
-    <button onclick="convert()">Convertir</button>
-
-  </div>
-
-  <div class="preview" id="preview"></div>
-
-</div>
-
 <script>
 
 let img = new Image();
 let originalFileName = "";
-  
+
 /* CHARGEMENT DE L'IMAGE */
 document.getElementById("file").onchange = (e) => {
 
@@ -58,6 +13,12 @@ document.getElementById("file").onchange = (e) => {
     alert("Seuls les fichiers WebP sont acceptés");
     return;
   }
+
+  // 👉 récupérer nom sans extension
+  const dotIndex = file.name.lastIndexOf(".");
+  originalFileName = dotIndex !== -1
+    ? file.name.substring(0, dotIndex)
+    : file.name;
 
   document.getElementById("detected").innerText = "Format détecté : WEBP";
 
@@ -99,6 +60,9 @@ function convert(){
 
     let url = URL.createObjectURL(blob);
 
+    // 👉 extension propre
+    let ext = format === "image/png" ? "png" : "jpg";
+
     document.getElementById("preview").innerHTML = `
       <div class="box">
 
@@ -108,8 +72,8 @@ function convert(){
 
         <br><br>
 
-        <a href="${url}" download="${originalFileName}">
-        <button>Télécharger</button>
+        <a href="${url}" download="${originalFileName}-converted.${ext}">
+          <button>Télécharger</button>
         </a>
 
       </div>
@@ -120,16 +84,3 @@ function convert(){
 }
 
 </script>
-
-<footer>
-<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
-
-<a href="index.html">Accueil</a>
-<a href="about.html">À propos</a>
-<a href="contact.html">Contact</a>
-<a href="privacy.html">Politique de confidentialité</a>
-<a href="terms.html">Conditions d’utilisation</a>
-</footer>
-
-</body>
-</html>
