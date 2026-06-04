@@ -5,7 +5,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convertisseur WebP | Image Tools Pro</title>
+<title>Convertisseur d’images | Image Tools Pro</title>
+
+<meta name="description" content="Convertissez vos images WebP en JPG ou PNG gratuitement en ligne. Outil rapide et sécurisé.">
+<meta name="robots" content="index, follow">
 
 <link rel="stylesheet" href="style.css">
 </head>
@@ -20,16 +23,19 @@
 <div class="container">
 
   <!-- DROP ZONE -->
-  <div class="drop-zone" id="dropZone">
-
-    <input type="file" id="file" accept="image/webp" hidden>
-
-    <p>📁 Glisse-dépose ton image ici</p>
-    <small>ou clique pour sélectionner</small>
-
-  </div>
-
   <div class="box">
+
+    <div class="drop-zone" id="dropZone">
+
+      <input type="file" id="file" accept="image/*">
+
+      <div class="drop-content">
+        <div class="icon">📁</div>
+        <h3>Glisse-dépose ton image ici</h3>
+        <p>ou clique pour sélectionner</p>
+      </div>
+
+    </div>
 
     <p id="detected">Format détecté : -</p>
 
@@ -42,141 +48,126 @@
 
   </div>
 
+  <!-- PREVIEW -->
   <div class="preview" id="preview"></div>
 
 </div>
 
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
+
+  <a href="index.html">Accueil</a>
+  <a href="about.html">À propos</a>
+  <a href="contact.html">Contact</a>
+  <a href="privacy.html">Politique de confidentialité</a>
+  <a href="terms.html">Conditions d’utilisation</a>
+</footer>
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+let img = new Image();
+let originalFileName = "";
 
-  let img = new Image();
-  let originalFileName = "";
+const fileInput = document.getElementById("file");
+const dropZone = document.getElementById("dropZone");
+const preview = document.getElementById("preview");
 
-  const dropZone = document.getElementById("dropZone");
-  const fileInput = document.getElementById("file");
-  const preview = document.getElementById("preview");
-  const detected = document.getElementById("detected");
+/* =========================
+   LOAD IMAGE
+========================= */
+function handleFile(file) {
 
-  // =========================
-  // CLICK ZONE
-  // =========================
-  dropZone.addEventListener("click", () => {
-    fileInput.click();
-  });
+  if (!file) return;
 
-  // =========================
-  // DRAG OVER
-  // =========================
-  dropZone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropZone.classList.add("drag-active");
-  });
+  originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
-  dropZone.addEventListener("dragleave", () => {
-    dropZone.classList.remove("drag-active");
-  });
+  document.getElementById("detected").textContent =
+    "Format détecté : " + file.type.split("/")[1].toUpperCase();
 
-  // =========================
-  // DROP FILE
-  // =========================
-  dropZone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropZone.classList.remove("drag-active");
+  const reader = new FileReader();
 
-    const file = e.dataTransfer.files[0];
-    if (!file) return;
+  reader.onload = ev => {
+    img.src = ev.target.result;
 
-    fileInput.files = e.dataTransfer.files;
-    loadFile(file);
-  });
-
-  // =========================
-  // INPUT FILE
-  // =========================
-  fileInput.addEventListener("change", (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    loadFile(file);
-  });
-
-  // =========================
-  // LOAD IMAGE
-  // =========================
-  function loadFile(file) {
-
-    originalFileName = file.name.replace(/\.[^/.]+$/, "");
-
-    detected.textContent = "Format détecté : " + file.type;
-
-    const reader = new FileReader();
-
-    reader.onload = (ev) => {
-
-      img = new Image();
-
-      img.onload = () => {
-        preview.innerHTML = `
-          <div class="box">
-            <p>Image originale</p>
-            <img src="${img.src}" style="max-width:100%;border-radius:10px;">
-          </div>
-        `;
-      };
-
-      img.src = ev.target.result;
-    };
-
-    reader.readAsDataURL(file);
-  }
-
-  // =========================
-  // CONVERT
-  // =========================
-  window.convert = function () {
-
-    if (!img.src) {
-      alert("Ajoute une image !");
-      return;
-    }
-
-    const format = document.getElementById("format").value;
-
-    const canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-
-    canvas.toBlob((blob) => {
-
-      if (!blob) {
-        alert("Erreur conversion");
-        return;
-      }
-
-      const url = URL.createObjectURL(blob);
-
-      const ext = format === "image/png" ? "png" : "jpg";
-
-      preview.innerHTML += `
+    img.onload = () => {
+      preview.innerHTML = `
         <div class="box">
-          <p>Image convertie</p>
-
-          <img src="${url}" style="max-width:100%;border-radius:10px;">
-
-          <br><br>
-
-          <a href="${url}" download="${originalFileName}-converted.${ext}">
-            <button>Télécharger</button>
-          </a>
+          <p>Image originale</p>
+          <img src="${img.src}" style="max-width:100%;border-radius:10px;">
         </div>
       `;
-    }, format, 0.92);
+    };
   };
 
+  reader.readAsDataURL(file);
+}
+
+/* FILE INPUT */
+fileInput.addEventListener("change", (e) => {
+  handleFile(e.target.files[0]);
 });
+
+/* =========================
+   DRAG & DROP
+========================= */
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropZone.classList.add("drag-active");
+});
+
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("drag-active");
+});
+
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropZone.classList.remove("drag-active");
+
+  handleFile(e.dataTransfer.files[0]);
+});
+
+/* =========================
+   CONVERT
+========================= */
+function convert() {
+
+  if (!img.src) {
+    alert("Ajoute une image !");
+    return;
+  }
+
+  let format = document.getElementById("format").value;
+
+  let canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+
+  canvas.toBlob(blob => {
+
+    if (!blob) return;
+
+    let url = URL.createObjectURL(blob);
+
+    let ext = format === "image/png" ? "png" : "jpg";
+
+    preview.innerHTML = `
+      <div class="box">
+        <p>Image convertie</p>
+
+        <img src="${url}" style="max-width:100%;border-radius:10px;">
+
+        <br><br>
+
+        <a href="${url}" download="${originalFileName}-converted.${ext}">
+          <button>Télécharger</button>
+        </a>
+      </div>
+    `;
+  }, format);
+}
 </script>
 
 </body>
