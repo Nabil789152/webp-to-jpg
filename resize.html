@@ -4,51 +4,50 @@ document.addEventListener("DOMContentLoaded", () => {
 let img = new Image();
 let originalFileName = "";
 
-/* =========================
-   FILE INPUT LOAD
-========================= */
+/* FILE INPUT */
 const fileInput = document.getElementById("file");
 
 fileInput.addEventListener("change", (e) => {
-
   const file = e.target.files[0];
   if (!file) return;
-
   loadImage(file);
 });
 
 /* =========================
-   DRAG & DROP
+   DRAG & DROP SAFE
 ========================= */
 
-const dropZone = document.querySelector(".box");
+const dropZone = document.getElementById("dropZone");
 
-dropZone.addEventListener("dragover", (e) => {
-  e.preventDefault();
-  dropZone.style.border = "2px dashed #1a73e8";
-  dropZone.style.background = "#eef5ff";
-});
+if (dropZone) {
 
-dropZone.addEventListener("dragleave", () => {
-  dropZone.style.border = "none";
-  dropZone.style.background = "white";
-});
+  dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropZone.style.border = "2px dashed #1a73e8";
+    dropZone.style.background = "#eef5ff";
+  });
 
-dropZone.addEventListener("drop", (e) => {
-  e.preventDefault();
+  dropZone.addEventListener("dragleave", () => {
+    dropZone.style.border = "none";
+    dropZone.style.background = "white";
+  });
 
-  dropZone.style.border = "none";
-  dropZone.style.background = "white";
+  dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
 
-  const file = e.dataTransfer.files[0];
-  if (!file) return;
+    dropZone.style.border = "none";
+    dropZone.style.background = "white";
 
-  fileInput.files = e.dataTransfer.files;
-  loadImage(file);
-});
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+
+    fileInput.files = e.dataTransfer.files;
+    loadImage(file);
+  });
+}
 
 /* =========================
-   LOAD IMAGE FUNCTION
+   LOAD IMAGE
 ========================= */
 function loadImage(file) {
 
