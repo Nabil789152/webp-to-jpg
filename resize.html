@@ -76,78 +76,86 @@ Taille originale : <span id="sizeInfo">-</span>
 <script>
 
 let img = new Image();
+let originalFileName = "";
 
 /* CHARGEMENT IMAGE */
 document.getElementById("file").onchange = (e) => {
-const file = e.target.files[0];
-if(!file) return;
 
-const reader = new FileReader();
+  const file = e.target.files[0];
+  if(!file) return;
 
-reader.onload = ev => {
-img.src = ev.target.result;
+  const reader = new FileReader();
 
-img.onload = () => {
-document.getElementById("sizeInfo").innerText =
-img.width + " x " + img.height;
+  // 👉 récupérer nom sans extension
+  const dotIndex = file.name.lastIndexOf(".");
+  originalFileName = dotIndex !== -1
+    ? file.name.substring(0, dotIndex)
+    : file.name;
 
-document.getElementById("preview").innerHTML = `
-<div>
-<p>Image originale</p>
-<img src="${img.src}" alt="image originale">
-</div>
-`;
-};
-};
+  reader.onload = ev => {
+    img.src = ev.target.result;
 
-reader.readAsDataURL(file);
+    img.onload = () => {
+      document.getElementById("sizeInfo").innerText =
+        img.width + " x " + img.height;
+
+      document.getElementById("preview").innerHTML = `
+        <div>
+          <p>Image originale</p>
+          <img src="${img.src}" alt="image originale">
+        </div>
+      `;
+    };
+  };
+
+  reader.readAsDataURL(file);
 };
 
 /* REDIMENSIONNEMENT */
 function resizeImage(){
 
-if(!img.src){
-alert("Veuillez ajouter une image !");
-return;
-}
+  if(!img.src){
+    alert("Veuillez ajouter une image !");
+    return;
+  }
 
-let newW = parseInt(document.getElementById("newWidth").value);
+  let newW = parseInt(document.getElementById("newWidth").value);
 
-if(!newW || newW <= 0){
-alert("Veuillez entrer une largeur valide !");
-return;
-}
+  if(!newW || newW <= 0){
+    alert("Veuillez entrer une largeur valide !");
+    return;
+  }
 
-let ratio = img.height / img.width;
-let newH = Math.round(newW * ratio);
+  let ratio = img.height / img.width;
+  let newH = Math.round(newW * ratio);
 
-let canvas = document.createElement("canvas");
-canvas.width = newW;
-canvas.height = newH;
+  let canvas = document.createElement("canvas");
+  canvas.width = newW;
+  canvas.height = newH;
 
-canvas.getContext("2d").drawImage(img,0,0,newW,newH);
+  canvas.getContext("2d").drawImage(img,0,0,newW,newH);
 
-canvas.toBlob(blob => {
+  canvas.toBlob(blob => {
 
-let url = URL.createObjectURL(blob);
+    let url = URL.createObjectURL(blob);
 
-document.getElementById("preview").innerHTML += `
-<div>
+    document.getElementById("preview").innerHTML += `
+      <div>
 
-<p>Image redimensionnée</p>
+        <p>Image redimensionnée</p>
 
-<img src="${url}" alt="image redimensionnée">
+        <img src="${url}" alt="image redimensionnée">
 
-<br><br>
+        <br><br>
 
-<a href="${url}" download="image-redimensionnee.jpg">
-<button>Télécharger</button>
-</a>
+        <a href="${url}" download="${originalFileName}-resized.jpg">
+          <button>Télécharger</button>
+        </a>
 
-</div>
-`;
+      </div>
+    `;
 
-}, "image/jpeg", 0.9);
+  }, "image/jpeg", 0.9);
 
 }
 
