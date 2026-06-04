@@ -1,52 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Redimensionneur d’images | Image Tools Pro</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h1>Redimensionner une image</h1>
+  <p>Changer les dimensions facilement</p>
+</header>
+
+<div class="container">
+
+  <div class="box">
+    <input type="file" id="file" accept="image/*">
+
+    <br><br>
+
+    <small>Taille : <span id="sizeInfo">-</span></small>
+
+    <br><br>
+
+    <input type="number" id="newWidth" placeholder="Largeur (px)">
+
+    <br><br>
+
+    <button onclick="resizeImage()">Redimensionner</button>
+  </div>
+
+  <div class="preview" id="preview"></div>
+
+</div>
+
 <script>
+document.addEventListener("DOMContentLoaded", () => {
 
 let img = new Image();
 let originalFileName = "";
 
-/* ELEMENTS */
-const fileInput = document.getElementById("file");
-const dropZone = document.getElementById("dropZone");
+/* FILE LOAD */
+document.getElementById("file").addEventListener("change", (e) => {
 
-/* CLICK DROPZONE */
-if (dropZone) {
-  dropZone.addEventListener("click", () => fileInput.click());
-
-  /* DRAG OVER */
-  dropZone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropZone.classList.add("dragover");
-  });
-
-  /* DRAG LEAVE */
-  dropZone.addEventListener("dragleave", () => {
-    dropZone.classList.remove("dragover");
-  });
-
-  /* DROP */
-  dropZone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropZone.classList.remove("dragover");
-
-    const file = e.dataTransfer.files[0];
-    if (file) handleFile(file);
-  });
-}
-
-/* INPUT FILE */
-fileInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
-  if (file) handleFile(file);
-});
-
-/* CENTRAL FILE HANDLER */
-function handleFile(file) {
-
   if (!file) return;
-
-  if (!file.type.startsWith("image/")) {
-    alert("Veuillez choisir une image !");
-    return;
-  }
 
   originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
@@ -56,35 +57,33 @@ function handleFile(file) {
     img.src = ev.target.result;
 
     img.onload = () => {
-
       document.getElementById("sizeInfo").innerText =
         img.width + " × " + img.height + " px";
 
       document.getElementById("preview").innerHTML = `
         <div class="box">
           <p>Image originale</p>
-          <img src="${img.src}" alt="image originale"
-               style="max-width:100%;border-radius:10px;">
+          <img src="${img.src}" style="max-width:100%;border-radius:10px;">
         </div>
       `;
     };
   };
 
   reader.readAsDataURL(file);
-}
+});
 
 /* RESIZE */
-function resizeImage() {
+window.resizeImage = function () {
 
   if (!img.src) {
-    alert("Veuillez ajouter une image !");
+    alert("Ajoute une image !");
     return;
   }
 
   let newW = parseInt(document.getElementById("newWidth").value);
 
   if (!newW || newW <= 0) {
-    alert("Veuillez entrer une largeur valide !");
+    alert("Largeur invalide !");
     return;
   }
 
@@ -95,37 +94,30 @@ function resizeImage() {
   canvas.width = newW;
   canvas.height = newH;
 
-  let ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0, newW, newH);
+  canvas.getContext("2d").drawImage(img, 0, 0, newW, newH);
 
   canvas.toBlob(blob => {
-
-    if (!blob) {
-      alert("Erreur de redimensionnement");
-      return;
-    }
 
     let url = URL.createObjectURL(blob);
 
     document.getElementById("preview").innerHTML += `
       <div class="box">
-
         <p>Image redimensionnée</p>
-
-        <img src="${url}" alt="image redimensionnée"
-             style="max-width:100%;border-radius:10px;">
+        <img src="${url}" style="max-width:100%;border-radius:10px;">
 
         <br><br>
 
         <a href="${url}" download="${originalFileName}-resized.jpg">
           <button>Télécharger</button>
         </a>
-
       </div>
     `;
 
   }, "image/jpeg", 0.92);
+};
 
-}
-
+});
 </script>
+
+</body>
+</html>
