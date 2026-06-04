@@ -1,55 +1,45 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
+try {
+
 let img = new Image();
 let originalFileName = "";
 
-/* FILE INPUT */
+/* ELEMENTS */
 const fileInput = document.getElementById("file");
+const sizeInfo = document.getElementById("sizeInfo");
+const preview = document.getElementById("preview");
+const newWidthInput = document.getElementById("newWidth");
+const dropZone = document.getElementById("file").parentElement;
 
-fileInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  loadImage(file);
-});
+/* FILE INPUT */
+fileInput.addEventListener("change", handleFile);
 
-/* =========================
-   DRAG & DROP SAFE
-========================= */
-
-const dropZone = document.getElementById("dropZone");
-
+/* DRAG & DROP */
 if (dropZone) {
 
   dropZone.addEventListener("dragover", (e) => {
     e.preventDefault();
     dropZone.style.border = "2px dashed #1a73e8";
-    dropZone.style.background = "#eef5ff";
-  });
-
-  dropZone.addEventListener("dragleave", () => {
-    dropZone.style.border = "none";
-    dropZone.style.background = "white";
   });
 
   dropZone.addEventListener("drop", (e) => {
     e.preventDefault();
 
-    dropZone.style.border = "none";
-    dropZone.style.background = "white";
-
     const file = e.dataTransfer.files[0];
     if (!file) return;
 
     fileInput.files = e.dataTransfer.files;
-    loadImage(file);
+    handleFile({ target: { files: [file] } });
   });
 }
 
-/* =========================
-   LOAD IMAGE
-========================= */
-function loadImage(file) {
+/* LOAD IMAGE */
+function handleFile(e) {
+
+  const file = e.target.files[0];
+  if (!file) return;
 
   originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
@@ -59,10 +49,9 @@ function loadImage(file) {
     img.src = ev.target.result;
 
     img.onload = () => {
-      document.getElementById("sizeInfo").innerText =
-        img.width + " × " + img.height + " px";
+      sizeInfo.innerText = img.width + " × " + img.height + " px";
 
-      document.getElementById("preview").innerHTML = `
+      preview.innerHTML = `
         <div class="box">
           <p>Image originale</p>
           <img src="${img.src}" style="max-width:100%;border-radius:10px;">
@@ -74,9 +63,7 @@ function loadImage(file) {
   reader.readAsDataURL(file);
 }
 
-/* =========================
-   RESIZE
-========================= */
+/* RESIZE */
 window.resizeImage = function () {
 
   if (!img.src) {
@@ -84,9 +71,9 @@ window.resizeImage = function () {
     return;
   }
 
-  let newW = parseInt(document.getElementById("newWidth").value);
+  let newW = parseInt(newWidthInput.value);
 
-  if (!newW || newW <= 0) {
+  if (!newW) {
     alert("Largeur invalide !");
     return;
   }
@@ -104,7 +91,7 @@ window.resizeImage = function () {
 
     let url = URL.createObjectURL(blob);
 
-    document.getElementById("preview").innerHTML += `
+    preview.innerHTML += `
       <div class="box">
         <p>Image redimensionnée</p>
         <img src="${url}" style="max-width:100%;border-radius:10px;">
@@ -119,6 +106,10 @@ window.resizeImage = function () {
 
   }, "image/jpeg", 0.92);
 };
+
+} catch (err) {
+  console.error("ERREUR JS:", err);
+}
 
 });
 </script>
