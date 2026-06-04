@@ -1,62 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Redimensionneur d’images | Image Tools Pro</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h1>Redimensionner une image</h1>
+  <p>Glisse-dépose ou sélectionne une image</p>
+</header>
+
+<div class="container">
+
+  <!-- DROP ZONE -->
+  <div class="box" id="dropZone">
+
+    <input type="file" id="file" accept="image/*">
+
+    <br><br>
+
+    <small>Taille : <span id="sizeInfo">-</span></small>
+
+    <br><br>
+
+    <input type="number" id="newWidth" placeholder="Largeur (px)">
+
+    <br><br>
+
+    <button onclick="resizeImage()">Redimensionner</button>
+
+  </div>
+
+  <!-- PREVIEW -->
+  <div class="preview" id="preview"></div>
+
+</div>
+
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  let img = new Image();
-  let originalFileName = "";
+let img = new Image();
+let originalFileName = "";
 
-  const fileInput = document.getElementById("file");
-  const sizeInfo = document.getElementById("sizeInfo");
-  const preview = document.getElementById("preview");
-  const newWidthInput = document.getElementById("newWidth");
+/* =========================
+   ELEMENTS
+========================= */
+const fileInput = document.getElementById("file");
+const dropZone = document.getElementById("dropZone");
+const sizeInfo = document.getElementById("sizeInfo");
+const preview = document.getElementById("preview");
+const widthInput = document.getElementById("newWidth");
 
-  // zone drag & drop = la box principale
-  const dropZone = fileInput.closest(".box");
+/* =========================
+   LOAD FILE
+========================= */
+fileInput.addEventListener("change", handleFile);
 
-  if (!fileInput || !preview || !dropZone) {
-    console.error("❌ Elements HTML manquants");
-    return;
-  }
+function handleFile(fileObj) {
 
-  /* =========================
-     FILE HANDLER
-  ========================= */
-  function handleFile(file) {
+  const file = fileObj.target ? fileObj.target.files[0] : fileObj;
+  if (!file) return;
 
-    if (!file || !file.type.startsWith("image/")) {
-      alert("Veuillez choisir une image valide !");
-      return;
-    }
+  originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
-    originalFileName = file.name.replace(/\.[^/.]+$/, "");
+  const reader = new FileReader();
 
-    const reader = new FileReader();
+  reader.onload = ev => {
+    img.src = ev.target.result;
 
-    reader.onload = (ev) => {
-      img.src = ev.target.result;
+    img.onload = () => {
+      sizeInfo.innerText = img.width + " × " + img.height + " px";
 
-      img.onload = () => {
-        sizeInfo.textContent = `${img.width} × ${img.height} px`;
-
-        preview.innerHTML = `
-          <div class="box">
-            <p>Image originale</p>
-            <img src="${img.src}" style="max-width:100%;border-radius:10px;">
-          </div>
-        `;
-      };
+      preview.innerHTML = `
+        <div class="box">
+          <p>Image originale</p>
+          <img src="${img.src}" style="max-width:100%;border-radius:10px;">
+        </div>
+      `;
     };
+  };
 
-    reader.readAsDataURL(file);
-  }
+  reader.readAsDataURL(file);
+}
 
-  /* FILE INPUT */
-  fileInput.addEventListener("change", (e) => {
-    handleFile(e.target.files[0]);
-  });
-
-  /* =========================
-     DRAG & DROP CANVA STYLE
-  ========================= */
+/* =========================
+   DRAG & DROP SAFE
+========================= */
+if (dropZone) {
 
   dropZone.addEventListener("dragover", (e) => {
     e.preventDefault();
@@ -72,55 +107,66 @@ document.addEventListener("DOMContentLoaded", () => {
     dropZone.classList.remove("drag-active");
 
     const file = e.dataTransfer.files[0];
+    if (!file) return;
+
     handleFile(file);
   });
+}
 
-  /* =========================
-     RESIZE
-  ========================= */
-  window.resizeImage = function () {
+/* =========================
+   RESIZE FUNCTION
+========================= */
+window.resizeImage = function () {
 
-    if (!img.src) {
-      alert("Ajoute une image !");
+  if (!img.src) {
+    alert("Ajoute une image !");
+    return;
+  }
+
+  let newW = parseInt(widthInput.value);
+
+  if (!newW || newW <= 0) {
+    alert("Largeur invalide !");
+    return;
+  }
+
+  let ratio = img.height / img.width;
+  let newH = Math.round(newW * ratio);
+
+  let canvas = document.createElement("canvas");
+  canvas.width = newW;
+  canvas.height = newH;
+
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0, newW, newH);
+
+  canvas.toBlob(blob => {
+
+    if (!blob) {
+      alert("Erreur de conversion");
       return;
     }
 
-    const newW = parseInt(newWidthInput.value);
+    let url = URL.createObjectURL(blob);
 
-    if (!newW || newW <= 0) {
-      alert("Largeur invalide !");
-      return;
-    }
+    preview.innerHTML += `
+      <div class="box">
+        <p>Image redimensionnée</p>
+        <img src="${url}" style="max-width:100%;border-radius:10px;">
 
-    const ratio = img.height / img.width;
-    const newH = Math.round(newW * ratio);
+        <br><br>
 
-    const canvas = document.createElement("canvas");
-    canvas.width = newW;
-    canvas.height = newH;
+        <a href="${url}" download="${originalFileName}-resized.jpg">
+          <button>Télécharger</button>
+        </a>
+      </div>
+    `;
 
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0, newW, newH);
-
-    canvas.toBlob((blob) => {
-
-      const url = URL.createObjectURL(blob);
-
-      preview.innerHTML += `
-        <div class="box">
-          <p>Image redimensionnée</p>
-          <img src="${url}" style="max-width:100%;border-radius:10px;">
-
-          <br><br>
-
-          <a href="${url}" download="${originalFileName}-resized.jpg">
-            <button>Télécharger</button>
-          </a>
-        </div>
-      `;
-
-    }, "image/jpeg", 0.92);
-  };
+  }, "image/jpeg", 0.92);
+};
 
 });
 </script>
+
+</body>
+</html>
