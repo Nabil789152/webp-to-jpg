@@ -1,5 +1,5 @@
 /* =========================
-GLOBAL STYLE - IMAGE TOOLS PRO (FINAL OPTIMISÉ)
+GLOBAL STYLE - IMAGE TOOLS PRO (FINAL CLEAN)
 ========================= */
 
 * {
@@ -109,7 +109,7 @@ grid-template-columns: 1fr;
 }
 
 /* =========================
-TOOL CARDS (VERSION PRO FINAL)
+TOOL CARDS (FINAL PRO)
 ========================= */
 
 .tool-card {
@@ -120,8 +120,8 @@ box-shadow: 0 2px 10px rgba(0,0,0,0.05);
 display: flex;
 flex-direction: column;
 text-align: center;
-transition: all 0.25s ease;
 overflow: hidden;
+transition: all 0.25s ease;
 }
 
 .tool-card:hover {
@@ -130,27 +130,26 @@ box-shadow: 0 12px 28px rgba(0,0,0,0.12);
 }
 
 /* =========================
-VIGNETTES (FIX DÉFINITIF ✔)
+VIGNETTES FORCÉES (FIX DÉFINITIF)
 ========================= */
 
 .tool-card img {
 width: 100%;
-height: 170px;
+aspect-ratio: 16 / 9;
 object-fit: cover;
 object-position: center;
-border-radius: 10px;
 display: block;
+border-radius: 10px;
 margin-bottom: 10px;
 transition: transform 0.35s ease;
 }
 
-/* zoom uniquement image (plus clean UX) */
 .tool-card:hover img {
-transform: scale(1.07);
+transform: scale(1.06);
 }
 
 /* =========================
-TEXTS
+TEXTES
 ========================= */
 
 .tool-card h3 {
@@ -186,7 +185,7 @@ background: transparent;
 }
 
 /* =========================
-BOX (OUTILS PAGES)
+BOX (PAGES OUTILS)
 ========================= */
 
 .box {
