@@ -1,78 +1,3 @@
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Redimensionner une image en ligne gratuit | Image Tools Pro</title>
-
-<meta name="description" content="Redimensionnez vos images en ligne gratuitement. Changez les dimensions facilement tout en gardant une bonne qualité. Outil rapide et simple.">
-<meta name="robots" content="index, follow">
-
-<meta property="og:title" content="Redimensionner une image en ligne gratuit">
-<meta property="og:description" content="Redimensionnez vos images rapidement et facilement en ligne gratuitement.">
-<meta property="og:type" content="website">
-
-<link rel="stylesheet" href="style.css">
-
-<style>
-.container{
-  max-width:700px;
-  margin:auto;
-  padding:20px;
-}
-
-.preview img{
-  max-width:260px;
-  margin-top:15px;
-  border-radius:10px;
-  border:1px solid #ddd;
-}
-
-.small{
-  font-size:13px;
-  color:#5f6368;
-}
-</style>
-
-</head>
-
-<body>
-
-<!-- HEADER -->
-<header>
-  <h1>Redimensionner une image</h1>
-  <p>Changer les dimensions d’une image facilement en ligne</p>
-</header>
-
-<!-- MAIN -->
-<div class="container">
-
-<div class="box">
-
-<input type="file" id="file" accept="image/*">
-
-<div class="box">
-<p class="small">
-Taille originale : <span id="sizeInfo">-</span>
-</p>
-</div>
-
-<label>Nouvelle largeur (px)</label><br>
-<input type="number" id="newWidth" placeholder="ex : 800">
-
-<br><br>
-
-<button onclick="resizeImage()">Redimensionner</button>
-
-</div>
-
-<!-- PREVIEW -->
-<div class="preview" id="preview"></div>
-
-</div>
-
 <script>
 
 let img = new Image();
@@ -82,25 +7,22 @@ let originalFileName = "";
 document.getElementById("file").onchange = (e) => {
 
   const file = e.target.files[0];
-  if(!file) return;
+  if (!file) return;
+
+  // 👉 nom propre sans extension
+  originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
   const reader = new FileReader();
-
-  // 👉 récupérer nom sans extension
-  const dotIndex = file.name.lastIndexOf(".");
-  originalFileName = dotIndex !== -1
-    ? file.name.substring(0, dotIndex)
-    : file.name;
 
   reader.onload = ev => {
     img.src = ev.target.result;
 
     img.onload = () => {
       document.getElementById("sizeInfo").innerText =
-        img.width + " x " + img.height;
+        img.width + " × " + img.height + " px";
 
       document.getElementById("preview").innerHTML = `
-        <div>
+        <div class="box">
           <p>Image originale</p>
           <img src="${img.src}" alt="image originale">
         </div>
@@ -112,16 +34,16 @@ document.getElementById("file").onchange = (e) => {
 };
 
 /* REDIMENSIONNEMENT */
-function resizeImage(){
+function resizeImage() {
 
-  if(!img.src){
+  if (!img.src) {
     alert("Veuillez ajouter une image !");
     return;
   }
 
   let newW = parseInt(document.getElementById("newWidth").value);
 
-  if(!newW || newW <= 0){
+  if (!newW || newW <= 0) {
     alert("Veuillez entrer une largeur valide !");
     return;
   }
@@ -133,14 +55,20 @@ function resizeImage(){
   canvas.width = newW;
   canvas.height = newH;
 
-  canvas.getContext("2d").drawImage(img,0,0,newW,newH);
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0, newW, newH);
 
   canvas.toBlob(blob => {
+
+    if (!blob) {
+      alert("Erreur de redimensionnement");
+      return;
+    }
 
     let url = URL.createObjectURL(blob);
 
     document.getElementById("preview").innerHTML += `
-      <div>
+      <div class="box">
 
         <p>Image redimensionnée</p>
 
@@ -155,25 +83,8 @@ function resizeImage(){
       </div>
     `;
 
-  }, "image/jpeg", 0.9);
+  }, "image/jpeg", 0.92);
 
 }
 
 </script>
-
-<!-- FOOTER -->
-<footer>
-  <p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
-
-  <div>
-    <a href="index.html">Accueil</a>
-    <a href="about.html">À propos</a>
-    <a href="contact.html">Contact</a>
-    <a href="privacy.html">Politique de confidentialité</a>
-    <a href="terms.html">Conditions d’utilisation</a>
-    <a href="sitemap.xml">Sitemap</a>
-  </div>
-</footer>
-
-</body>
-</html>
