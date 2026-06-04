@@ -1,52 +1,3 @@
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Compresseur d’images en ligne gratuit | Image Tools Pro</title>
-
-<meta name="description" content="Compressez vos images en ligne gratuitement. Réduisez la taille des images instantanément tout en gardant une bonne qualité. Outil rapide et sécurisé.">
-<meta name="robots" content="index, follow">
-
-<link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-<header>
-  <h1>Compresseur d’images</h1>
-  <p>Réduire la taille des images sans perte de qualité</p>
-</header>
-
-<div class="container">
-
-  <div class="box">
-
-    <input type="file" id="file" accept="image/*">
-
-    <div class="box">
-      <label>Qualité de compression</label><br>
-      <input type="range" id="quality" min="10" max="100" value="70">
-
-  <br>
-  <small id="qtext">Qualité : 70%</small>
-
-  <br><br>
-  <small>
-    Dimensions originales : <span id="imgSize">-</span>
-  </small>
-</div>
-
-    <button onclick="compress()">Compresser l’image</button>
-
-  </div>
-
-  <div class="preview" id="preview"></div>
-
-</div>
-
 <script>
 
 let img = new Image();
@@ -64,13 +15,10 @@ document.getElementById("file").onchange = (e) => {
   const file = e.target.files[0];
   if (!file) return;
 
-  originalSize = (file.size / 1024).toFixed(2);
+  originalSize = file.size / 1024;
 
-  // 👉 nom fichier sans extension
-  const dotIndex = file.name.lastIndexOf(".");
-  originalFileName = dotIndex !== -1
-    ? file.name.substring(0, dotIndex)
-    : file.name;
+  // 👉 nom propre sans extension
+  originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
   const reader = new FileReader();
 
@@ -84,8 +32,8 @@ document.getElementById("file").onchange = (e) => {
 
       document.getElementById("preview").innerHTML = `
         <div class="box">
-          <p>Original Image (${originalSize} KB)</p>
-          <img src="${img.src}" alt="original image">
+          <p>Image originale (${originalSize.toFixed(2)} KB)</p>
+          <img src="${img.src}" alt="image originale">
         </div>
       `;
     };
@@ -95,9 +43,9 @@ document.getElementById("file").onchange = (e) => {
 };
 
 /* COMPRESSION */
-function compress(){
+function compress() {
 
-  if(!img.src){
+  if (!img.src) {
     alert("Veuillez ajouter une image");
     return;
   }
@@ -108,11 +56,17 @@ function compress(){
   canvas.width = img.width;
   canvas.height = img.height;
 
-  canvas.getContext("2d").drawImage(img, 0, 0);
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
 
   canvas.toBlob(blob => {
 
-    let newSize = (blob.size / 1024).toFixed(2);
+    if (!blob) {
+      alert("Erreur de compression");
+      return;
+    }
+
+    let newSize = blob.size / 1024;
     let reduction = (100 - (newSize / originalSize * 100)).toFixed(1);
 
     let url = URL.createObjectURL(blob);
@@ -124,7 +78,7 @@ function compress(){
 
         <img src="${url}" alt="image compressée">
 
-        <p>Taille : ${newSize} KB</p>
+        <p>Taille : ${newSize.toFixed(2)} KB</p>
         <p>Réduction : ${reduction}%</p>
 
         <a href="${url}" download="${originalFileName}-compressed.jpg">
@@ -139,16 +93,3 @@ function compress(){
 }
 
 </script>
-
-<footer>
-<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
-
-<a href="index.html">Accueil</a>
-<a href="about.html">À propos</a>
-<a href="contact.html">Contact</a>
-<a href="privacy.html">Politique de confidentialité</a>
-<a href="terms.html">Conditions d’utilisation</a>
-</footer>
-
-</body>
-</html>
