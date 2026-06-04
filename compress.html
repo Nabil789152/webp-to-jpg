@@ -51,6 +51,7 @@
 
 let img = new Image();
 let originalSize = 0;
+let originalFileName = "";
 
 /* SLIDER QUALITÉ */
 document.getElementById("quality").oninput = (e) => {
@@ -59,10 +60,17 @@ document.getElementById("quality").oninput = (e) => {
 
 /* CHARGEMENT IMAGE */
 document.getElementById("file").onchange = (e) => {
+
   const file = e.target.files[0];
   if (!file) return;
 
   originalSize = (file.size / 1024).toFixed(2);
+
+  // 👉 nom fichier sans extension
+  const dotIndex = file.name.lastIndexOf(".");
+  originalFileName = dotIndex !== -1
+    ? file.name.substring(0, dotIndex)
+    : file.name;
 
   const reader = new FileReader();
 
@@ -71,16 +79,16 @@ document.getElementById("file").onchange = (e) => {
 
     img.onload = () => {
 
-  // 👇 dimensions en px
-  document.getElementById("imgSize").innerText =
-    img.width + " × " + img.height + " px";
+      document.getElementById("imgSize").innerText =
+        img.width + " × " + img.height + " px";
 
-  document.getElementById("preview").innerHTML = `
-    <div class="box">
-      <p>Original Image (${originalSize} KB)</p>
-      <img src="${img.src}" alt="original image">
-    </div>
-  `;
+      document.getElementById("preview").innerHTML = `
+        <div class="box">
+          <p>Original Image (${originalSize} KB)</p>
+          <img src="${img.src}" alt="original image">
+        </div>
+      `;
+    };
   };
 
   reader.readAsDataURL(file);
@@ -119,7 +127,7 @@ function compress(){
         <p>Taille : ${newSize} KB</p>
         <p>Réduction : ${reduction}%</p>
 
-        <a href="${url}" download="image-compressee.jpg">
+        <a href="${url}" download="${originalFileName}-compressed.jpg">
           <button>Télécharger</button>
         </a>
 
