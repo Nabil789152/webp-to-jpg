@@ -1,53 +1,56 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Redimensionneur d’images | Image Tools Pro</title>
-<link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-<header>
-  <h1>Redimensionner une image</h1>
-  <p>Changer les dimensions facilement</p>
-</header>
-
-<div class="container">
-
-  <div class="box">
-    <input type="file" id="file" accept="image/*">
-
-    <br><br>
-
-    <small>Taille : <span id="sizeInfo">-</span></small>
-
-    <br><br>
-
-    <input type="number" id="newWidth" placeholder="Largeur (px)">
-
-    <br><br>
-
-    <button onclick="resizeImage()">Redimensionner</button>
-  </div>
-
-  <div class="preview" id="preview"></div>
-
-</div>
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
 let img = new Image();
 let originalFileName = "";
 
-/* FILE LOAD */
-document.getElementById("file").addEventListener("change", (e) => {
+/* =========================
+   FILE INPUT LOAD
+========================= */
+const fileInput = document.getElementById("file");
+
+fileInput.addEventListener("change", (e) => {
 
   const file = e.target.files[0];
   if (!file) return;
+
+  loadImage(file);
+});
+
+/* =========================
+   DRAG & DROP
+========================= */
+
+const dropZone = document.querySelector(".box");
+
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropZone.style.border = "2px dashed #1a73e8";
+  dropZone.style.background = "#eef5ff";
+});
+
+dropZone.addEventListener("dragleave", () => {
+  dropZone.style.border = "none";
+  dropZone.style.background = "white";
+});
+
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+
+  dropZone.style.border = "none";
+  dropZone.style.background = "white";
+
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+
+  fileInput.files = e.dataTransfer.files;
+  loadImage(file);
+});
+
+/* =========================
+   LOAD IMAGE FUNCTION
+========================= */
+function loadImage(file) {
 
   originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
@@ -70,9 +73,11 @@ document.getElementById("file").addEventListener("change", (e) => {
   };
 
   reader.readAsDataURL(file);
-});
+}
 
-/* RESIZE */
+/* =========================
+   RESIZE
+========================= */
 window.resizeImage = function () {
 
   if (!img.src) {
@@ -118,6 +123,3 @@ window.resizeImage = function () {
 
 });
 </script>
-
-</body>
-</html>
