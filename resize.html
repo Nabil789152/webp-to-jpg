@@ -3,145 +3,180 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redimensionneur d’images</title>
 
-<title>Redimensionneur d’images | Image Tools Pro</title>
-<link rel="stylesheet" href="style.css">
+<style>
+body{
+    margin:0;
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+}
+
+/* HEADER */
+header{
+    background:#1e88e5;
+    color:white;
+    padding:20px;
+    text-align:center;
+}
+
+header h1{
+    margin:0;
+    font-size:24px;
+}
+
+/* CONTAINER */
+.container{
+    max-width:900px;
+    margin:40px auto;
+    background:white;
+    padding:25px;
+    border-radius:12px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* INPUTS */
+input[type="file"]{
+    width:100%;
+    margin-bottom:15px;
+}
+
+label{
+    font-weight:bold;
+    display:block;
+    margin-top:10px;
+}
+
+input[type="number"]{
+    width:100%;
+    padding:10px;
+    margin-top:5px;
+    border:1px solid #ccc;
+    border-radius:8px;
+}
+
+/* BUTTON */
+button{
+    margin-top:20px;
+    width:100%;
+    padding:12px;
+    background:#1e88e5;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#1565c0;
+}
+
+/* PREVIEW */
+.preview{
+    margin-top:20px;
+    text-align:center;
+}
+
+.preview img{
+    max-width:100%;
+    border-radius:10px;
+    margin-top:10px;
+    box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* FOOTER */
+footer{
+    text-align:center;
+    padding:20px;
+    margin-top:40px;
+    background:#222;
+    color:#aaa;
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <h1>Redimensionner une image</h1>
-  <p>Glisse-dépose ou sélectionne une image</p>
+    <h1>Redimensionneur d’Images</h1>
 </header>
 
 <div class="container">
 
-  <div class="box" id="dropZone">
+    <input type="file" id="imageInput" accept="image/*">
 
-    <input type="file" id="file" accept="image/*">
+    <label>Largeur (px)</label>
+    <input type="number" id="width" placeholder="Ex: 800">
 
-    <br><br>
-
-    <small>Taille : <span id="sizeInfo">-</span></small>
-
-    <br><br>
-
-    <input type="number" id="newWidth" placeholder="Largeur (px)">
-
-    <br><br>
+    <label>Hauteur (px)</label>
+    <input type="number" id="height" placeholder="Ex: 600">
 
     <button onclick="resizeImage()">Redimensionner</button>
 
-  </div>
+    <div class="preview">
+        <h3>Aperçu :</h3>
+        <img id="output">
+    </div>
 
-  <div class="preview" id="preview"></div>
+    <button id="downloadBtn" style="display:none;">Télécharger l’image</button>
 
 </div>
 
+<footer>
+    © 2026 - Outils Image Pro | Développé par Nabil
+</footer>
+
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+let originalImage = new Image();
 
-  let img = new Image();
-  let originalFileName = "";
-
-  const fileInput = document.getElementById("file");
-  const dropZone = document.getElementById("dropZone");
-  const sizeInfo = document.getElementById("sizeInfo");
-  const preview = document.getElementById("preview");
-  const widthInput = document.getElementById("newWidth");
-
-  function handleFile(file) {
-    if (!file) return;
-
-    originalFileName = file.name.replace(/\.[^/.]+$/, "");
+document.getElementById("imageInput").addEventListener("change", function(e){
+    const file = e.target.files[0];
+    if(!file) return;
 
     const reader = new FileReader();
-
-    reader.onload = ev => {
-      img.src = ev.target.result;
-
-      img.onload = () => {
-        sizeInfo.textContent = `${img.width} × ${img.height} px`;
-
-        preview.innerHTML = `
-          <div class="box">
-            <p>Image originale</p>
-            <img src="${img.src}" style="max-width:100%;border-radius:10px;">
-          </div>
-        `;
-      };
+    reader.onload = function(event){
+        originalImage.src = event.target.result;
     };
-
     reader.readAsDataURL(file);
-  }
-
-  // FILE INPUT
-  fileInput.addEventListener("change", (e) => {
-    handleFile(e.target.files[0]);
-  });
-
-  // DRAG ENTER / OVER
-  dropZone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropZone.classList.add("drag-active");
-  });
-
-  dropZone.addEventListener("dragleave", () => {
-    dropZone.classList.remove("drag-active");
-  });
-
-  // DROP
-  dropZone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropZone.classList.remove("drag-active");
-
-    handleFile(e.dataTransfer.files[0]);
-  });
-
-  // RESIZE
-  window.resizeImage = function () {
-
-    if (!img.src) {
-      alert("Ajoute une image !");
-      return;
-    }
-
-    let newW = parseInt(widthInput.value);
-
-    if (!newW || newW <= 0) {
-      alert("Largeur invalide !");
-      return;
-    }
-
-    let ratio = img.height / img.width;
-    let newH = Math.round(newW * ratio);
-
-    let canvas = document.createElement("canvas");
-    canvas.width = newW;
-    canvas.height = newH;
-
-    canvas.getContext("2d").drawImage(img, 0, 0, newW, newH);
-
-    canvas.toBlob(blob => {
-
-      let url = URL.createObjectURL(blob);
-
-      preview.innerHTML += `
-        <div class="box">
-          <p>Image redimensionnée</p>
-          <img src="${url}" style="max-width:100%;border-radius:10px;">
-          <br><br>
-          <a href="${url}" download="${originalFileName}-resized.jpg">
-            <button>Télécharger</button>
-          </a>
-        </div>
-      `;
-
-    }, "image/jpeg", 0.92);
-  };
-
 });
+
+function resizeImage(){
+    const width = parseInt(document.getElementById("width").value);
+    const height = parseInt(document.getElementById("height").value);
+
+    if(!originalImage.src){
+        alert("Veuillez choisir une image !");
+        return;
+    }
+
+    if(!width || !height){
+        alert("Veuillez entrer largeur et hauteur !");
+        return;
+    }
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = width;
+    canvas.height = height;
+
+    ctx.drawImage(originalImage, 0, 0, width, height);
+
+    const dataURL = canvas.toDataURL("image/png");
+
+    document.getElementById("output").src = dataURL;
+
+    const downloadBtn = document.getElementById("downloadBtn");
+    downloadBtn.style.display = "block";
+
+    downloadBtn.onclick = function(){
+        const a = document.createElement("a");
+        a.href = dataURL;
+        a.download = "resized-image.png";
+        a.click();
+    };
+}
 </script>
 
 </body>
