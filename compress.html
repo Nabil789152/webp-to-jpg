@@ -1,59 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Compresseur d’images | Image Tools Pro</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h1>Compresseur d’images</h1>
+  <p>Réduire la taille des images sans perte de qualité</p>
+</header>
+
+<div class="container">
+
+  <div class="box" id="dropZone">
+    <input type="file" id="file" accept="image/*">
+
+    <br><br>
+
+    <label>Qualité</label>
+    <input type="range" id="quality" min="10" max="100" value="70">
+    <small id="qtext">Qualité : 70%</small>
+
+    <br><br>
+
+    <small>Dimensions : <span id="imgSize">-</span></small>
+
+    <br><br>
+
+    <button onclick="compress()">Compresser</button>
+  </div>
+
+  <div class="preview" id="preview"></div>
+
+</div>
+
 <script>
+document.addEventListener("DOMContentLoaded", () => {
 
 let img = new Image();
 let originalSize = 0;
 let originalFileName = "";
 
-/* SLIDER QUALITÉ */
-document.getElementById("quality").addEventListener("input", (e) => {
-  document.getElementById("qtext").innerText =
-    "Qualité : " + e.target.value + "%";
+/* SAFE ELEMENTS */
+const fileInput = document.getElementById("file");
+const quality = document.getElementById("quality");
+const qtext = document.getElementById("qtext");
+
+/* SLIDER */
+quality.addEventListener("input", (e) => {
+  qtext.innerText = "Qualité : " + e.target.value + "%";
 });
 
-/* DROP + CLICK ZONE (si tu l’ajoutes dans HTML) */
-const fileInput = document.getElementById("file");
+/* DRAG & DROP */
 const dropZone = document.getElementById("dropZone");
 
-/* CLICK */
-if (dropZone) {
-  dropZone.addEventListener("click", () => fileInput.click());
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropZone.style.background = "#e8f0fe";
+});
 
-  /* DRAG OVER */
-  dropZone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropZone.classList.add("dragover");
-  });
+dropZone.addEventListener("dragleave", () => {
+  dropZone.style.background = "white";
+});
 
-  /* DRAG LEAVE */
-  dropZone.addEventListener("dragleave", () => {
-    dropZone.classList.remove("dragover");
-  });
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropZone.style.background = "white";
 
-  /* DROP */
-  dropZone.addEventListener("drop", (e) => {
-    e.preventDefault();
-    dropZone.classList.remove("dragover");
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
 
-    const file = e.dataTransfer.files[0];
-    if (file) handleFile(file);
-  });
-}
+  loadImage(file);
+});
 
 /* FILE INPUT */
 fileInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
-  if (file) handleFile(file);
+  if (!file) return;
+  loadImage(file);
 });
 
-/* HANDLE FILE (centralisé propre) */
-function handleFile(file) {
-
-  if (!file) return;
-
-  if (!file.type.startsWith("image/")) {
-    alert("Veuillez choisir une image !");
-    return;
-  }
+/* LOAD IMAGE */
+function loadImage(file) {
 
   originalSize = file.size / 1024;
   originalFileName = file.name.replace(/\.[^/.]+$/, "");
@@ -64,15 +98,13 @@ function handleFile(file) {
     img.src = ev.target.result;
 
     img.onload = () => {
-
       document.getElementById("imgSize").innerText =
         img.width + " × " + img.height + " px";
 
       document.getElementById("preview").innerHTML = `
         <div class="box">
-          <p>Image originale (${originalSize.toFixed(2)} KB)</p>
-          <img src="${img.src}" alt="image originale"
-               style="max-width:100%;border-radius:10px;">
+          <p>Image originale</p>
+          <img src="${img.src}" style="max-width:100%;border-radius:10px;">
         </div>
       `;
     };
@@ -81,29 +113,23 @@ function handleFile(file) {
   reader.readAsDataURL(file);
 }
 
-/* COMPRESSION */
-function compress() {
+/* COMPRESS */
+window.compress = function () {
 
   if (!img.src) {
-    alert("Veuillez ajouter une image");
+    alert("Ajoute une image !");
     return;
   }
 
-  let q = document.getElementById("quality").value / 100;
+  let q = quality.value / 100;
 
   let canvas = document.createElement("canvas");
   canvas.width = img.width;
   canvas.height = img.height;
 
-  let ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0);
+  canvas.getContext("2d").drawImage(img, 0, 0);
 
   canvas.toBlob(blob => {
-
-    if (!blob) {
-      alert("Erreur de compression");
-      return;
-    }
 
     let newSize = blob.size / 1024;
     let reduction = (100 - (newSize / originalSize * 100)).toFixed(1);
@@ -112,24 +138,22 @@ function compress() {
 
     document.getElementById("preview").innerHTML += `
       <div class="box">
-
         <p>Image compressée</p>
-
-        <img src="${url}" alt="image compressée"
-             style="max-width:100%;border-radius:10px;">
-
-        <p>Taille : ${newSize.toFixed(2)} KB</p>
-        <p>Réduction : ${reduction}%</p>
+        <img src="${url}" style="max-width:100%;border-radius:10px;">
+        <p>${newSize.toFixed(2)} KB</p>
+        <p>- ${reduction}%</p>
 
         <a href="${url}" download="${originalFileName}-compressed.jpg">
           <button>Télécharger</button>
         </a>
-
       </div>
     `;
 
   }, "image/jpeg", q);
-
 }
 
+});
 </script>
+
+</body>
+</html>
