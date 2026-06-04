@@ -15,7 +15,7 @@ body {
 }
 
 /* =========================
-HEADER (APPLE CLEAN)
+HEADER
 ========================= */
 
 header {
@@ -25,36 +25,9 @@ header {
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
-h1 {
-  font-size: 36px;
-  font-weight: 600;
-  letter-spacing: -0.5px;
-  margin-bottom: 10px;
-}
-
-h2, h3 {
-  color: #1d1d1f;
-  font-weight: 600;
-  letter-spacing: -0.3px;
-}
-
-p {
-  color: #6e6e73;
-  line-height: 1.6;
-}
-
 /* =========================
-LINKS & BUTTONS (APPLE STYLE)
+BUTTON
 ========================= */
-
-a {
-  color: #0071e3;
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-}
 
 button {
   margin-top: 15px;
@@ -73,12 +46,8 @@ button:hover {
   transform: translateY(-1px);
 }
 
-button:active {
-  transform: scale(0.98);
-}
-
 /* =========================
-INPUTS (CLEAN MODERNE)
+INPUT
 ========================= */
 
 input,
@@ -88,40 +57,46 @@ textarea {
   padding: 10px 12px;
   border: 1px solid #d2d2d7;
   border-radius: 10px;
-  outline: none;
   width: 100%;
   font-size: 14px;
   background: white;
 }
 
 /* =========================
-LAYOUT INDEX (CARDS)
+BOX (CLEAN + CANVA STYLE DROP AREA)
 ========================= */
 
-.container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
-  max-width: 1100px;
-  margin: 45px auto;
-  padding: 0 20px;
+.box {
+  max-width: 700px;
+  margin: 20px auto;
+  background: white;
+  padding: 22px;
+  border-radius: 16px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+  text-align: center;
+  transition: all 0.25s ease;
 }
 
-/* RESPONSIVE */
-@media (max-width: 900px) {
-  .container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .container {
-    grid-template-columns: 1fr;
-  }
+/* DROP ZONE ACTIVE */
+.drag-active {
+  border: 2px dashed #0071e3;
+  background: rgba(0,113,227,0.06);
+  transform: scale(1.02);
 }
 
 /* =========================
-TOOL CARDS (APPLE SaaS STYLE)
+PREVIEW IMAGE (CANVA STYLE)
+========================= */
+
+.preview img {
+  max-width: 280px;
+  margin-top: 15px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.10);
+}
+
+/* =========================
+TOOLS CARDS
 ========================= */
 
 .tool-card {
@@ -130,10 +105,6 @@ TOOL CARDS (APPLE SaaS STYLE)
   border-radius: 18px;
   padding: 18px;
   box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  overflow: hidden;
   transition: all 0.25s ease;
   border: 1px solid rgba(0,0,0,0.04);
 }
@@ -143,19 +114,13 @@ TOOL CARDS (APPLE SaaS STYLE)
   box-shadow: 0 18px 40px rgba(0,0,0,0.12);
 }
 
-/* =========================
-VIGNETTES FORCÉES (PRO FIX)
-========================= */
-
 .tool-card img {
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  object-position: center;
   border-radius: 12px;
   margin-bottom: 10px;
   transition: transform 0.35s ease;
-  display: block;
 }
 
 .tool-card:hover img {
@@ -163,21 +128,7 @@ VIGNETTES FORCÉES (PRO FIX)
 }
 
 /* =========================
-TEXTES
-========================= */
-
-.tool-card h3 {
-  margin: 10px 0 5px;
-  font-weight: 600;
-}
-
-.tool-card p {
-  margin: 0 0 10px;
-  color: #6e6e73;
-}
-
-/* =========================
-SEARCH BAR (APPLE STYLE)
+SEARCH BAR
 ========================= */
 
 .search-box {
@@ -191,48 +142,13 @@ SEARCH BAR (APPLE STYLE)
   margin: 20px auto;
 }
 
-.search-box input {
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 16px;
-  background: transparent;
-}
-
 /* =========================
-BOX (OUTILS)
+UTILITIES
 ========================= */
 
-.box {
-  max-width: 700px;
-  margin: 20px auto;
-  background: white;
-  padding: 22px;
-  border-radius: 14px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
-  text-align: center;
-}
-
-/* =========================
-PREVIEW IMAGES
-========================= */
-
-.preview img {
-  max-width: 280px;
-  margin-top: 15px;
-  border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.10);
-}
-
-/* =========================
-SEO SECTIONS
-========================= */
-
-.seo-section {
-  max-width: 900px;
-  margin: 60px auto;
-  padding: 0 20px;
-  text-align: left;
+.small {
+  font-size: 13px;
+  color: #6e6e73;
 }
 
 /* =========================
@@ -246,29 +162,4 @@ footer {
   color: #6e6e73;
   background: white;
   border-top: 1px solid rgba(0,0,0,0.06);
-  text-align: center;
-}
-
-footer a {
-  color: #6e6e73;
-  margin: 0 6px;
-}
-
-/* =========================
-UTILITIES
-========================= */
-
-.small {
-  font-size: 13px;
-  color: #6e6e73;
-}
-
-.box {
-  transition: 0.3s ease;
-}
-
-.drag-active {
-  border: 2px dashed #1a73e8 !important;
-  background: rgba(26,115,232,0.05);
-  transform: scale(1.01);
 }
