@@ -1,95 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Converter</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h1>Convertisseur WebP</h1>
+  <p>Upload → Convertir → Télécharger</p>
+</header>
+
+<div class="box">
+
+  <input type="file" id="file" accept="image/webp">
+
+  <p id="detected">Format : -</p>
+
+  <select id="format">
+    <option value="image/jpeg">JPG</option>
+    <option value="image/png">PNG</option>
+  </select>
+
+  <button onclick="convert()">Convertir</button>
+
+</div>
+
+<div class="preview" id="preview"></div>
+
 <script>
+let img = new Image();
+let originalFileName = "";
 
-window.addEventListener("DOMContentLoaded", () => {
+/* FILE UPLOAD */
+document.getElementById("file").addEventListener("change", function(e){
 
-  let img = new Image();
-  let originalFileName = "";
+  const file = e.target.files[0];
+  if(!file) return;
 
-  const fileInput = document.getElementById("file");
-  const detected = document.getElementById("detected");
-  const preview = document.getElementById("preview");
-  const formatSelect = document.getElementById("format");
+  originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
-  /* CHARGEMENT IMAGE */
-  fileInput.onchange = (e) => {
+  document.getElementById("detected").textContent = "Format détecté : " + file.type;
 
-    const file = e.target.files[0];
-    if (!file) return;
+  const reader = new FileReader();
 
-    if (file.type !== "image/webp") {
-      alert("Seuls les fichiers WebP sont acceptés");
-      return;
-    }
+  reader.onload = function(ev){
+    img.src = ev.target.result;
 
-    originalFileName = file.name.replace(/\.[^/.]+$/, "");
-
-    detected.innerText = "Format détecté : WEBP";
-
-    const reader = new FileReader();
-
-    reader.onload = ev => {
-      img.src = ev.target.result;
-
-      img.onload = () => {
-        preview.innerHTML = `
-          <div class="box">
-            <p>Image originale (WEBP)</p>
-            <img src="${img.src}" alt="image originale WebP">
-          </div>
-        `;
-      };
+    img.onload = function(){
+      document.getElementById("preview").innerHTML =
+        `<div class="box">
+          <p>Image originale</p>
+          <img src="${img.src}" style="max-width:100%;border-radius:10px;">
+        </div>`;
     };
-
-    reader.readAsDataURL(file);
   };
 
-  /* CONVERSION */
-  window.convert = function () {
-
-    if (!img.src) {
-      alert("Veuillez ajouter une image WebP");
-      return;
-    }
-
-    let format = formatSelect.value;
-
-    let canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    let ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-
-    canvas.toBlob(blob => {
-
-      if (!blob) {
-        alert("Erreur de conversion");
-        return;
-      }
-
-      let url = URL.createObjectURL(blob);
-      let ext = format === "image/png" ? "png" : "jpg";
-
-      preview.innerHTML = `
-        <div class="box">
-
-          <p>Image convertie</p>
-
-          <img src="${url}" alt="image convertie">
-
-          <br><br>
-
-          <a href="${url}" download="${originalFileName}-converted.${ext}">
-            <button>Télécharger</button>
-          </a>
-
-        </div>
-      `;
-
-    }, format, 0.92);
-
-  };
-
+  reader.readAsDataURL(file);
 });
 
+/* CONVERT */
+function convert(){
+
+  if(!img.src){
+    alert("Veuillez choisir une image !");
+    return;
+  }
+
+  let format = document.getElementById("format").value;
+
+  let canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+
+  canvas.getContext("2d").drawImage(img,0,0);
+
+  canvas.toBlob(blob => {
+
+    let url = URL.createObjectURL(blob);
+    let ext = format === "image/png" ? "png" : "jpg";
+
+    document.getElementById("preview").innerHTML +=
+      `<div class="box">
+        <p>Image convertie</p>
+        <img src="${url}" style="max-width:100%;border-radius:10px;">
+        <br><br>
+        <a download="${originalFileName}-converted.${ext}" href="${url}">
+          <button>Télécharger</button>
+        </a>
+      </div>`;
+
+  }, format);
+}
 </script>
+
+</body>
+</html>
