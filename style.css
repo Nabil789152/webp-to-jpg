@@ -1,222 +1,249 @@
 /* =========================
-   GLOBAL STYLE - IMAGE TOOLS PRO
-   ========================= */
+GLOBAL STYLE - IMAGE TOOLS PRO (OPTIMISÉ)
+========================= */
 
 * {
   box-sizing: border-box;
-}
+  }
 
 body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f5f7fb;
-  color: #202124;
-  text-align: center;
+margin: 0;
+font-family: Arial, sans-serif;
+background: #f5f7fb;
+color: #202124;
+text-align: center;
 }
 
 /* =========================
-   HEADER
-   ========================= */
+HEADER
+========================= */
 
 header {
-  padding: 40px 20px 20px;
-  background: white;
-  border-bottom: 1px solid #eee;
+padding: 40px 20px 20px;
+background: white;
+border-bottom: 1px solid #eee;
 }
 
 h1 {
-  font-size: 34px;
-  margin-bottom: 10px;
+font-size: 34px;
+margin-bottom: 10px;
 }
 
 h2, h3 {
-  color: #202124;
+color: #202124;
 }
 
 p {
-  color: #5f6368;
+color: #5f6368;
+line-height: 1.6;
 }
 
 /* =========================
-   LINKS & BUTTONS
-   ========================= */
+LINKS & BUTTONS
+========================= */
 
 a {
-  color: #1a73e8;
-  text-decoration: none;
+color: #1a73e8;
+text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
+text-decoration: underline;
 }
 
 button {
-  margin-top: 15px;
-  padding: 12px 20px;
-  background: #1a73e8;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  color: white;
-  cursor: pointer;
-  transition: 0.2s;
+margin-top: 15px;
+padding: 12px 20px;
+background: #1a73e8;
+border: none;
+border-radius: 8px;
+font-weight: 600;
+color: white;
+cursor: pointer;
+transition: 0.2s;
 }
 
 button:hover {
-  background: #1558b0;
+background: #1558b0;
 }
 
 /* =========================
-   INPUTS
-   ========================= */
+INPUTS
+========================= */
 
 input,
 select,
 textarea {
-  margin-top: 10px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  outline: none;
-  width: 100%;
-  max-width: 100%;
+margin-top: 10px;
+padding: 10px;
+border: 1px solid #ddd;
+border-radius: 6px;
+outline: none;
+width: 100%;
 }
 
 /* =========================
-   LAYOUT INDEX (CARDS)
-   ========================= */
+LAYOUT INDEX (CARDS)
+========================= */
 
 .container {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-  max-width: 1100px;
-  margin: 40px auto;
-  padding: 0 20px;
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 20px;
+max-width: 1100px;
+margin: 40px auto;
+padding: 0 20px;
 }
 
-/* RESPONSIVE INDEX */
+/* RESPONSIVE */
 @media (max-width: 900px) {
-  .container {
-    grid-template-columns: repeat(2, 1fr);
-  }
+.container {
+grid-template-columns: repeat(2, 1fr);
+}
 }
 
 @media (max-width: 600px) {
-  .container {
-    grid-template-columns: 1fr;
-  }
+.container {
+grid-template-columns: 1fr;
+}
 }
 
 /* =========================
-   TOOL CARDS (INDEX)
-   ========================= */
+TOOL CARDS (VERSION PRO)
+========================= */
 
 .tool-card {
-  background: white;
-  border-radius: 14px;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  transition: 0.3s;
+background: white;
+border-radius: 14px;
+padding: 18px;
+box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+display: flex;
+flex-direction: column;
+text-align: center;
+transition: 0.25s ease;
+overflow: hidden;
 }
 
 .tool-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+transform: translateY(-6px);
+box-shadow: 0 10px 25px rgba(0,0,0,0.12);
 }
+
+/* =========================
+VIGNETTES FIX PARFAIT
+========================= */
 
 .tool-card img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 10px;
+width: 100%;
+height: 160px;
+object-fit: cover;
+object-position: center;
+border-radius: 10px;
+display: block;
+margin-bottom: 10px;
+transition: transform 0.3s ease;
 }
 
+.tool-card:hover img {
+transform: scale(1.05);
+}
+
+/* =========================
+TITLES & TEXT
+========================= */
+
 .tool-card h3 {
-  margin: 10px 0 5px;
+margin: 10px 0 5px;
 }
 
 .tool-card p {
-  margin: 0 0 10px;
-  color: #5f6368;
+margin: 0 0 10px;
+color: #5f6368;
 }
 
 /* =========================
-   SEARCH BAR
-   ========================= */
+SEARCH BAR
+========================= */
 
 .search-box {
-  display: flex;
-  align-items: center;
-  background: white;
-  border-radius: 28px;
-  padding: 10px 15px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  max-width: 500px;
-  margin: 20px auto;
+display: flex;
+align-items: center;
+background: white;
+border-radius: 28px;
+padding: 10px 15px;
+box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+max-width: 500px;
+margin: 20px auto;
 }
 
 .search-box input {
-  border: none;
-  outline: none;
-  width: 100%;
-  font-size: 16px;
-  background: transparent;
+border: none;
+outline: none;
+width: 100%;
+font-size: 16px;
+background: transparent;
 }
 
 /* =========================
-   BOX (PAGES OUTILS)
-   ========================= */
+BOX (PAGES OUTILS)
+========================= */
 
 .box {
-  max-width: 700px;
-  margin: 20px auto;
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  text-align: center;
+max-width: 700px;
+margin: 20px auto;
+background: white;
+padding: 20px;
+border-radius: 12px;
+box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+text-align: center;
 }
 
 /* =========================
-   PREVIEW IMAGES
-   ========================= */
+PREVIEW IMAGES
+========================= */
 
 .preview img {
-  max-width: 260px;
-  margin-top: 15px;
-  border-radius: 10px;
-  border: 1px solid #ddd;
+max-width: 260px;
+margin-top: 15px;
+border-radius: 10px;
+border: 1px solid #ddd;
 }
 
 /* =========================
-   FOOTER
-   ========================= */
+SEO SECTIONS
+========================= */
+
+.seo-section {
+max-width: 900px;
+margin: 60px auto;
+padding: 0 20px;
+text-align: left;
+}
+
+/* =========================
+FOOTER
+========================= */
 
 footer {
-  margin-top: 60px;
-  padding: 20px;
-  font-size: 13px;
-  color: #5f6368;
-  background: white;
-  border-top: 1px solid #eee;
-  text-align: center;
+margin-top: 60px;
+padding: 20px;
+font-size: 13px;
+color: #5f6368;
+background: white;
+border-top: 1px solid #eee;
+text-align: center;
 }
 
 footer a {
-  color: #5f6368;
-  margin: 0 6px;
+color: #5f6368;
+margin: 0 6px;
 }
 
 /* =========================
-   UTILITIES
-   ========================= */
+UTILITIES
+========================= */
 
 .small {
-  font-size: 13px;
-  color: #5f6368;
+font-size: 13px;
+color: #5f6368;
 }
