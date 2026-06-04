@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Redimensionneur d’images | Image Tools Pro</title>
-
 <link rel="stylesheet" href="style.css">
 </head>
 
@@ -14,12 +12,12 @@
 
 <header>
   <h1>Redimensionner une image</h1>
-  <p>Glisser-déposer ou importer une image</p>
+  <p>Glisse-dépose ou sélectionne une image</p>
 </header>
 
 <div class="container">
 
-  <div class="box">
+  <div class="box" id="dropZone">
 
     <input type="file" id="file" accept="image/*">
 
@@ -35,59 +33,33 @@
 
     <button onclick="resizeImage()">Redimensionner</button>
 
-    <p class="small">💡 Tu peux aussi glisser une image ici</p>
-
   </div>
 
   <div class="preview" id="preview"></div>
 
 </div>
 
-<footer>
-  <p>© 2026 Image Tools Pro</p>
-  <a href="index.html">Accueil</a>
-</footer>
-
 <script>
+document.addEventListener("DOMContentLoaded", () => {
+
 let img = new Image();
 let originalFileName = "";
 
 const fileInput = document.getElementById("file");
+const dropZone = document.getElementById("dropZone");
 const sizeInfo = document.getElementById("sizeInfo");
 const preview = document.getElementById("preview");
-const dropZone = document.querySelector(".box");
+const widthInput = document.getElementById("newWidth");
 
 /* =========================
-UPLOAD FILE
+   FILE LOAD
 ========================= */
 fileInput.addEventListener("change", handleFile);
 
-/* =========================
-DRAG & DROP
-========================= */
-dropZone.addEventListener("dragover", (e) => {
-  e.preventDefault();
-  dropZone.classList.add("drag-active");
-});
+function handleFile(fileObj) {
 
-dropZone.addEventListener("dragleave", () => {
-  dropZone.classList.remove("drag-active");
-});
+  const file = fileObj.target ? fileObj.target.files[0] : fileObj;
 
-dropZone.addEventListener("drop", (e) => {
-  e.preventDefault();
-  dropZone.classList.remove("drag-active");
-
-  const file = e.dataTransfer.files[0];
-  handleFile({ target: { files: [file] } });
-});
-
-/* =========================
-HANDLE IMAGE
-========================= */
-function handleFile(e) {
-
-  const file = e.target.files[0];
   if (!file) return;
 
   originalFileName = file.name.replace(/\.[^/.]+$/, "");
@@ -98,7 +70,7 @@ function handleFile(e) {
     img.src = ev.target.result;
 
     img.onload = () => {
-      sizeInfo.textContent = img.width + " × " + img.height + " px";
+      sizeInfo.innerText = img.width + " × " + img.height + " px";
 
       preview.innerHTML = `
         <div class="box">
@@ -113,18 +85,44 @@ function handleFile(e) {
 }
 
 /* =========================
-RESIZE
+   DRAG & DROP (SAFE)
 ========================= */
-function resizeImage() {
+if (dropZone) {
+
+  dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropZone.classList.add("drag-active");
+  });
+
+  dropZone.addEventListener("dragleave", () => {
+    dropZone.classList.remove("drag-active");
+  });
+
+  dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropZone.classList.remove("drag-active");
+
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+
+    fileInput.files = e.dataTransfer.files;
+    handleFile(file);
+  });
+}
+
+/* =========================
+   RESIZE
+========================= */
+window.resizeImage = function () {
 
   if (!img.src) {
     alert("Ajoute une image !");
     return;
   }
 
-  let newW = parseInt(document.getElementById("newWidth").value);
+  let newW = parseInt(widthInput.value);
 
-  if (!newW) {
+  if (!newW || newW <= 0) {
     alert("Largeur invalide !");
     return;
   }
@@ -156,7 +154,9 @@ function resizeImage() {
     `;
 
   }, "image/jpeg", 0.92);
-}
+};
+
+});
 </script>
 
 </body>
