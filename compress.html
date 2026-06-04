@@ -1,157 +1,110 @@
-<!DOCTYPE html>
-<html lang="fr">
-
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Compresseur d’images | Image Tools Pro</title>
-
-<link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-
-<header>
-  <h1>Compresser une image</h1>
-  <p>Réduire la taille sans perte visible de qualité</p>
-</header>
-
-<div class="container">
-
-  <div class="box">
-
-    <input type="file" id="file" accept="image/*">
-
-    <br><br>
-
-    <label>Qualité</label>
-    <input type="range" id="quality" min="10" max="100" value="70">
-
-    <p id="qtext">Qualité : 70%</p>
-
-    <br>
-
-    <small>Taille originale : <span id="imgSize">-</span></small>
-
-    <br><br>
-
-    <button onclick="compress()">Compresser</button>
-
-  </div>
-
-  <div class="preview" id="preview"></div>
-
-</div>
-
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
-  let img = new Image();
-  let originalSize = 0;
-  let originalFileName = "";
+let img = new Image();
+let originalFileName = "";
 
-  const fileInput = document.getElementById("file");
-  const qualityInput = document.getElementById("quality");
-  const qtext = document.getElementById("qtext");
-  const imgSize = document.getElementById("imgSize");
-  const preview = document.getElementById("preview");
+const fileInput = document.getElementById("file");
+const dropZone = document.querySelector(".box");
+const preview = document.getElementById("preview");
+const detected = document.getElementById("detected");
 
-  // =========================
-  // SLIDER
-  // =========================
-  qualityInput.addEventListener("input", (e) => {
-    qtext.textContent = "Qualité : " + e.target.value + "%";
-  });
+/* =========================
+   FILE + DRAG & DROP
+========================= */
 
-  // =========================
-  // LOAD IMAGE
-  // =========================
-  fileInput.addEventListener("change", (e) => {
+function handleFile(file) {
+  if (!file) return;
 
-    const file = e.target.files[0];
-    if (!file) return;
+  if (file.type !== "image/webp") {
+    alert("Seuls les fichiers WebP sont acceptés");
+    return;
+  }
 
-    originalSize = file.size / 1024;
-    originalFileName = file.name.replace(/\.[^/.]+$/, "");
+  originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
-    const reader = new FileReader();
+  detected.innerText = "Format détecté : WEBP";
 
-    reader.onload = (ev) => {
+  const reader = new FileReader();
 
-      img = new Image();
+  reader.onload = ev => {
+    img.src = ev.target.result;
 
-      img.onload = () => {
-
-        imgSize.textContent = img.width + " × " + img.height + " px";
-
-        preview.innerHTML = `
-          <div class="box">
-            <p>Image originale (${originalSize.toFixed(2)} KB)</p>
-            <img src="${img.src}" style="max-width:100%;border-radius:10px;">
-          </div>
-        `;
-      };
-
-      img.src = ev.target.result;
-    };
-
-    reader.readAsDataURL(file);
-  });
-
-  // =========================
-  // COMPRESS FUNCTION
-  // =========================
-  window.compress = function () {
-
-    if (!img.src) {
-      alert("Ajoute une image !");
-      return;
-    }
-
-    const q = qualityInput.value / 100;
-
-    const canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
-
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-
-    canvas.toBlob((blob) => {
-
-      if (!blob) {
-        alert("Erreur de compression");
-        return;
-      }
-
-      const newSize = blob.size / 1024;
-      const reduction = (100 - (newSize / originalSize * 100)).toFixed(1);
-
-      const url = URL.createObjectURL(blob);
-
-      preview.innerHTML += `
+    img.onload = () => {
+      preview.innerHTML = `
         <div class="box">
-
-          <p>Image compressée</p>
-
-          <img src="${url}" style="max-width:100%;border-radius:10px;">
-
-          <p>Taille : ${newSize.toFixed(2)} KB</p>
-          <p>Réduction : ${reduction}%</p>
-
-          <a href="${url}" download="${originalFileName}-compressed.jpg">
-            <button>Télécharger</button>
-          </a>
-
+          <p>Image originale (WEBP)</p>
+          <img src="${img.src}" style="max-width:100%;border-radius:10px;">
         </div>
       `;
-
-    }, "image/jpeg", q);
+    };
   };
+
+  reader.readAsDataURL(file);
+}
+
+/* FILE INPUT */
+fileInput.addEventListener("change", (e) => {
+  handleFile(e.target.files[0]);
+});
+
+/* DRAG ENTER */
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropZone.classList.add("drag-active");
+});
+
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("drag-active");
+});
+
+/* DROP */
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropZone.classList.remove("drag-active");
+
+  handleFile(e.dataTransfer.files[0]);
+});
+
+/* =========================
+   CONVERT
+========================= */
+
+window.convert = function () {
+
+  if (!img.src) {
+    alert("Ajoute une image !");
+    return;
+  }
+
+  let format = document.getElementById("format").value;
+
+  let canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+
+  canvas.toBlob(blob => {
+
+    let url = URL.createObjectURL(blob);
+    let ext = format === "image/png" ? "png" : "jpg";
+
+    preview.innerHTML += `
+      <div class="box">
+        <p>Image convertie</p>
+        <img src="${url}" style="max-width:100%;border-radius:10px;">
+        <br><br>
+        <a href="${url}" download="${originalFileName}-converted.${ext}">
+          <button>Télécharger</button>
+        </a>
+      </div>
+    `;
+
+  }, format);
+
+};
 
 });
 </script>
-
-</body>
-</html>
