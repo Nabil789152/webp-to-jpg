@@ -5,19 +5,57 @@ let originalSize = 0;
 let originalFileName = "";
 
 /* SLIDER QUALITÉ */
-document.getElementById("quality").oninput = (e) => {
-  document.getElementById("qtext").innerText = "Qualité : " + e.target.value + "%";
-};
+document.getElementById("quality").addEventListener("input", (e) => {
+  document.getElementById("qtext").innerText =
+    "Qualité : " + e.target.value + "%";
+});
 
-/* CHARGEMENT IMAGE */
-document.getElementById("file").onchange = (e) => {
+/* DROP + CLICK ZONE (si tu l’ajoutes dans HTML) */
+const fileInput = document.getElementById("file");
+const dropZone = document.getElementById("dropZone");
 
+/* CLICK */
+if (dropZone) {
+  dropZone.addEventListener("click", () => fileInput.click());
+
+  /* DRAG OVER */
+  dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropZone.classList.add("dragover");
+  });
+
+  /* DRAG LEAVE */
+  dropZone.addEventListener("dragleave", () => {
+    dropZone.classList.remove("dragover");
+  });
+
+  /* DROP */
+  dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropZone.classList.remove("dragover");
+
+    const file = e.dataTransfer.files[0];
+    if (file) handleFile(file);
+  });
+}
+
+/* FILE INPUT */
+fileInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
+  if (file) handleFile(file);
+});
+
+/* HANDLE FILE (centralisé propre) */
+function handleFile(file) {
+
   if (!file) return;
 
-  originalSize = file.size / 1024;
+  if (!file.type.startsWith("image/")) {
+    alert("Veuillez choisir une image !");
+    return;
+  }
 
-  // 👉 nom propre sans extension
+  originalSize = file.size / 1024;
   originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
   const reader = new FileReader();
@@ -33,14 +71,15 @@ document.getElementById("file").onchange = (e) => {
       document.getElementById("preview").innerHTML = `
         <div class="box">
           <p>Image originale (${originalSize.toFixed(2)} KB)</p>
-          <img src="${img.src}" alt="image originale">
+          <img src="${img.src}" alt="image originale"
+               style="max-width:100%;border-radius:10px;">
         </div>
       `;
     };
   };
 
   reader.readAsDataURL(file);
-};
+}
 
 /* COMPRESSION */
 function compress() {
@@ -76,7 +115,8 @@ function compress() {
 
         <p>Image compressée</p>
 
-        <img src="${url}" alt="image compressée">
+        <img src="${url}" alt="image compressée"
+             style="max-width:100%;border-radius:10px;">
 
         <p>Taille : ${newSize.toFixed(2)} KB</p>
         <p>Réduction : ${reduction}%</p>
