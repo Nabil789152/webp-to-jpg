@@ -1,85 +1,97 @@
 /* =========================
-GLOBAL STYLE - IMAGE TOOLS PRO (FINAL CLEAN)
+GLOBAL STYLE - APPLE / SAAS CLEAN UI
 ========================= */
 
 * {
   box-sizing: border-box;
-  }
+}
 
 body {
-margin: 0;
-font-family: Arial, sans-serif;
-background: #f5f7fb;
-color: #202124;
-text-align: center;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  background: #f5f5f7;
+  color: #1d1d1f;
+  text-align: center;
 }
 
 /* =========================
-HEADER
+HEADER (APPLE CLEAN)
 ========================= */
 
 header {
-padding: 40px 20px 20px;
-background: white;
-border-bottom: 1px solid #eee;
+  padding: 45px 20px 25px;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
 h1 {
-font-size: 34px;
-margin-bottom: 10px;
+  font-size: 36px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
 }
 
 h2, h3 {
-color: #202124;
+  color: #1d1d1f;
+  font-weight: 600;
+  letter-spacing: -0.3px;
 }
 
 p {
-color: #5f6368;
-line-height: 1.6;
+  color: #6e6e73;
+  line-height: 1.6;
 }
 
 /* =========================
-LINKS & BUTTONS
+LINKS & BUTTONS (APPLE STYLE)
 ========================= */
 
 a {
-color: #1a73e8;
-text-decoration: none;
+  color: #0071e3;
+  text-decoration: none;
 }
 
 a:hover {
-text-decoration: underline;
+  text-decoration: underline;
 }
 
 button {
-margin-top: 15px;
-padding: 12px 20px;
-background: #1a73e8;
-border: none;
-border-radius: 8px;
-font-weight: 600;
-color: white;
-cursor: pointer;
-transition: 0.2s;
+  margin-top: 15px;
+  padding: 12px 18px;
+  background: #0071e3;
+  border: none;
+  border-radius: 12px;
+  font-weight: 500;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 button:hover {
-background: #1558b0;
+  background: #005bb5;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: scale(0.98);
 }
 
 /* =========================
-INPUTS
+INPUTS (CLEAN MODERNE)
 ========================= */
 
 input,
 select,
 textarea {
-margin-top: 10px;
-padding: 10px;
-border: 1px solid #ddd;
-border-radius: 6px;
-outline: none;
-width: 100%;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border: 1px solid #d2d2d7;
+  border-radius: 10px;
+  outline: none;
+  width: 100%;
+  font-size: 14px;
+  background: white;
 }
 
 /* =========================
@@ -87,65 +99,67 @@ LAYOUT INDEX (CARDS)
 ========================= */
 
 .container {
-display: grid;
-grid-template-columns: repeat(3, 1fr);
-gap: 20px;
-max-width: 1100px;
-margin: 40px auto;
-padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  max-width: 1100px;
+  margin: 45px auto;
+  padding: 0 20px;
 }
 
 /* RESPONSIVE */
 @media (max-width: 900px) {
-.container {
-grid-template-columns: repeat(2, 1fr);
-}
+  .container {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media (max-width: 600px) {
-.container {
-grid-template-columns: 1fr;
-}
+  .container {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* =========================
-TOOL CARDS (FINAL PRO)
+TOOL CARDS (APPLE SaaS STYLE)
 ========================= */
 
 .tool-card {
-background: white;
-border-radius: 14px;
-padding: 18px;
-box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-display: flex;
-flex-direction: column;
-text-align: center;
-overflow: hidden;
-transition: all 0.25s ease;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  overflow: hidden;
+  transition: all 0.25s ease;
+  border: 1px solid rgba(0,0,0,0.04);
 }
 
 .tool-card:hover {
-transform: translateY(-6px);
-box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0,0,0,0.12);
 }
 
 /* =========================
-VIGNETTES FORCÉES (FIX DÉFINITIF)
+VIGNETTES FORCÉES (PRO FIX)
 ========================= */
 
 .tool-card img {
-width: 100%;
-aspect-ratio: 16 / 9;
-object-fit: cover;
-object-position: center;
-display: block;
-border-radius: 10px;
-margin-bottom: 10px;
-transition: transform 0.35s ease;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  transition: transform 0.35s ease;
+  display: block;
 }
 
 .tool-card:hover img {
-transform: scale(1.06);
+  transform: scale(1.05);
 }
 
 /* =========================
@@ -153,49 +167,50 @@ TEXTES
 ========================= */
 
 .tool-card h3 {
-margin: 10px 0 5px;
+  margin: 10px 0 5px;
+  font-weight: 600;
 }
 
 .tool-card p {
-margin: 0 0 10px;
-color: #5f6368;
+  margin: 0 0 10px;
+  color: #6e6e73;
 }
 
 /* =========================
-SEARCH BAR
+SEARCH BAR (APPLE STYLE)
 ========================= */
 
 .search-box {
-display: flex;
-align-items: center;
-background: white;
-border-radius: 28px;
-padding: 10px 15px;
-box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-max-width: 500px;
-margin: 20px auto;
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 30px;
+  padding: 10px 15px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  max-width: 500px;
+  margin: 20px auto;
 }
 
 .search-box input {
-border: none;
-outline: none;
-width: 100%;
-font-size: 16px;
-background: transparent;
+  border: none;
+  outline: none;
+  width: 100%;
+  font-size: 16px;
+  background: transparent;
 }
 
 /* =========================
-BOX (PAGES OUTILS)
+BOX (OUTILS)
 ========================= */
 
 .box {
-max-width: 700px;
-margin: 20px auto;
-background: white;
-padding: 20px;
-border-radius: 12px;
-box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-text-align: center;
+  max-width: 700px;
+  margin: 20px auto;
+  background: white;
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+  text-align: center;
 }
 
 /* =========================
@@ -203,10 +218,10 @@ PREVIEW IMAGES
 ========================= */
 
 .preview img {
-max-width: 260px;
-margin-top: 15px;
-border-radius: 10px;
-border: 1px solid #ddd;
+  max-width: 280px;
+  margin-top: 15px;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.10);
 }
 
 /* =========================
@@ -214,10 +229,10 @@ SEO SECTIONS
 ========================= */
 
 .seo-section {
-max-width: 900px;
-margin: 60px auto;
-padding: 0 20px;
-text-align: left;
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 0 20px;
+  text-align: left;
 }
 
 /* =========================
@@ -225,18 +240,18 @@ FOOTER
 ========================= */
 
 footer {
-margin-top: 60px;
-padding: 20px;
-font-size: 13px;
-color: #5f6368;
-background: white;
-border-top: 1px solid #eee;
-text-align: center;
+  margin-top: 60px;
+  padding: 25px;
+  font-size: 13px;
+  color: #6e6e73;
+  background: white;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  text-align: center;
 }
 
 footer a {
-color: #5f6368;
-margin: 0 6px;
+  color: #6e6e73;
+  margin: 0 6px;
 }
 
 /* =========================
@@ -244,6 +259,6 @@ UTILITIES
 ========================= */
 
 .small {
-font-size: 13px;
-color: #5f6368;
+  font-size: 13px;
+  color: #6e6e73;
 }
