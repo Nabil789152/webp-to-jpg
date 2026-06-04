@@ -7,18 +7,15 @@ let originalFileName = "";
 document.getElementById("file").onchange = (e) => {
 
   const file = e.target.files[0];
-  if(!file) return;
+  if (!file) return;
 
-  if(file.type !== "image/webp"){
+  if (file.type !== "image/webp") {
     alert("Seuls les fichiers WebP sont acceptés");
     return;
   }
 
-  // 👉 récupérer nom sans extension
-  const dotIndex = file.name.lastIndexOf(".");
-  originalFileName = dotIndex !== -1
-    ? file.name.substring(0, dotIndex)
-    : file.name;
+  // 👉 nom propre sans extension
+  originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
   document.getElementById("detected").innerText = "Format détecté : WEBP";
 
@@ -41,9 +38,9 @@ document.getElementById("file").onchange = (e) => {
 };
 
 /* CONVERSION */
-function convert(){
+function convert() {
 
-  if(!img.src){
+  if (!img.src) {
     alert("Veuillez ajouter une image WebP");
     return;
   }
@@ -54,9 +51,15 @@ function convert(){
   canvas.width = img.width;
   canvas.height = img.height;
 
-  canvas.getContext("2d").drawImage(img, 0, 0);
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
 
   canvas.toBlob(blob => {
+
+    if (!blob) {
+      alert("Erreur de conversion");
+      return;
+    }
 
     let url = URL.createObjectURL(blob);
 
@@ -79,7 +82,7 @@ function convert(){
       </div>
     `;
 
-  }, format);
+  }, format, 0.92);
 
 }
 
