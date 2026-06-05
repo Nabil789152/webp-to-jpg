@@ -19,12 +19,15 @@
   <h1>Conversion en niveaux de gris</h1>
 </header>
 
-<div id="grayscaleTool" class="tool-section" style="display:none;">
+<div class="box">
+
   <h2>Conversion en niveaux de gris</h2>
 
-  <input type="file" id="grayInput" accept="image/*">
-
-  <br><br>
+  <!-- DROP ZONE -->
+  <div id="dropZone" class="drop-zone">
+    <p>📁 Glissez une image ici ou cliquez pour choisir</p>
+    <input type="file" id="grayInput" accept="image/*" hidden>
+  </div>
 
   <canvas id="grayCanvas"></canvas>
 
@@ -32,18 +35,72 @@
 
   <button onclick="convertToGray()">Convertir</button>
   <button onclick="downloadGray()">Télécharger</button>
+
 </div>
 
+<footer>
+
+<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
+
+<a href="index.html">Accueil</a>
+<a href="about.html">À propos</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Politique de confidentialité</a>
+<a href="terms.html">Conditions d’utilisation</a>
+
+</footer>
+
+<script>
 let grayImage = null;
 
-function openGrayscaleTool() {
-  document.getElementById("grayscaleTool").style.display = "block";
-}
+const dropZone = document.getElementById("dropZone");
+const input = document.getElementById("grayInput");
 
-document.getElementById("grayInput").addEventListener("change", function (e) {
+// =========================
+// OPEN FILE DIALOG
+// =========================
+dropZone.addEventListener("click", () => {
+  input.click();
+});
+
+// =========================
+// DRAG OVER
+// =========================
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropZone.classList.add("drag-active");
+});
+
+// =========================
+// DRAG LEAVE
+// =========================
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("drag-active");
+});
+
+// =========================
+// DROP FILE
+// =========================
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropZone.classList.remove("drag-active");
+
+  const file = e.dataTransfer.files[0];
+  if (file) handleImage(file);
+});
+
+// =========================
+// INPUT FILE
+// =========================
+input.addEventListener("change", (e) => {
   const file = e.target.files[0];
-  if (!file) return;
+  if (file) handleImage(file);
+});
 
+// =========================
+// IMAGE HANDLER
+// =========================
+function handleImage(file) {
   const img = new Image();
 
   img.onload = function () {
@@ -59,8 +116,11 @@ document.getElementById("grayInput").addEventListener("change", function (e) {
   };
 
   img.src = URL.createObjectURL(file);
-});
+}
 
+// =========================
+// CONVERT TO GRAY
+// =========================
 function convertToGray() {
   if (!grayImage) return;
 
@@ -82,6 +142,9 @@ function convertToGray() {
   ctx.putImageData(grayImage, 0, 0);
 }
 
+// =========================
+// DOWNLOAD
+// =========================
 function downloadGray() {
   const canvas = document.getElementById("grayCanvas");
   const link = document.createElement("a");
@@ -90,20 +153,6 @@ function downloadGray() {
   link.click();
 }
 </script>
-
-<footer>
-
-<p>
-© 2026 Image Tools Pro — Outils d’images gratuits en ligne
-</p>
-
-<a href="index.html">Accueil</a>
-<a href="about.html">À propos</a>
-<a href="contact.html">Contact</a>
-<a href="privacy.html">Politique de confidentialité</a>
-<a href="terms.html">Conditions d’utilisation</a>
-
-</footer>
 
 </body>
 </html>
