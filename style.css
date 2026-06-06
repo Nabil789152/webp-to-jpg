@@ -144,11 +144,11 @@ CARDS
 /* IMAGES CARDS */
 .tool-card img {
   width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  transition: transform 0.35s ease;
+  max-width: 120px;
+  height: 90px;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 15px auto;
 }
 
 .tool-card:hover img {
