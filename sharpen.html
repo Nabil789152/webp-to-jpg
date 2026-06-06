@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Netteté d’image (Sharpen) | Image Tools Pro</title>
+
+<meta name="description" content="Améliorez la netteté de vos images gratuitement en ligne avec l'effet Sharpen.">
+<meta name="robots" content="index, follow">
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h1>Effet de netteté (Sharpen)</h1>
+</header>
+
+<div class="box">
+
+  <h2>Améliorer la netteté d’une image</h2>
+
+  <!-- DROP ZONE -->
+  <div id="dropZone" class="drop-zone">
+    <p>📁 Glissez une image ici ou cliquez pour choisir</p>
+    <input type="file" id="sharpInput" accept="image/*" hidden>
+  </div>
+
+  <canvas id="sharpCanvas"></canvas>
+
+  <br>
+
+  <button onclick="applySharpen()">Améliorer netteté</button>
+  <button onclick="downloadSharp()">Télécharger</button>
+
+</div>
+
+<footer>
+
+<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
+
+<a href="index.html">Accueil</a>
+<a href="about.html">À propos</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Politique de confidentialité</a>
+<a href="terms.html">Conditions d’utilisation</a>
+
+</footer>
+
+<script>
+
+let sharpImage = null;
+
+const dropZone = document.getElementById("dropZone");
+const input = document.getElementById("sharpInput");
+
+// =========================
+// OPEN FILE DIALOG
+// =========================
+dropZone.addEventListener("click", () => {
+  input.click();
+});
+
+// =========================
+// DRAG OVER
+// =========================
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropZone.classList.add("drag-active");
+});
+
+// =========================
+// DRAG LEAVE
+// =========================
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("drag-active");
+});
+
+// =========================
+// DROP FILE
+// =========================
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropZone.classList.remove("drag-active");
+
+  const file = e.dataTransfer.files[0];
+  if (file) handleImage(file);
+});
+
+// =========================
+// INPUT FILE
+// =========================
+input.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) handleImage(file);
+});
+
+// =========================
+// LOAD IMAGE
+// =========================
+function handleImage(file) {
+  const img = new Image();
+
+  img.onload = function () {
+    const canvas = document.getElementById("sharpCanvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    ctx.drawImage(img, 0, 0);
+
+    sharpImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  };
+
+  img.src = URL.createObjectURL(file);
+}
+
+// =========================
+// SHARPEN FILTER (simple kernel)
+// =========================
+function applySharpen() {
+  if (!sharpImage) return;
+
+  const canvas = document.getElementById("sharpCanvas");
+  const ctx = canvas.getContext("2d");
+
+  let data = sharpImage.data;
+  let width = canvas.width;
+  let temp = new Uint8ClampedArray(data);
+
+  // sharpen kernel:
+  //  0 -1  0
+  // -1  5 -1
+  //  0 -1  0
+
+  for (let i = 1; i < width - 1; i++) {
+    for (let j = 1; j < canvas.height - 1; j++) {
+
+      let idx = (j * width + i) * 4;
+
+      for (let k = 0; k < 3; k++) {
+
+        let center = temp[idx + k];
+        let left = temp[idx + k - 4];
+        let right = temp[idx + k + 4];
+        let top = temp[idx + k - width * 4];
+        let bottom = temp[idx + k + width * 4];
+
+        let value = (center * 5) - (left + right + top + bottom);
+
+        data[idx + k] = Math.min(255, Math.max(0, value));
+      }
+    }
+  }
+
+  ctx.putImageData(sharpImage, 0, 0);
+}
+
+// =========================
+// DOWNLOAD
+// =========================
+function downloadSharp() {
+  const canvas = document.getElementById("sharpCanvas");
+  const link = document.createElement("a");
+  link.download = "image-sharpen.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
+</script>
+
+</body>
+</html>
