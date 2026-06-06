@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Flou d’image | Image Tools Pro</title>
+
+<meta name="description" content="Appliquez un effet de flou à vos images gratuitement en ligne. Outil rapide et sécurisé.">
+<meta name="robots" content="index, follow">
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h1>Effet de flou (Blur)</h1>
+</header>
+
+<div class="box">
+
+  <h2>Appliquer un flou à une image</h2>
+
+  <!-- DROP ZONE -->
+  <div id="dropZone" class="drop-zone">
+    <p>📁 Glissez une image ici ou cliquez pour choisir</p>
+    <input type="file" id="blurInput" accept="image/*" hidden>
+  </div>
+
+  <canvas id="blurCanvas"></canvas>
+
+  <br>
+
+  <button onclick="applyBlur()">Appliquer le flou</button>
+  <button onclick="downloadBlur()">Télécharger</button>
+
+</div>
+
+<footer>
+
+<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
+
+<a href="index.html">Accueil</a>
+<a href="about.html">À propos</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Politique de confidentialité</a>
+<a href="terms.html">Conditions d’utilisation</a>
+
+</footer>
+
+<script>
+
+let blurImage = null;
+
+const dropZone = document.getElementById("dropZone");
+const input = document.getElementById("blurInput");
+
+// =========================
+// OPEN FILE DIALOG
+// =========================
+dropZone.addEventListener("click", () => {
+  input.click();
+});
+
+// =========================
+// DRAG OVER
+// =========================
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropZone.classList.add("drag-active");
+});
+
+// =========================
+// DRAG LEAVE
+// =========================
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("drag-active");
+});
+
+// =========================
+// DROP FILE
+// =========================
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropZone.classList.remove("drag-active");
+
+  const file = e.dataTransfer.files[0];
+  if (file) handleImage(file);
+});
+
+// =========================
+// INPUT FILE
+// =========================
+input.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) handleImage(file);
+});
+
+// =========================
+// IMAGE HANDLER
+// =========================
+function handleImage(file) {
+  const img = new Image();
+
+  img.onload = function () {
+    const canvas = document.getElementById("blurCanvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    ctx.drawImage(img, 0, 0);
+
+    blurImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  };
+
+  img.src = URL.createObjectURL(file);
+}
+
+// =========================
+// BLUR EFFECT
+// =========================
+function applyBlur() {
+  if (!blurImage) return;
+
+  const canvas = document.getElementById("blurCanvas");
+  const ctx = canvas.getContext("2d");
+
+  let data = blurImage.data;
+  let width = canvas.width;
+
+  let temp = new Uint8ClampedArray(data);
+
+  // simple box blur
+  for (let i = 1; i < width - 1; i++) {
+    for (let j = 1; j < canvas.height - 1; j++) {
+
+      let idx = (j * width + i) * 4;
+
+      for (let k = 0; k < 3; k++) {
+        let sum =
+          temp[idx + k] +
+          temp[idx + k - 4] +
+          temp[idx + k + 4] +
+          temp[idx + k - width * 4] +
+          temp[idx + k + width * 4];
+
+        data[idx + k] = sum / 5;
+      }
+    }
+  }
+
+  ctx.putImageData(blurImage, 0, 0);
+}
+
+// =========================
+// DOWNLOAD
+// =========================
+function downloadBlur() {
+  const canvas = document.getElementById("blurCanvas");
+  const link = document.createElement("a");
+  link.download = "image-blur.png";
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+}
+
+</script>
+
+</body>
+</html>
