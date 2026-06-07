@@ -126,6 +126,10 @@
   Supprimer le fond (IA)
 </button>
 
+<button class="btn" onclick="downloadImage()">
+  Télécharger l’image
+</button>
+
 <div class="loader" id="loader">⏳ Traitement en cours...</div>
 
 <script>
@@ -219,6 +223,20 @@ async function removeBackground(){
   }
 }
 
+function downloadImage() {
+  if (!previewResult.src) {
+    alert("Aucune image à télécharger");
+    return;
+  }
+
+  const link = document.createElement("a");
+  link.href = previewResult.src;
+  link.download = "image-sans-fond.png";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+  
 </script>
 
 </body>
