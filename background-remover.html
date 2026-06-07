@@ -5,76 +5,68 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Suppression d’arrière-plan | Image Tools Pro</title>
+<title>Background Remover IA | Image Tools Pro</title>
 
 <link rel="stylesheet" href="style.css">
 
 <style>
-/* =========================
-PAGE STYLE (BACKGROUND REMOVER)
-========================= */
 
-.page-title {
-  margin: 30px 0 10px;
-  font-size: 28px;
-  font-weight: 600;
+.page-title{
+  margin:30px 0 10px;
+  font-size:28px;
+  font-weight:600;
 }
 
-.sub-title {
-  color: #6e6e73;
-  margin-bottom: 25px;
+.sub-title{
+  color:#6e6e73;
+  margin-bottom:20px;
 }
 
-/* PREVIEW GRID */
-.preview-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 0 20px;
+.preview-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:20px;
+  max-width:900px;
+  margin:30px auto;
+  padding:0 20px;
 }
 
-.preview-box {
-  background: white;
-  border-radius: 16px;
-  padding: 15px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+.preview-box{
+  background:#fff;
+  border-radius:16px;
+  padding:15px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.06);
 }
 
-.preview-box h3 {
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-.preview-box img {
-  max-width: 100%;
-  border-radius: 12px;
-}
-
-/* CANVAS STYLE */
-canvas {
-  max-width: 100%;
-  border-radius: 12px;
+.preview-box img{
+  width:100%;
+  border-radius:12px;
 }
 
 /* BUTTON */
-.action-btn {
-  margin-top: 15px;
-  width: 100%;
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  background: #0071e3;
-  color: white;
-  font-weight: 500;
-  cursor: pointer;
-  transition: 0.2s;
+.btn{
+  margin-top:20px;
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  border:none;
+  background:#0071e3;
+  color:#fff;
+  font-weight:500;
+  cursor:pointer;
 }
 
-.action-btn:hover {
-  background: #005bb5;
+.btn:hover{
+  background:#005bb5;
 }
+
+/* LOADER */
+.loader{
+  display:none;
+  margin-top:15px;
+  color:#6e6e73;
+}
+
 </style>
 
 </head>
@@ -83,49 +75,51 @@ canvas {
 
 <header>
   <h1>Image Tools Pro</h1>
-  <p>Suppression d’arrière-plan intelligente</p>
+  <p>Suppression d’arrière-plan IA</p>
 </header>
 
-<h2 class="page-title">Suppression d’arrière-plan</h2>
-<p class="sub-title">Glissez une image ou cliquez pour commencer</p>
+<h2 class="page-title">Background Remover IA</h2>
+<p class="sub-title">Téléchargez une image → obtenez un fond transparent instantané</p>
 
-<!-- DRAG & DROP -->
+<!-- DROP -->
 <div class="drop-zone" id="dropZone">
-  <p>📁 Glissez & déposez votre image ici</p>
+  <p>📁 Glissez ou cliquez pour importer une image</p>
   <input type="file" id="fileInput" accept="image/*" hidden>
 </div>
 
-<!-- PREVIEWS -->
 <div class="preview-grid">
 
   <div class="preview-box">
     <h3>Image originale</h3>
-    <img id="originalPreview" />
+    <img id="previewOriginal">
   </div>
 
   <div class="preview-box">
-    <h3>Fond supprimé (simulation)</h3>
-    <canvas id="canvas"></canvas>
+    <h3>Résultat IA</h3>
+    <img id="previewResult">
   </div>
 
 </div>
 
-<button class="action-btn" onclick="removeBackground()">Supprimer le fond</button>
+<button class="btn" onclick="removeBackground()">Supprimer le fond (IA)</button>
+
+<div class="loader" id="loader">⏳ Traitement en cours...</div>
 
 <script>
+
 const dropZone = document.getElementById("dropZone");
 const fileInput = document.getElementById("fileInput");
-const originalPreview = document.getElementById("originalPreview");
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const previewOriginal = document.getElementById("previewOriginal");
+const previewResult = document.getElementById("previewResult");
+const loader = document.getElementById("loader");
 
-let img = new Image();
+let imageFile = null;
 
 /* CLICK */
-dropZone.addEventListener("click", () => fileInput.click());
+dropZone.onclick = () => fileInput.click();
 
 /* DROP */
-dropZone.addEventListener("dragover", (e) => {
+dropZone.addEventListener("dragover", e => {
   e.preventDefault();
   dropZone.classList.add("drag-active");
 });
@@ -134,59 +128,66 @@ dropZone.addEventListener("dragleave", () => {
   dropZone.classList.remove("drag-active");
 });
 
-dropZone.addEventListener("drop", (e) => {
+dropZone.addEventListener("drop", e => {
   e.preventDefault();
   dropZone.classList.remove("drag-active");
   handleFile(e.dataTransfer.files[0]);
 });
 
-/* FILE INPUT */
-fileInput.addEventListener("change", (e) => {
+fileInput.addEventListener("change", e => {
   handleFile(e.target.files[0]);
 });
 
-/* LOAD IMAGE */
-function handleFile(file) {
+function handleFile(file){
+  imageFile = file;
+
   const reader = new FileReader();
-
-  reader.onload = function(e) {
-    img = new Image();
-    img.onload = function() {
-      originalPreview.src = img.src;
-
-      canvas.width = img.width;
-      canvas.height = img.height;
-
-      ctx.drawImage(img, 0, 0);
-    }
-    img.src = e.target.result;
+  reader.onload = e => {
+    previewOriginal.src = e.target.result;
   }
-
   reader.readAsDataURL(file);
 }
 
-/* SIMPLE BACKGROUND REMOVAL (SIMULATION) */
-function removeBackground() {
-  if (!img.src) return;
+/* =========================
+REMOVE BG API (PRO)
+========================= */
 
-  ctx.drawImage(img, 0, 0);
+async function removeBackground(){
 
-  let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-  let data = imageData.data;
+  if(!imageFile) return;
 
-  // ⚡ SIMPLE EFFECT: remove near-white background
-  for (let i = 0; i < data.length; i += 4) {
-    let r = data[i];
-    let g = data[i + 1];
-    let b = data[i + 2];
+  loader.style.display = "block";
 
-    if (r > 240 && g > 240 && b > 240) {
-      data[i + 3] = 0; // transparent
+  const formData = new FormData();
+  formData.append("image_file", imageFile);
+  formData.append("size", "auto");
+
+  try{
+
+    const response = await fetch("https://api.remove.bg/v1.0/removebg", {
+      method: "POST",
+      headers: {
+        "X-Api-Key": "TA_CLE_API_ICI"
+      },
+      body: formData
+    });
+
+    if(!response.ok){
+      throw new Error("Erreur API");
     }
+
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+
+    previewResult.src = url;
+
+  }catch(err){
+    alert("Erreur lors du traitement de l’image");
   }
 
-  ctx.putImageData(imageData, 0, 0);
+  loader.style.display = "none";
 }
+
 </script>
 
 </body>
