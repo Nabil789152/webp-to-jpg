@@ -131,7 +131,7 @@
 
 <script>
 let maxUses = 5;
-let uses = localStorage.getItem("bg_uses") || 0;
+let uses = parseInt(localStorage.getItem("bg_uses")) || 0;
 /* =========================
 ELEMENTS
 ========================= */
@@ -171,7 +171,6 @@ fileInput.addEventListener("change", (e) => {
 HANDLE FILE
 ========================= */
 function handleFile(file){
- function handleFile(file){
   if(!file) return;
 
   imageFile = file;
@@ -182,7 +181,7 @@ function handleFile(file){
   };
   reader.readAsDataURL(file);
 
-  // 👉 LANCEMENT AUTOMATIQUE
+  // 🚀 auto lancement après upload
   setTimeout(() => {
     removeBackground();
   }, 300);
