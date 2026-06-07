@@ -130,7 +130,8 @@
 <div class="loader" id="loader">⏳ Traitement en cours...</div>
 
 <script>
-
+let maxUses = 5;
+let uses = localStorage.getItem("bg_uses") || 0;
 /* =========================
 ELEMENTS
 ========================= */
