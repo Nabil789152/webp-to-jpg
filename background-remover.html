@@ -122,9 +122,6 @@
 </div>
 
 <!-- BUTTON -->
-<button class="btn" onclick="removeBackground()">
-  Supprimer le fond (IA)
-</button>
 
 <button class="btn" id="downloadBtn" onclick="downloadImage()" style="display:none;">
   Télécharger l’image
@@ -173,6 +170,7 @@ fileInput.addEventListener("change", (e) => {
 HANDLE FILE
 ========================= */
 function handleFile(file){
+ function handleFile(file){
   if(!file) return;
 
   imageFile = file;
@@ -182,6 +180,11 @@ function handleFile(file){
     previewOriginal.src = e.target.result;
   };
   reader.readAsDataURL(file);
+
+  // 👉 LANCEMENT AUTOMATIQUE
+  setTimeout(() => {
+    removeBackground();
+  }, 300);
 }
 
 /* =========================
