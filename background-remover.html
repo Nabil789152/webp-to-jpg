@@ -5,50 +5,189 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Suppression d’arrière-plan (bientôt disponible) | Image Tools Pro</title>
-
-<meta name="description" content="L'outil de suppression d'arrière-plan est actuellement en développement et sera bientôt disponible gratuitement en ligne.">
-<meta name="robots" content="index, follow">
+<title>Suppression d’arrière-plan | Image Tools Pro</title>
 
 <link rel="stylesheet" href="style.css">
+
+<style>
+/* =========================
+PAGE STYLE (BACKGROUND REMOVER)
+========================= */
+
+.page-title {
+  margin: 30px 0 10px;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.sub-title {
+  color: #6e6e73;
+  margin-bottom: 25px;
+}
+
+/* PREVIEW GRID */
+.preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 0 20px;
+}
+
+.preview-box {
+  background: white;
+  border-radius: 16px;
+  padding: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+}
+
+.preview-box h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.preview-box img {
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+/* CANVAS STYLE */
+canvas {
+  max-width: 100%;
+  border-radius: 12px;
+}
+
+/* BUTTON */
+.action-btn {
+  margin-top: 15px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #0071e3;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.action-btn:hover {
+  background: #005bb5;
+}
+</style>
+
 </head>
 
 <body>
 
 <header>
-  <h1>Suppression d’arrière-plan</h1>
-  <p>Outil en cours de développement</p>
+  <h1>Image Tools Pro</h1>
+  <p>Suppression d’arrière-plan intelligente</p>
 </header>
 
-<div class="container">
+<h2 class="page-title">Suppression d’arrière-plan</h2>
+<p class="sub-title">Glissez une image ou cliquez pour commencer</p>
 
-  <div class="box">
+<!-- DRAG & DROP -->
+<div class="drop-zone" id="dropZone">
+  <p>📁 Glissez & déposez votre image ici</p>
+  <input type="file" id="fileInput" accept="image/*" hidden>
+</div>
 
-    <h2>🚧 Fonctionnalité en préparation</h2>
+<!-- PREVIEWS -->
+<div class="preview-grid">
 
-    <p>
-      Nous travaillons actuellement sur un outil de suppression automatique d’arrière-plan pour vos images.
-    </p>
+  <div class="preview-box">
+    <h3>Image originale</h3>
+    <img id="originalPreview" />
+  </div>
 
-    <p>
-      Cette fonctionnalité sera bientôt disponible gratuitement sur Image Tools Pro.
-    </p>
-
-    <button disabled>Bientôt disponible</button>
-
+  <div class="preview-box">
+    <h3>Fond supprimé (simulation)</h3>
+    <canvas id="canvas"></canvas>
   </div>
 
 </div>
 
-<footer>
-<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
+<button class="action-btn" onclick="removeBackground()">Supprimer le fond</button>
 
-<a href="index.html">Accueil</a>
-<a href="about.html">À propos</a>
-<a href="contact.html">Contact</a>
-<a href="privacy.html">Politique de confidentialité</a>
-<a href="terms.html">Conditions d’utilisation</a>
-</footer>
+<script>
+const dropZone = document.getElementById("dropZone");
+const fileInput = document.getElementById("fileInput");
+const originalPreview = document.getElementById("originalPreview");
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+let img = new Image();
+
+/* CLICK */
+dropZone.addEventListener("click", () => fileInput.click());
+
+/* DROP */
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropZone.classList.add("drag-active");
+});
+
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("drag-active");
+});
+
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+  dropZone.classList.remove("drag-active");
+  handleFile(e.dataTransfer.files[0]);
+});
+
+/* FILE INPUT */
+fileInput.addEventListener("change", (e) => {
+  handleFile(e.target.files[0]);
+});
+
+/* LOAD IMAGE */
+function handleFile(file) {
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    img = new Image();
+    img.onload = function() {
+      originalPreview.src = img.src;
+
+      canvas.width = img.width;
+      canvas.height = img.height;
+
+      ctx.drawImage(img, 0, 0);
+    }
+    img.src = e.target.result;
+  }
+
+  reader.readAsDataURL(file);
+}
+
+/* SIMPLE BACKGROUND REMOVAL (SIMULATION) */
+function removeBackground() {
+  if (!img.src) return;
+
+  ctx.drawImage(img, 0, 0);
+
+  let imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  let data = imageData.data;
+
+  // ⚡ SIMPLE EFFECT: remove near-white background
+  for (let i = 0; i < data.length; i += 4) {
+    let r = data[i];
+    let g = data[i + 1];
+    let b = data[i + 2];
+
+    if (r > 240 && g > 240 && b > 240) {
+      data[i + 3] = 0; // transparent
+    }
+  }
+
+  ctx.putImageData(imageData, 0, 0);
+}
+</script>
 
 </body>
 </html>
