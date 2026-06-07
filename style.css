@@ -281,3 +281,48 @@ DROP ZONE (CANVA STYLE UPGRADE)
   font-weight: 500;
   color: #1d1d1f;
 }
+
+
+/* =========================
+BACKGROUND REMOVER CARD STYLE
+========================= */
+
+.bg-card{
+  position: relative;
+  overflow: hidden;
+}
+
+/* effet subtil premium */
+.bg-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: radial-gradient(circle at top left, rgba(0,113,227,0.15), transparent 60%);
+  opacity:0;
+  transition: opacity 0.3s ease;
+}
+
+.bg-card:hover::before{
+  opacity:1;
+}
+
+/* badge "Populaire" */
+.badge-pro{
+  position:absolute;
+  top:12px;
+  right:12px;
+  background:#0071e3;
+  color:white;
+  font-size:11px;
+  font-weight:600;
+  padding:5px 10px;
+  border-radius:999px;
+  box-shadow:0 6px 18px rgba(0,113,227,0.25);
+  z-index:2;
+}
+
+/* texte plus propre */
+.bg-card p{
+  font-weight:500;
+  color:#6b7280;
+}
