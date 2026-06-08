@@ -7,12 +7,8 @@
 
 <title>Convertisseur JPG ↔ PNG gratuit en ligne | Image Tools Pro</title>
 
-<meta name="description" content="Convertissez vos images JPG en PNG ou PNG en JPG gratuitement en ligne. Outil rapide, sécurisé et sans perte de qualité.">
+<meta name="description" content="Convertissez vos images JPG en PNG ou PNG en JPG gratuitement en ligne.">
 <meta name="robots" content="index, follow">
-
-<meta property="og:title" content="Convertisseur JPG ↔ PNG">
-<meta property="og:description" content="Convertissez JPG et PNG instantanément en ligne gratuitement.">
-<meta property="og:type" content="website">
 
 <link rel="stylesheet" href="style.css">
 
@@ -34,38 +30,26 @@
   color:#5f6368;
   font-size:13px;
 }
+
+.box{
+  margin-top:15px;
+}
 </style>
 
 </head>
 
 <body>
 
-<!-- HEADER -->
 <header>
   <h1>Convertisseur JPG ↔ PNG</h1>
-  <p>Convertir JPG en PNG ou PNG en JPG instantanément</p>
+  <p>Convertir JPG et PNG instantanément</p>
 </header>
 
-<!-- MAIN -->
 <div class="container">
 
 <div class="box">
 
-<input type="file" id="file" accept=".jpg,.jpeg">
-
-<script>
-document.getElementById("file").addEventListener("change", function () {
-  const file = this.files[0];
-  if (!file) return;
-
-  const name = file.name.toLowerCase();
-
-  if (!name.endsWith(".jpg") && !name.endsWith(".jpeg")) {
-    alert("Seuls les fichiers .jpg et .jpeg sont autorisés !");
-    this.value = ""; // reset
-  }
-});
-</script>
+<input type="file" id="file" accept=".jpg,.jpeg,.png">
 
 <div class="box">
 <p class="small">Format détecté : <span id="formatDetected">-</span></p>
@@ -80,7 +64,6 @@ document.getElementById("file").addEventListener("change", function () {
 
 </div>
 
-<!-- PREVIEW -->
 <div class="preview" id="preview"></div>
 
 </div>
@@ -88,33 +71,42 @@ document.getElementById("file").addEventListener("change", function () {
 <script>
 
 let img = new Image();
+let fileName = "image";
 
-/* CHARGEMENT IMAGE */
-document.getElementById("file").onchange = (e) => {
-const file = e.target.files[0];
-if(!file) return;
+document.getElementById("file").addEventListener("change", function () {
+  const file = this.files[0];
+  if (!file) return;
 
-document.getElementById("formatDetected").innerText = file.type || "inconnu";
+  fileName = file.name.split(".")[0];
 
-const reader = new FileReader();
+  const name = file.name.toLowerCase();
 
-reader.onload = ev => {
-img.src = ev.target.result;
+  if (!name.endsWith(".jpg") && !name.endsWith(".jpeg") && !name.endsWith(".png")) {
+    alert("Seuls les fichiers .jpg, .jpeg et .png sont autorisés !");
+    this.value = "";
+    return;
+  }
 
-img.onload = () => {
-document.getElementById("preview").innerHTML = `
-<div>
-<p>Image originale</p>
-<img src="${img.src}" alt="image originale">
-</div>
-`;
-};
-};
+  document.getElementById("formatDetected").innerText = file.type;
 
-reader.readAsDataURL(file);
-};
+  const reader = new FileReader();
 
-/* CONVERSION */
+  reader.onload = ev => {
+    img.src = ev.target.result;
+
+    img.onload = () => {
+      document.getElementById("preview").innerHTML = `
+        <div>
+          <p>Image originale</p>
+          <img src="${img.src}" alt="image originale">
+        </div>
+      `;
+    };
+  };
+
+  reader.readAsDataURL(file);
+});
+
 function convert(){
 
 if(!img.src){
@@ -128,25 +120,30 @@ let canvas = document.createElement("canvas");
 canvas.width = img.width;
 canvas.height = img.height;
 
-canvas.getContext("2d").drawImage(img,0,0);
+let ctx = canvas.getContext("2d");
+
+/* IMPORTANT : fond blanc pour PNG → JPG */
+if(format === "image/jpeg"){
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+}
+
+ctx.drawImage(img,0,0);
 
 canvas.toBlob(blob => {
 
 let url = URL.createObjectURL(blob);
 
+let ext = format === "image/png" ? "png" : "jpg";
+
 document.getElementById("preview").innerHTML += `
 <div>
-
 <p>Image convertie</p>
-
 <img src="${url}" alt="image convertie">
-
 <br><br>
-
-<a href="${url}" download="image-convertie">
+<a href="${url}" download="${fileName}-converti.${ext}">
 <button>Télécharger</button>
 </a>
-
 </div>
 `;
 
@@ -156,47 +153,8 @@ document.getElementById("preview").innerHTML += `
 
 </script>
 
-<!-- RELATED TOOLS -->
-<section style="
-max-width:900px;
-margin:60px auto;
-padding:0 20px;
-text-align:center;
-">
-
-<h2>Autres outils</h2>
-
-<p>Tous vos outils d’images en un seul endroit</p>
-
-<div style="
-display:flex;
-flex-wrap:wrap;
-justify-content:center;
-gap:10px;
-margin-top:20px;
-">
-
-<a class="btn" href="converter.html">Convertisseur WebP</a>
-<a class="btn" href="compress.html">Compresseur d’images</a>
-<a class="btn" href="resize.html">Redimensionner image</a>
-<a class="btn" href="background-remover.html">Suppression d’arrière-plan</a>
-
-</div>
-
-</section>
-
-<!-- FOOTER -->
 <footer>
-  <p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
-
-  <div>
-    <a href="index.html">Accueil</a>
-    <a href="about.html">À propos</a>
-    <a href="contact.html">Contact</a>
-    <a href="privacy.html">Politique de confidentialité</a>
-    <a href="terms.html">Conditions d’utilisation</a>
-    <a href="sitemap.xml">Sitemap</a>
-  </div>
+  <p>© 2026 Image Tools Pro</p>
 </footer>
 
 </body>
