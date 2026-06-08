@@ -357,3 +357,35 @@ BACKGROUND REMOVER CARD STYLE
   padding: 10px;
   border-radius: 12px;
 }
+
+.mini-dashboard{
+  position:sticky;
+  top:0;
+  z-index:9999;
+
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:6px;
+
+  padding:8px 10px;
+  background:#ffffffee;
+  backdrop-filter: blur(8px);
+  border-bottom:1px solid #e5e5e5;
+}
+
+.mini-dashboard a{
+  font-size:12px;
+  padding:5px 10px;
+  border-radius:18px;
+  text-decoration:none;
+  color:#333;
+  background:#f3f3f3;
+  border:1px solid #ddd;
+  transition:0.2s;
+}
+
+.mini-dashboard a:hover{
+  background:#e9e9e9;
+  transform: translateY(-1px);
+}
