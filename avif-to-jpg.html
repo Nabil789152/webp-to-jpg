@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Convertisseur AVIF en JPG en ligne gratuit | Image Tools Pro</title>
+
+<meta name="description" content="Convertissez vos images AVIF en JPG gratuitement en ligne. Outil rapide, sécurisé et facile d'utilisation.">
+<meta name="robots" content="index, follow">
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h1>Convertisseur AVIF en JPG</h1>
+  <p>Convertir des images AVIF en JPG instantanément</p>
+</header>
+
+<div class="container">
+
+  <div class="box">
+
+    <input type="file" id="file" accept="image/jpeg,image/avif">
+
+    <div class="box">
+      <p id="info">Format détecté : -</p>
+    </div>
+
+    <button onclick="convert()">Convertir en JPG</button>
+
+  </div>
+
+  <div class="preview" id="preview"></div>
+
+</div>
+
+<script>
+
+let img = new Image();
+
+/* CHARGEMENT IMAGE */
+document.getElementById("file").onchange = (e) => {
+
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const type = file.type.toLowerCase();
+
+  if(!type.includes("jpeg") && !type.includes("avif")){
+    alert("Veuillez importer une image AVIF ou JPG");
+    return;
+  }
+
+  document.getElementById("info").innerText = "Format détecté : " + file.type;
+
+  const reader = new FileReader();
+
+  reader.onload = ev => {
+    img.src = ev.target.result;
+
+    img.onload = () => {
+      document.getElementById("preview").innerHTML = `
+        <div class="box">
+          <p>Image originale</p>
+          <img src="${img.src}" alt="image originale">
+        </div>
+      `;
+    };
+  };
+
+  reader.readAsDataURL(file);
+};
+
+/* CONVERSION */
+function convert(){
+
+  if(!img.src){
+    alert("Veuillez ajouter une image");
+    return;
+  }
+
+  let canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+
+  canvas.toBlob(blob => {
+
+    let url = URL.createObjectURL(blob);
+
+    document.getElementById("preview").innerHTML += `
+      <div class="box">
+
+        <p>Image convertie en JPG</p>
+
+        <img src="${url}" alt="image convertie">
+
+        <br><br>
+
+        <a href="${url}" download="image-convertie.jpg">
+          <button>Télécharger JPG</button>
+        </a>
+
+      </div>
+    `;
+
+  }, "image/jpeg", 0.92);
+
+}
+
+</script>
+
+<footer>
+<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
+
+<a href="index.html">Accueil</a>
+<a href="about.html">À propos</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Politique de confidentialité</a>
+<a href="terms.html">Conditions d’utilisation</a>
+</footer>
+
+</body>
+</html>
