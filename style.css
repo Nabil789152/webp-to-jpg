@@ -244,15 +244,17 @@ DROP ZONE (CANVA STYLE UPGRADE)
 ========================= */
 
 .drop-zone {
-  max-width: 700px;
-  margin: 20px auto;
-  padding: 45px;
-  border: 2px dashed #c7c7cc;
-  border-radius: 18px;
-  background: white;
+  border: 2px dashed #aaa;
+  border-radius: 12px;
+  padding: 60px 20px;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   cursor: pointer;
-  transition: all 0.25s ease;
-  user-select: none;
+  transition: 0.3s;
+  background: #fafafa;
 }
 
 .drop-zone:hover {
@@ -460,4 +462,10 @@ button:hover {
 .drop-zone.drag-active {
   border-color: #2d7ef7;
   background: #eef5ff;
+}
+
+.container{
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
 }
