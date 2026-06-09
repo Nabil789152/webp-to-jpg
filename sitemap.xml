@@ -27,27 +27,33 @@
   </url>
 
   <url>
-    <loc>https://nabil789152.github.io/webp-to-jpg/jpg-png-converter.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://nabil789152.github.io/webp-to-jpg/png-to-jpg.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://nabil789152.github.io/webp-to-jpg/jfif-to-jpg.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
     <loc>https://nabil789152.github.io/webp-to-jpg/background-remover.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://nabil789152.github.io/webp-to-jpg/grayscale.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://nabil789152.github.io/webp-to-jpg/blur.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <url>
+    <loc>https://nabil789152.github.io/webp-to-jpg/sharpen.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://nabil789152.github.io/webp-to-jpg/rotate.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
   </url>
 
   <url>
@@ -57,9 +63,9 @@
   </url>
 
   <url>
-    <loc>https://nabil789152.github.io/webp-to-jpg/webp-to-jpg.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <loc>https://nabil789152.github.io/webp-to-jpg/jpg-png-converter.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
   </url>
 
   <url>
@@ -69,10 +75,19 @@
   </url>
 
   <url>
+    <loc>https://nabil789152.github.io/webp-to-jpg/jfif-to-jpg.html</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://nabil789152.github.io/webp-to-jpg/best-image-formats.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  
+  
+
 
   <url>
     <loc>https://nabil789152.github.io/webp-to-jpg/about.html</loc>
