@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Convertisseur SVG en JPG en ligne gratuit | Image Tools Pro</title>
+
+<meta name="description" content="Convertissez vos images SVG en JPG gratuitement en ligne. Outil rapide, sécurisé et facile d'utilisation.">
+<meta name="robots" content="index, follow">
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- 🔥 TOP MENU -->
+<div class="top-buttons">
+  <a href="index.html">🏠 Accueil</a>
+  <a href="converter.html">🔄 Convertisseur</a>
+  <a href="compress.html">📦 Compresseur</a>
+  <a href="resize.html">📏 Redimentionneur</a>
+  <a href="background-remover.html">🧹 BG</a>
+  <a href="grayscale.html">🏁 NB</a>
+  <a href="pdf-to-images.html">📄➡️🖼 PDF vers Images</a>
+  <a href="blur.html">▒ Flou</a>
+  <a href="sharpen.html">💎 Netteté</a>
+  <a href="rotate.html">🔁 Rotation</a>
+  <a href="image-cropper.html">🔲 Recadrer</a>
+  <a href="jpg-png-converter.html">🖼️ JPG↔PNG</a>
+  <a href="avif-to-jpg.html">🖼️ AVIF→JPG</a>
+</div>
+
+
+<header>
+  <h1>Convertisseur SVG en JPG</h1>
+  <p>Convertir des images SVG en JPG instantanément</p>
+</header>
+
+<div class="container">
+
+  <div class="box">
+
+    <div class="drop-zone" id="dropZone">
+
+      <input type="file" id="file" accept="image/svg,.svg">
+
+      <div class="drop-content">
+        <div class="icon">📁</div>
+        <h3>Glisse-dépose ton image ici</h3>
+        <p>ou clique pour sélectionner</p>
+      </div>
+
+    </div>
+    <div class="box">
+      <p id="info">Format détecté : -</p>
+    </div>
+
+    <button onclick="convert()">Convertir en JPG</button>
+
+  </div>
+
+  <div class="preview" id="preview"></div>
+
+</div>
+
+<script>
+
+let img = new Image();
+
+/* CHARGEMENT IMAGE */
+document.getElementById("file").onchange = (e) => {
+
+  const file = e.target.files[0];
+  if(!file) return;
+
+  const type = file.type.toLowerCase();
+
+  if(!type.includes("jpeg") && !type.includes("svg")){
+    alert("Veuillez importer une image SVG ou JPG");
+    return;
+  }
+
+  document.getElementById("info").innerText = "Format détecté : " + file.type;
+
+  const reader = new FileReader();
+
+  reader.onload = ev => {
+    img.src = ev.target.result;
+
+    img.onload = () => {
+      document.getElementById("preview").innerHTML = `
+        <div class="box">
+          <p>Image originale</p>
+          <img src="${img.src}" alt="image originale">
+        </div>
+      `;
+    };
+  };
+
+  reader.readAsDataURL(file);
+};
+
+/* CONVERSION */
+function convert(){
+
+  if(!img.src){
+    alert("Veuillez ajouter une image");
+    return;
+  }
+
+  let canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+
+  canvas.toBlob(blob => {
+
+    let url = URL.createObjectURL(blob);
+
+    document.getElementById("preview").innerHTML += `
+      <div class="box">
+
+        <p>Image convertie en JPG</p>
+
+        <img src="${url}" alt="image convertie">
+
+        <br><br>
+
+        <a href="${url}" download="image-convertie.jpg">
+          <button>Télécharger JPG</button>
+        </a>
+
+      </div>
+    `;
+
+  }, "image/jpeg", 0.92);
+
+}
+
+</script>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Image Tools Pro</p>
+  <a href="about.html">À propos</a>
+  <a href="contact.html">Contact</a>
+  <a href="privacy.html">Confidentialité</a>
+  <a href="terms.html">Conditions</a>
+</footer>
+  
+</body>
+</html>
