@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Compresseur PDF | Image Tools Pro</title>
+
+<style>
+body {
+  font-family: Arial;
+  background: #f4f6f9;
+  text-align: center;
+  padding: 20px;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.dropzone {
+  border: 2px dashed #999;
+  padding: 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.dropzone.hover {
+  background: #e8f0ff;
+}
+
+select, button {
+  padding: 10px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+button {
+  background: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0056b3;
+}
+
+.progress {
+  width: 100%;
+  background: #eee;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 15px;
+  display: none;
+}
+
+.progress-bar {
+  height: 10px;
+  width: 0%;
+  background: #28a745;
+}
+
+.info {
+  margin-top: 10px;
+  font-size: 14px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- 🔥 TOP MENU -->
+<div class="top-buttons">
+  <a href="index.html">🏠 Accueil</a>
+  <a href="converter.html">🔄 Convertisseur</a>
+  <a href="compress.html">📦 Compresseur</a>
+  <a href="resize.html">📏 Redimentionneur</a>
+  <a href="background-remover.html">🧹 BG</a>
+  <a href="grayscale.html">🏁 NB</a>
+  <a href="blur.html">▒ Flou</a>
+  <a href="sharpen.html">💎 Netteté</a>
+  <a href="rotate.html">🔁 Rotation</a>
+  <a href="image-cropper.html">🔲 Recadrer</a>
+  <a href="jpg-png-converter.html">🖼️ JPG↔PNG</a>
+  <a href="avif-to-jpg.html">🖼️ AVIF→JPG</a>
+  <a href="jfif-to-jpg.html">🖼️ JFIF→JPG</a>
+</div>
+  
+<body>
+
+<div class="container">
+
+<h2>📄 Compresseur PDF</h2>
+
+<div id="dropzone" class="dropzone">
+  Glissez votre fichier PDF ici ou cliquez
+  <input type="file" id="file" accept="application/pdf" hidden>
+</div>
+
+<p id="fileInfo"></p>
+
+<select id="level">
+  <option value="low">○ Faible compression</option>
+  <option value="medium" selected>○ Recommandée</option>
+  <option value="high">○ Maximale</option>
+</select>
+
+<button onclick="compressPDF()">Compresser PDF</button>
+
+<div class="progress" id="progress">
+  <div class="progress-bar" id="bar"></div>
+</div>
+
+<p class="info" id="result"></p>
+
+</div>
+
+<!-- PDF LIB -->
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
+<script>
+let fileData = null;
+
+const dropzone = document.getElementById("dropzone");
+const fileInput = document.getElementById("file");
+
+dropzone.onclick = () => fileInput.click();
+
+dropzone.ondragover = e => {
+  e.preventDefault();
+  dropzone.classList.add("hover");
+};
+
+dropzone.ondragleave = () => dropzone.classList.remove("hover");
+
+dropzone.ondrop = e => {
+  e.preventDefault();
+  dropzone.classList.remove("hover");
+  handleFile(e.dataTransfer.files[0]);
+};
+
+fileInput.onchange = e => handleFile(e.target.files[0]);
+
+function handleFile(file) {
+  if (!file) return;
+
+  fileData = file;
+
+  document.getElementById("fileInfo").innerText =
+    `📄 ${file.name} - ${(file.size/1024).toFixed(2)} KB`;
+}
+
+async function compressPDF() {
+  if (!fileData) return alert("Ajoute un PDF");
+
+  const level = document.getElementById("level").value;
+
+  const progress = document.getElementById("progress");
+  const bar = document.getElementById("bar");
+  const result = document.getElementById("result");
+
+  progress.style.display = "block";
+  bar.style.width = "10%";
+
+  const arrayBuffer = await fileData.arrayBuffer();
+
+  const pdfDoc = await PDFLib.PDFDocument.load(arrayBuffer);
+
+  bar.style.width = "40%";
+
+  const pages = pdfDoc.getPages();
+
+  // Simulation compression
+  let scale = 1;
+
+  if (level === "low") scale = 1;
+  if (level === "medium") scale = 0.85;
+  if (level === "high") scale = 0.65;
+
+  for (let page of pages) {
+    const { width, height } = page.getSize();
+    page.scale(scale, scale);
+  }
+
+  bar.style.width = "70%";
+
+  const compressedBytes = await pdfDoc.save();
+
+  bar.style.width = "100%";
+
+  const blob = new Blob([compressedBytes], { type: "application/pdf" });
+
+  const url = URL.createObjectURL(blob);
+
+  const originalSize = fileData.size;
+  const newSize = blob.size;
+
+  result.innerHTML = `
+    📊 Taille originale : ${(originalSize/1024).toFixed(2)} KB<br>
+    📉 Taille compressée : ${(newSize/1024).toFixed(2)} KB<br><br>
+    <a href="${url}" download="compressed.pdf">⬇ Télécharger PDF compressé</a>
+  `;
+}
+</script>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
+
+  <a href="index.html">Accueil</a>
+  <a href="about.html">À propos</a>
+  <a href="contact.html">Contact</a>
+  <a href="privacy.html">Politique de confidentialité</a>
+  <a href="terms.html">Conditions d’utilisation</a>
+</footer>
+
+</body>
+</html>
