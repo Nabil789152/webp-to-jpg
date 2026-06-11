@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PDF vers Images | Image Tools Pro</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  text-align: center;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+.box {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.drop-zone {
+  border: 2px dashed #999;
+  padding: 40px;
+  text-align: center;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.drop-zone.drag {
+  background: #e8f0ff;
+  border-color: #007bff;
+}
+
+button {
+  padding: 10px 15px;
+  margin-top: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background: #007bff;
+  color: white;
+}
+
+button:hover {
+  background: #0056d2;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.thumb {
+  background: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.thumb img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+small {
+  display: block;
+  margin-top: 5px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- 🔥 TOP MENU -->
+<div class="top-buttons">
+  <a href="index.html">🏠 Accueil</a>
+  <a href="compress.html">📦 Compresseur</a>
+  <a href="resize.html">📏 Redimentionneur</a>
+  <a href="background-remover.html">🧹 BG</a>
+  <a href="grayscale.html">🏁 NB</a>
+  <a href="blur.html">▒ Flou</a>
+  <a href="sharpen.html">💎 Netteté</a>
+  <a href="rotate.html">🔁 Rotation</a>
+  <a href="image-cropper.html">🔲 Recadrer</a>
+  <a href="jpg-png-converter.html">🖼️ JPG↔PNG</a>
+  <a href="avif-to-jpg.html">🖼️ AVIF→JPG</a>
+  <a href="jfif-to-jpg.html">🖼️ JFIF→JPG</a>
+</div>
+
+<header>
+<h1>📄➡️🖼 PDF vers Images</h1>
+<p>Convertis chaque page de ton PDF en image JPG</p>
+</header>
+
+<div class="container">
+
+<div class="box">
+
+<div class="drop-zone" id="dropZone">
+📄 Glisse ton PDF ici ou clique pour sélectionner
+<input type="file" id="fileInput" accept="application/pdf" hidden>
+</div>
+
+<button onclick="convertPDF()">🚀 Convertir</button>
+<button onclick="downloadAll()">⬇ Télécharger ZIP</button>
+
+<div id="status"></div>
+
+<div class="grid" id="output"></div>
+
+</div>
+
+</div>
+
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<!-- JSZip -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script>
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+let pdfDoc = null;
+let images = [];
+
+const fileInput = document.getElementById("fileInput");
+const dropZone = document.getElementById("dropZone");
+const output = document.getElementById("output");
+const status = document.getElementById("status");
+
+/* CLICK */
+dropZone.addEventListener("click", () => fileInput.click());
+
+fileInput.addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  loadPDF(file);
+});
+
+/* DRAG & DROP */
+dropZone.addEventListener("dragover", e => {
+  e.preventDefault();
+  dropZone.classList.add("drag");
+});
+
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("drag");
+});
+
+dropZone.addEventListener("drop", e => {
+  e.preventDefault();
+  dropZone.classList.remove("drag");
+  loadPDF(e.dataTransfer.files[0]);
+});
+
+/* LOAD PDF */
+async function loadPDF(file) {
+  const reader = new FileReader();
+
+  reader.onload = async function () {
+    const typedarray = new Uint8Array(this.result);
+    pdfDoc = await pdfjsLib.getDocument(typedarray).promise;
+    status.innerText = `📄 PDF chargé : ${pdfDoc.numPages} pages`;
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
+/* CONVERT */
+async function convertPDF() {
+  if (!pdfDoc) {
+    alert("Ajoute un PDF !");
+    return;
+  }
+
+  output.innerHTML = "";
+  images = [];
+
+  for (let i = 1; i <= pdfDoc.numPages; i++) {
+
+    const page = await pdfDoc.getPage(i);
+    const viewport = page.getViewport({ scale: 2 });
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    const imgData = canvas.toDataURL("image/jpeg", 0.9);
+    images.push(imgData);
+
+    const div = document.createElement("div");
+    div.className = "thumb";
+
+    div.innerHTML = `
+      <img src="${imgData}">
+      <small>Page ${i}</small>
+      <a href="${imgData}" download="page-${i}.jpg">
+        <button>⬇ JPG</button>
+      </a>
+    `;
+
+    output.appendChild(div);
+
+    status.innerText = `Conversion : ${i}/${pdfDoc.numPages}`;
+  }
+
+  status.innerText = "✅ Conversion terminée";
+}
+
+/* DOWNLOAD ALL ZIP */
+async function downloadAll() {
+
+  if (images.length === 0) {
+    alert("Convertis d'abord le PDF !");
+    return;
+  }
+
+  const zip = new JSZip();
+
+  images.forEach((img, i) => {
+    const base64 = img.split(",")[1];
+    zip.file(`page-${i + 1}.jpg`, base64, { base64: true });
+  });
+
+  const content = await zip.generateAsync({ type: "blob" });
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(content);
+  link.download = "pdf-images.zip";
+  link.click();
+}
+
+</script>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
+
+  <a href="index.html">Accueil</a>
+  <a href="about.html">À propos</a>
+  <a href="contact.html">Contact</a>
+  <a href="privacy.html">Politique de confidentialité</a>
+  <a href="terms.html">Conditions d’utilisation</a>
+</footer>
+
+  
+</body>
+</html>
