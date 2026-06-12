@@ -1,23 +1,87 @@
 <!DOCTYPE html>
+
 <html lang="fr">
-  
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>PDF vers Word PRO | Image Tools Pro</title>
-<meta name="description" content="Convertissez vos fichiers PDF en documents WORD gratuitement en ligne. Outil rapide, sécurisé et facile d'utilisation.">
+
+<meta name="description" content="Convertissez vos fichiers PDF en documents Word gratuitement en ligne.">
 <meta name="robots" content="index, follow">
 
 <link rel="stylesheet" href="style.css">
-</head>
-  
-<style>
-body {font-family: Arial;background:#f4f6f9;margin:0}
 
-<!-- 🔥 TOP MENU -->  
-  
+<style>
+body{
+  font-family:Arial,sans-serif;
+  background:#f4f6f9;
+  margin:0;
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+}
+
+.box{
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+.drop-zone{
+  border:2px dashed #999;
+  padding:40px;
+  text-align:center;
+  border-radius:12px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.drop-zone.drag{
+  background:#e8f0ff;
+  border-color:#007bff;
+}
+
+button{
+  padding:10px 15px;
+  margin-top:10px;
+  border:none;
+  border-radius:8px;
+  background:#007bff;
+  color:#fff;
+  cursor:pointer;
+}
+
+button:hover{
+  background:#0056d2;
+}
+
+.preview{
+  margin-top:20px;
+  text-align:center;
+}
+
+.preview canvas{
+  max-width:100%;
+  border-radius:10px;
+  box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+
+#info{
+  margin-top:15px;
+  line-height:1.8;
+}
+</style>
+
+</head>
+
 <body>
+
 <div class="top-buttons">
   <a href="index.html">🏠 Accueil</a>
   <a href="converter.html">🔄 Convertisseur</a>
@@ -34,39 +98,30 @@ body {font-family: Arial;background:#f4f6f9;margin:0}
   <a href="avif-to-jpg.html">🖼️ AVIF→JPG</a>
   <a href="jfif-to-jpg.html">🖼️ JFIF→JPG</a>
   <a href="svg-to-jpg.html">🖼️ SVG→JPG</a>
-</div>  
-  
-.container{max-width:900px;margin:auto;padding:20px}
-.box{background:#fff;padding:20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
-.drop-zone{border:2px dashed #999;padding:40px;text-align:center;border-radius:12px;cursor:pointer}
-button{padding:10px 15px;margin-top:10px;border:none;border-radius:8px;background:#007bff;color:white;cursor:pointer}
-button:hover{background:#0056d2}
-.preview img{max-width:100%;margin-top:10px;border-radius:10px}
-</style>
+</div>
 
 <div class="container">
+
 <div class="box">
 
 <h1>📝➡️🗎 PDF vers Word PRO</h1>
 
 <div class="drop-zone" id="dropZone">
-📄 Glisse ton PDF ou clique
+📄 Glisse ton PDF ici ou clique pour sélectionner
 <input type="file" id="fileInput" accept="application/pdf" hidden>
 </div>
 
-<button onclick="convertDOCX()">🚀 Convertir en DOCX PRO</button>
+<button onclick="convertToWord()">🚀 Convertir en Word</button>
 
 <div id="info"></div>
+
 <div class="preview" id="preview"></div>
 
 </div>
+
 </div>
 
-<!-- PDF.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
-<!-- JSZIP -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 
 <script>
 
@@ -80,143 +135,134 @@ const dropZone = document.getElementById("dropZone");
 const info = document.getElementById("info");
 const preview = document.getElementById("preview");
 
-dropZone.onclick = () => fileInput.click();
+dropZone.addEventListener("click", () => fileInput.click());
 
-fileInput.onchange = e => loadPDF(e.target.files[0]);
+fileInput.addEventListener("change", e => {
+  loadPDF(e.target.files[0]);
+});
 
-dropZone.ondragover = e => {e.preventDefault(); dropZone.style.background="#e8f0ff";}
-dropZone.ondragleave = () => dropZone.style.background="white";
-dropZone.ondrop = e => {
+dropZone.addEventListener("dragover", e => {
   e.preventDefault();
+  dropZone.classList.add("drag");
+});
+
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("drag");
+});
+
+dropZone.addEventListener("drop", e => {
+  e.preventDefault();
+  dropZone.classList.remove("drag");
   loadPDF(e.dataTransfer.files[0]);
-};
+});
 
 async function loadPDF(file){
 
-const reader = new FileReader();
+  const reader = new FileReader();
 
-reader.onload = async function(){
-const typed = new Uint8Array(this.result);
+  reader.onload = async function(){
 
-pdfDoc = await pdfjsLib.getDocument(typed).promise;
+    const typedArray = new Uint8Array(this.result);
 
-info.innerHTML = `📄 Pages : ${pdfDoc.numPages} | 💾 ${ (file.size/1024).toFixed(2)} KB`;
-};
+    pdfDoc = await pdfjsLib.getDocument(typedArray).promise;
 
-reader.readAsArrayBuffer(file);
+    const page = await pdfDoc.getPage(1);
+
+    const viewport = page.getViewport({scale:1});
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+
+    await page.render({
+      canvasContext:ctx,
+      viewport
+    }).promise;
+
+    preview.innerHTML = "";
+    preview.appendChild(canvas);
+
+    info.innerHTML = `
+      📄 Nombre de pages : ${pdfDoc.numPages}<br>
+      📐 Format : ${Math.round(viewport.width)} × ${Math.round(viewport.height)} px<br>
+      💾 Taille PDF : ${(file.size/1024).toFixed(2)} KB
+    `;
+  };
+
+  reader.readAsArrayBuffer(file);
 }
 
-/* ===========================
-   🧠 PDF → DOCX PRO
-=========================== */
+async function convertToWord(){
 
-async function convertDOCX(){
+  if(!pdfDoc){
+    alert("Ajoute un PDF !");
+    return;
+  }
 
-if(!pdfDoc){
-alert("Ajoute un PDF !");
-return;
-}
+  let htmlContent = "";
 
-const zip = new JSZip();
+  for(let i=1;i<=pdfDoc.numPages;i++){
 
-// 📁 Structure DOCX
-zip.file("[Content_Types].xml", `
-<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
-<Default Extension="xml" ContentType="application/xml"/>
-<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
-<Default Extension="jpeg" ContentType="image/jpeg"/>
-<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
-</Types>
-`);
+    const page = await pdfDoc.getPage(i);
 
-zip.folder("_rels").file(".rels", `
-<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
-</Relationships>
-`);
+    const viewport = page.getViewport({scale:1.5});
 
-let bodyXML = "";
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
 
-for(let i=1;i<=pdfDoc.numPages;i++){
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
 
-const page = await pdfDoc.getPage(i);
-const viewport = page.getViewport({scale:1.5});
+    await page.render({
+      canvasContext:ctx,
+      viewport
+    }).promise;
 
-const canvas = document.createElement("canvas");
-const ctx = canvas.getContext("2d");
+    const imgData = canvas.toDataURL("image/jpeg",0.9);
 
-canvas.width = viewport.width;
-canvas.height = viewport.height;
+    htmlContent += `
+      <h3>Page ${i}</h3>
+      <img src="${imgData}" style="width:100%;margin-bottom:20px;">
+      <hr>
+    `;
+  }
 
-await page.render({canvasContext:ctx,viewport}).promise;
+  const wordHTML = `
+  <html>
+  <head>
+  <meta charset="utf-8">
+  </head>
+  <body>
+  ${htmlContent}
+  </body>
+  </html>`;
 
-// 🖼️ Image page
-const imgData = canvas.toDataURL("image/jpeg",0.9);
-const imgBase64 = imgData.split(",")[1];
+  const blob = new Blob(
+    ['\ufeff', wordHTML],
+    {type:'application/msword'}
+  );
 
-// image file
-zip.folder("word/media").file(`image${i}.jpeg`, imgBase64, {base64:true});
+  const sizeKB = (blob.size/1024).toFixed(2);
 
-// 📝 texte
-const text = await page.getTextContent();
-const pageText = text.items.map(t=>t.str).join(" ");
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "document.doc";
+  link.click();
 
-// 📄 Word XML paragraph
-bodyXML += `
-<w:p>
-<w:r>
-<w:t>Page ${i}</w:t>
-</w:r>
-</w:p>
-
-<w:p>
-<w:r>
-<w:drawing>
-<wp:inline xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">
-<a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
-<a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"/>
-</a:graphic>
-</wp:inline>
-</w:drawing>
-</w:r>
-</w:p>
-
-<w:p><w:r><w:t>${pageText}</w:t></w:r></w:p>
-`;
-}
-
-/* document.xml */
-zip.folder("word").file("document.xml", `
-<?xml version="1.0" encoding="UTF-8"?>
-<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
-<w:body>
-${bodyXML}
-</w:body>
-</w:document>
-`);
-
-// 📦 build DOCX
-const blob = await zip.generateAsync({type:"blob"});
-
-const sizeKB = (blob.size/1024).toFixed(2);
-
-const a = document.createElement("a");
-a.href = URL.createObjectURL(blob);
-a.download = "PDF-Word-PRO.docx";
-a.click();
-
-info.innerHTML += `<br>📦 DOCX généré : ${sizeKB} KB`;
+  info.innerHTML += `<br>📦 Taille du document Word : ${sizeKB} KB`;
 }
 
 </script>
 
+<!-- FOOTER -->
 <footer>
-<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
-
-<a href="index.html">Accueil</a>
-<a href="about.html">À propos</a>
-<a href="contact.html">Contact</a>
-<a href="privacy.html">Politique de confidentialité</a>
-<a href="terms.html">Conditions d’utilisation</a>
+  <p>© 2026 Image Tools Pro</p>
+  <a href="about.html">À propos</a>
+  <a href="contact.html">Contact</a>
+  <a href="privacy.html">Confidentialité</a>
+  <a href="terms.html">Conditions</a>
 </footer>
 
 </body>
