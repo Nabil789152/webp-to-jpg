@@ -208,14 +208,35 @@ async function convertToWord() {
     return;
   }
 
-  let fullText = "";
+  let fullContent = "";
 
   for (let i = 1; i <= pdfDoc.numPages; i++) {
-    const page = await pdfDoc.getPage(i);
-    const textContent = await page.getTextContent();
 
+    const page = await pdfDoc.getPage(i);
+    const viewport = page.getViewport({ scale: 1.5 });
+
+    // 📄 Canvas pour image de la page (inclut TOUT : texte + images)
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    const imgData = canvas.toDataURL("image/png");
+
+    // 📝 Texte séparé
+    const textContent = await page.getTextContent();
     const pageText = textContent.items.map(item => item.str).join(" ");
-    fullText += `<h3>Page ${i}</h3><p>${pageText}</p>`;
+
+    // 📦 On combine image + texte
+    fullContent += `
+      <h2>Page ${i}</h2>
+      <img src="${imgData}" style="width:100%; margin-bottom:10px;" />
+      <p>${pageText}</p>
+      <hr>
+    `;
   }
 
   const htmlWord =
@@ -223,7 +244,7 @@ async function convertToWord() {
 xmlns:w="urn:schemas-microsoft-com:office:word"
 xmlns="http://www.w3.org/TR/REC-html40">
 <head><meta charset="utf-8"></head>
-<body>${fullText}</body></html>`;
+<body>${fullContent}</body></html>`;
 
   const blob = new Blob(['\ufeff', htmlWord], {
     type: "application/msword"
@@ -238,7 +259,6 @@ xmlns="http://www.w3.org/TR/REC-html40">
 
   info.innerHTML += `<br>📦 Taille fichier WORD : ${sizeKB} KB`;
 }
-
 </script>
 
 <footer>
