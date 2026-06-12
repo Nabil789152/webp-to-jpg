@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>PDF vers Word | Image Tools Pro</title>
+
+<meta name="description" content="Convertis ton PDF en document Word (.doc) gratuitement en ligne. Outil rapide et sécurisé.">
+<meta name="robots" content="index, follow">
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- 🔥 TOP MENU -->
+<div class="top-buttons">
+  <a href="index.html">🏠 Accueil</a>
+  <a href="converter.html">🔄 Convertisseur</a>
+  <a href="resize.html">📏 Redimentionneur</a>
+  <a href="compress.html">📦 Compresseur</a>
+  <a href="background-remover.html">🧹 BG</a>
+  <a href="grayscale.html">🏁 NB</a>
+  <a href="pdf-to-images.html">📝➡️🖼️ PDF vers Images</a>
+  <a href="blur.html">▒ Flou</a>
+  <a href="sharpen.html">💎 Netteté</a>
+  <a href="rotate.html">🔁 Rotation</a>
+  <a href="image-cropper.html">🔲 Recadrer</a>
+  <a href="jpg-png-converter.html">🖼️ JPG↔PNG</a>
+  <a href="avif-to-jpg.html">🖼️ AVIF→JPG</a>
+  <a href="jfif-to-jpg.html">🖼️ JFIF→JPG</a>
+  <a href="svg-to-jpg.html">🖼️ SVG→JPG</a>
+</div>
+
+  
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f9;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  text-align: center;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 20px;
+}
+
+.box {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.drop-zone {
+  border: 2px dashed #999;
+  padding: 40px;
+  text-align: center;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.drop-zone.drag {
+  background: #e8f0ff;
+  border-color: #007bff;
+}
+
+button {
+  padding: 10px 15px;
+  margin-top: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  background: #007bff;
+  color: white;
+}
+
+button:hover {
+  background: #0056d2;
+}
+
+.preview {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.preview canvas {
+  max-width: 100%;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+</style>
+
+<body>
+
+<!-- 🔥 TOP MENU -->
+<div class="top-buttons">
+  <a href="index.html">🏠 Accueil</a>
+  <a href="converter.html">🔄 Convertisseur</a>
+  <a href="resize.html">📏 Redimentionneur</a>
+  <a href="background-remover.html">🧹 BG</a>
+  <a href="grayscale.html">🏁 NB</a>
+  <a href="blur.html">▒ Flou</a>
+  <a href="sharpen.html">💎 Netteté</a>
+  <a href="rotate.html">🔁 Rotation</a>
+</div>
+
+<header>
+<h1>📝➡️🗎 PDF vers Word</h1>
+<p>Convertis ton PDF en document Word (.doc)</p>
+</header>
+
+<div class="container">
+
+<div class="box">
+
+<div class="drop-zone" id="dropZone">
+📄 Glisse ton PDF ici ou clique pour sélectionner
+<input type="file" id="fileInput" accept="application/pdf" hidden>
+</div>
+
+<button onclick="convertToWord()">🚀 Convertir en Word</button>
+
+<div id="info"></div>
+
+<div class="preview" id="preview"></div>
+
+</div>
+</div>
+
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<script>
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+let pdfDoc = null;
+let pdfFileSize = 0;
+let firstPageCanvas = null;
+
+/* UI */
+const fileInput = document.getElementById("fileInput");
+const dropZone = document.getElementById("dropZone");
+const info = document.getElementById("info");
+const preview = document.getElementById("preview");
+
+/* CLICK */
+dropZone.addEventListener("click", () => fileInput.click());
+
+fileInput.addEventListener("change", (e) => {
+  loadPDF(e.target.files[0]);
+});
+
+/* DROP */
+dropZone.addEventListener("dragover", e => {
+  e.preventDefault();
+  dropZone.classList.add("drag");
+});
+
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("drag");
+});
+
+dropZone.addEventListener("drop", e => {
+  e.preventDefault();
+  dropZone.classList.remove("drag");
+  loadPDF(e.dataTransfer.files[0]);
+});
+
+/* LOAD */
+async function loadPDF(file) {
+
+  pdfFileSize = (file.size / 1024).toFixed(2);
+
+  const reader = new FileReader();
+
+  reader.onload = async function () {
+    const typedarray = new Uint8Array(this.result);
+
+    pdfDoc = await pdfjsLib.getDocument(typedarray).promise;
+
+    const page = await pdfDoc.getPage(1);
+    const viewport = page.getViewport({ scale: 1.2 });
+
+    const canvas = document.createElement("canvas");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+
+    await page.render({ canvasContext: ctx, viewport }).promise;
+
+    firstPageCanvas = canvas;
+
+    preview.innerHTML = "";
+    preview.appendChild(canvas);
+
+    info.innerHTML = `
+      📄 Pages : ${pdfDoc.numPages}<br>
+      📐 Format page (1ère page) : ${Math.round(viewport.width)} × ${Math.round(viewport.height)} px<br>
+      💾 Taille PDF : ${pdfFileSize} KB
+    `;
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
+/* CONVERT TO WORD (.DOC) */
+async function convertToWord() {
+
+  if (!pdfDoc) {
+    alert("Ajoute un PDF !");
+    return;
+  }
+
+  let fullText = "";
+
+  for (let i = 1; i <= pdfDoc.numPages; i++) {
+    const page = await pdfDoc.getPage(i);
+    const textContent = await page.getTextContent();
+
+    const pageText = textContent.items.map(item => item.str).join(" ");
+    fullText += `<h3>Page ${i}</h3><p>${pageText}</p>`;
+  }
+
+  const htmlWord =
+`<html xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="utf-8"></head>
+<body>${fullText}</body></html>`;
+
+  const blob = new Blob(['\ufeff', htmlWord], {
+    type: "application/msword"
+  });
+
+  const sizeKB = (blob.size / 1024).toFixed(2);
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "document.doc";
+  link.click();
+
+  info.innerHTML += `<br>📦 Taille fichier WORD : ${sizeKB} KB`;
+}
+
+</script>
+
+<footer>
+<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
+
+<a href="index.html">Accueil</a>
+<a href="about.html">À propos</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Politique de confidentialité</a>
+<a href="terms.html">Conditions d’utilisation</a>
+</footer>
+
+</body>
+</html>
