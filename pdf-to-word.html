@@ -1,85 +1,27 @@
 <!DOCTYPE html>
 <html lang="fr">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>PDF vers Word | Image Tools Pro</title>
+<title>PDF vers Word PRO | Image Tools Pro</title>
 
-<meta name="description" content="Convertis ton PDF en document Word (.doc) gratuitement en ligne. Outil rapide et sécurisé.">
-<meta name="robots" content="index, follow">
 <link rel="stylesheet" href="style.css">
-</head>
-  
+
 <style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f9;
-  margin: 0;
-  padding: 0;
-}
-
-header {
-  text-align: center;
-  padding: 20px;
-}
-
-.container {
-  max-width: 900px;
-  margin: auto;
-  padding: 20px;
-}
-
-.box {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.drop-zone {
-  border: 2px dashed #999;
-  padding: 40px;
-  text-align: center;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.drop-zone.drag {
-  background: #e8f0ff;
-  border-color: #007bff;
-}
-
-button {
-  padding: 10px 15px;
-  margin-top: 10px;
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  background: #007bff;
-  color: white;
-}
-
-button:hover {
-  background: #0056d2;
-}
-
-.preview {
-  margin-top: 20px;
-  text-align: center;
-}
-
-.preview canvas {
-  max-width: 100%;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
+body {font-family: Arial;background:#f4f6f9;margin:0}
+.container{max-width:900px;margin:auto;padding:20px}
+.box{background:#fff;padding:20px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+.drop-zone{border:2px dashed #999;padding:40px;text-align:center;border-radius:12px;cursor:pointer}
+button{padding:10px 15px;margin-top:10px;border:none;border-radius:8px;background:#007bff;color:white;cursor:pointer}
+button:hover{background:#0056d2}
+.preview img{max-width:100%;margin-top:10px;border-radius:10px}
 </style>
+</head>
 
+<!-- 🔥 TOP MENU -->  
+  
 <body>
-
-<!-- 🔥 TOP MENU -->
 <div class="top-buttons">
   <a href="index.html">🏠 Accueil</a>
   <a href="converter.html">🔄 Convertisseur</a>
@@ -98,24 +40,19 @@ button:hover {
   <a href="svg-to-jpg.html">🖼️ SVG→JPG</a>
 </div>
 
-<header>
-<h1>📝➡️🗎 PDF vers Word</h1>
-<p>Convertis ton PDF en document Word (.doc)</p>
-</header>
-
 <div class="container">
-
 <div class="box">
 
+<h1>📝➡️🗎 PDF vers Word PRO</h1>
+
 <div class="drop-zone" id="dropZone">
-📄 Glisse ton PDF ici ou clique pour sélectionner
+📄 Glisse ton PDF ou clique
 <input type="file" id="fileInput" accept="application/pdf" hidden>
 </div>
 
-<button onclick="convertToWord()">🚀 Convertir en Word</button>
+<button onclick="convertDOCX()">🚀 Convertir en DOCX PRO</button>
 
 <div id="info"></div>
-
 <div class="preview" id="preview"></div>
 
 </div>
@@ -124,141 +61,148 @@ button:hover {
 <!-- PDF.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
+<!-- JSZIP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
 <script>
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
 "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
 let pdfDoc = null;
-let pdfFileSize = 0;
-let firstPageCanvas = null;
 
-/* UI */
 const fileInput = document.getElementById("fileInput");
 const dropZone = document.getElementById("dropZone");
 const info = document.getElementById("info");
 const preview = document.getElementById("preview");
 
-/* CLICK */
-dropZone.addEventListener("click", () => fileInput.click());
+dropZone.onclick = () => fileInput.click();
 
-fileInput.addEventListener("change", (e) => {
-  loadPDF(e.target.files[0]);
-});
+fileInput.onchange = e => loadPDF(e.target.files[0]);
 
-/* DROP */
-dropZone.addEventListener("dragover", e => {
+dropZone.ondragover = e => {e.preventDefault(); dropZone.style.background="#e8f0ff";}
+dropZone.ondragleave = () => dropZone.style.background="white";
+dropZone.ondrop = e => {
   e.preventDefault();
-  dropZone.classList.add("drag");
-});
-
-dropZone.addEventListener("dragleave", () => {
-  dropZone.classList.remove("drag");
-});
-
-dropZone.addEventListener("drop", e => {
-  e.preventDefault();
-  dropZone.classList.remove("drag");
   loadPDF(e.dataTransfer.files[0]);
-});
+};
 
-/* LOAD */
-async function loadPDF(file) {
+async function loadPDF(file){
 
-  pdfFileSize = (file.size / 1024).toFixed(2);
+const reader = new FileReader();
 
-  const reader = new FileReader();
+reader.onload = async function(){
+const typed = new Uint8Array(this.result);
 
-  reader.onload = async function () {
-    const typedarray = new Uint8Array(this.result);
+pdfDoc = await pdfjsLib.getDocument(typed).promise;
 
-    pdfDoc = await pdfjsLib.getDocument(typedarray).promise;
+info.innerHTML = `📄 Pages : ${pdfDoc.numPages} | 💾 ${ (file.size/1024).toFixed(2)} KB`;
+};
 
-    const page = await pdfDoc.getPage(1);
-    const viewport = page.getViewport({ scale: 1.2 });
-
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-
-    await page.render({ canvasContext: ctx, viewport }).promise;
-
-    firstPageCanvas = canvas;
-
-    preview.innerHTML = "";
-    preview.appendChild(canvas);
-
-    info.innerHTML = `
-      📄 Pages : ${pdfDoc.numPages}<br>
-      📐 Format page (1ère page) : ${Math.round(viewport.width)} × ${Math.round(viewport.height)} px<br>
-      💾 Taille PDF : ${pdfFileSize} KB
-    `;
-  };
-
-  reader.readAsArrayBuffer(file);
+reader.readAsArrayBuffer(file);
 }
 
-/* CONVERT TO WORD (.DOC) */
-async function convertToWord() {
+/* ===========================
+   🧠 PDF → DOCX PRO
+=========================== */
 
-  if (!pdfDoc) {
-    alert("Ajoute un PDF !");
-    return;
-  }
+async function convertDOCX(){
 
-  let fullContent = "";
-
-  for (let i = 1; i <= pdfDoc.numPages; i++) {
-
-    const page = await pdfDoc.getPage(i);
-    const viewport = page.getViewport({ scale: 1.5 });
-
-    // 📄 Canvas pour image de la page (inclut TOUT : texte + images)
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-
-    await page.render({ canvasContext: ctx, viewport }).promise;
-
-    const imgData = canvas.toDataURL("image/png");
-
-    // 📝 Texte séparé
-    const textContent = await page.getTextContent();
-    const pageText = textContent.items.map(item => item.str).join(" ");
-
-    // 📦 On combine image + texte
-    fullContent += `
-      <h2>Page ${i}</h2>
-      <img src="${imgData}" style="width:100%; margin-bottom:10px;" />
-      <p>${pageText}</p>
-      <hr>
-    `;
-  }
-
-  const htmlWord =
-`<html xmlns:o="urn:schemas-microsoft-com:office:office"
-xmlns:w="urn:schemas-microsoft-com:office:word"
-xmlns="http://www.w3.org/TR/REC-html40">
-<head><meta charset="utf-8"></head>
-<body>${fullContent}</body></html>`;
-
-  const blob = new Blob(['\ufeff', htmlWord], {
-    type: "application/msword"
-  });
-
-  const sizeKB = (blob.size / 1024).toFixed(2);
-
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "document.doc";
-  link.click();
-
-  info.innerHTML += `<br>📦 Taille fichier WORD : ${sizeKB} KB`;
+if(!pdfDoc){
+alert("Ajoute un PDF !");
+return;
 }
+
+const zip = new JSZip();
+
+// 📁 Structure DOCX
+zip.file("[Content_Types].xml", `
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="xml" ContentType="application/xml"/>
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="jpeg" ContentType="image/jpeg"/>
+<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>
+`);
+
+zip.folder("_rels").file(".rels", `
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+</Relationships>
+`);
+
+let bodyXML = "";
+
+for(let i=1;i<=pdfDoc.numPages;i++){
+
+const page = await pdfDoc.getPage(i);
+const viewport = page.getViewport({scale:1.5});
+
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = viewport.width;
+canvas.height = viewport.height;
+
+await page.render({canvasContext:ctx,viewport}).promise;
+
+// 🖼️ Image page
+const imgData = canvas.toDataURL("image/jpeg",0.9);
+const imgBase64 = imgData.split(",")[1];
+
+// image file
+zip.folder("word/media").file(`image${i}.jpeg`, imgBase64, {base64:true});
+
+// 📝 texte
+const text = await page.getTextContent();
+const pageText = text.items.map(t=>t.str).join(" ");
+
+// 📄 Word XML paragraph
+bodyXML += `
+<w:p>
+<w:r>
+<w:t>Page ${i}</w:t>
+</w:r>
+</w:p>
+
+<w:p>
+<w:r>
+<w:drawing>
+<wp:inline xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing">
+<a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">
+<a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"/>
+</a:graphic>
+</wp:inline>
+</w:drawing>
+</w:r>
+</w:p>
+
+<w:p><w:r><w:t>${pageText}</w:t></w:r></w:p>
+`;
+}
+
+/* document.xml */
+zip.folder("word").file("document.xml", `
+<?xml version="1.0" encoding="UTF-8"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">
+<w:body>
+${bodyXML}
+</w:body>
+</w:document>
+`);
+
+// 📦 build DOCX
+const blob = await zip.generateAsync({type:"blob"});
+
+const sizeKB = (blob.size/1024).toFixed(2);
+
+const a = document.createElement("a");
+a.href = URL.createObjectURL(blob);
+a.download = "PDF-Word-PRO.docx";
+a.click();
+
+info.innerHTML += `<br>📦 DOCX généré : ${sizeKB} KB`;
+}
+
 </script>
 
 <footer>
