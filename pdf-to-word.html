@@ -122,11 +122,13 @@ button:hover{
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/html-docx-js@0.3.1/dist/html-docx.min.js"></script>
+  
 <script>
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
 "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
 
 let pdfDoc = null;
 
@@ -207,8 +209,7 @@ async function convertToWord(){
 
     const page = await pdfDoc.getPage(i);
 
-    const viewport = page.getViewport({scale:1.5});
-
+    const viewport = page.getViewport({scale:1.2});
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
@@ -220,35 +221,43 @@ async function convertToWord(){
       viewport
     }).promise;
 
-    const imgData = canvas.toDataURL("image/jpeg",0.9);
+const imgData = canvas.toDataURL("image/jpeg", 0.7);
 
-    htmlContent += `
-      <h3>Page ${i}</h3>
-      <img src="${imgData}" style="width:100%;margin-bottom:20px;">
-      <hr>
-    `;
+htmlContent += `
+  <div style="page-break-before: always;">
+    <h3>Page ${i}</h3>
+    <img src="${imgData}" style="width:100%;max-width:100%;">
+  </div>
+`;
   }
 
   const wordHTML = `
-  <html>
-  <head>
-  <meta charset="utf-8">
-  </head>
-  <body>
-  ${htmlContent}
-  </body>
-  </html>`;
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body { font-family: Arial; }
+  img { width: 100%; }
+  h3 { margin-top: 20px; }
+</style>
+</head>
+<body>
+${htmlContent}
+</body>
+</html>`;
 
-  const blob = new Blob(
-    ['\ufeff', wordHTML],
-    {type:'application/msword'}
-  );
+  if (typeof htmlDocx === "undefined") {
+  alert("Librairie Word non chargée !");
+  return;
+}
 
-  const sizeKB = (blob.size/1024).toFixed(2);
+  const blob = htmlDocx.asBlob(wordHTML);
+
+  const sizeKB = (blob.size / 1024).toFixed(2);
 
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = "document.doc";
+  link.download = "document.docx";
   link.click();
 
   info.innerHTML += `<br>📦 Taille du document Word : ${sizeKB} KB`;
