@@ -208,8 +208,8 @@ async function convertToWord(){
   for(let i=1;i<=pdfDoc.numPages;i++){
 
     const page = await pdfDoc.getPage(i);
+    const viewport = page.getViewport({scale:1.5});
 
-    const viewport = page.getViewport({scale:1.2});
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
 
@@ -221,46 +221,53 @@ async function convertToWord(){
       viewport
     }).promise;
 
-const imgData = canvas.toDataURL("image/jpeg", 0.7);
+    const imgData = canvas.toDataURL("image/jpeg", 0.7);
 
-htmlContent += `
-  <div style="page-break-before: always;">
-    <h3>Page ${i}</h3>
-    <img src="${imgData}" style="width:100%;max-width:100%;">
-  </div>
-`;
+    htmlContent += `
+      <div style="page-break-after: always; text-align:center;">
+        <h3>Page ${i}</h3>
+        <img src="${imgData}" style="width:100%;max-width:100%;">
+      </div>
+    `;
   }
 
   const wordHTML = `
-<html>
-<head>
-<meta charset="utf-8">
-<style>
-  body { font-family: Arial; }
-  img { width: 100%; }
-  h3 { margin-top: 20px; }
-</style>
-</head>
-<body>
-${htmlContent}
-</body>
-</html>`;
+  <html>
+  <head>
+    <meta charset="utf-8">
+    <style>
+      body { font-family: Arial; }
+      img { max-width: 100%; }
+      h3 { text-align:center; }
+    </style>
+  </head>
+  <body>
+    ${htmlContent}
+  </body>
+  </html>`;
 
   if (typeof htmlDocx === "undefined") {
-  alert("Librairie Word non chargée !");
+  alert("Erreur : html-docx-js n'est pas chargé.");
   return;
-}
-
+  }
+  
   const blob = htmlDocx.asBlob(wordHTML);
 
   const sizeKB = (blob.size / 1024).toFixed(2);
 
+  const url = URL.createObjectURL(blob);
+
   const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "document.docx";
+  link.href = url;
+  link.download = "PDF-Word-PRO.docx";
   link.click();
 
-  info.innerHTML += `<br>📦 Taille du document Word : ${sizeKB} KB`;
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+
+  info.innerHTML += `
+  <br>📦 Taille DOCX : ${sizeKB} KB
+  <br>✅ Conversion DOCX réussie
+  `;
 }
 
 </script>
