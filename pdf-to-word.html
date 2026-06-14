@@ -170,7 +170,7 @@ async function loadPDF(file){
 
     const page = await pdfDoc.getPage(1);
 
-    const viewport = page.getViewport({scale:1});
+    const viewport = page.getViewport({scale:1.5});
 
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
@@ -221,7 +221,7 @@ async function convertToWord(){
       viewport
     }).promise;
 
-    const imgData = canvas.toDataURL("image/jpeg", 0.7);
+    const imgData = canvas.toDataURL("image/jpeg", 0.5);
 
     htmlContent += `
       <div style="page-break-after: always; text-align:center;">
@@ -246,19 +246,18 @@ async function convertToWord(){
   </body>
   </html>`;
 
-if (!window.htmlDocx && !htmlDocx) {
+if (typeof htmlDocx === "undefined") {
   alert("Librairie Word non chargée !");
   return;
 }
-  alert("Erreur : html-docx-js n'est pas chargé.");
-  return;
-  }
-  
-  const blob = htmlDocx.asBlob(wordHTML);
 
-  const sizeKB = (blob.size / 1024).toFixed(2);
+const blob = htmlDocx.asBlob(wordHTML);
 
-  const url = URL.createObjectURL(blob);
+console.log("Taille DOCX :", blob.size, "octets");
+
+const sizeKB = (blob.size / 1024).toFixed(2);
+
+const url = URL.createObjectURL(blob);
 
   const link = document.createElement("a");
   link.href = url;
