@@ -37,13 +37,12 @@
 </header>
 
 <div class="container">
-
-  <div class="box drop-zone" id="dropZone">
-
-    <h3>📁 Glisse-dépose ton image ici</h3>
-    <p>ou clique pour sélectionner</p>
-
-    <input type="file" id="file" accept="image/*">
+  <!-- DROP ZONE -->
+  
+    <div class="drop-zone" id="dropZone">
+    🖼️ Glisse-dépose ton image ici ou clique pour sélectionner</p>
+    <input type="file" id="file" accept="image/*" hidden>
+    </div>
 
     <br><br>
 
@@ -251,6 +250,12 @@ function compressImage(){
 
 </script>
 
+<script>
+document.getElementById('dropZone').addEventListener('click', function() {
+    document.getElementById('file').click();
+});
+</script>
+  
 <!-- FOOTER -->
 <footer>
   <p>© 2026 Image Tools Pro</p>
