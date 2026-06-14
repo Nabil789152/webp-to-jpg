@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compresseur d’images PRO | Image Tools Pro</title>
+<title>Compresseur d’images | Image Tools Pro</title>
 
 <style>
 
@@ -27,18 +27,28 @@ header{
 
 .card{
   background:#fff;
-  padding:20px;
-  border-radius:14px;
+  padding:25px;
+  border-radius:16px;
   box-shadow:0 4px 20px rgba(0,0,0,0.08);
 }
 
 .drop-zone{
   border:2px dashed #bbb;
-  padding:40px;
+  padding:35px;
   text-align:center;
-  border-radius:12px;
+  border-radius:14px;
   cursor:pointer;
   background:#fafafa;
+}
+
+.drop-zone:hover{
+  border-color:#007bff;
+  background:#eef5ff;
+}
+
+.drag-active{
+  background:#e8f0ff;
+  border-color:#007bff;
 }
 
 button{
@@ -48,11 +58,13 @@ button{
   border:none;
   border-radius:10px;
   background:#007bff;
-  color:white;
+  color:#fff;
   cursor:pointer;
 }
 
-button:hover{ background:#0056d2; }
+button:hover{
+  background:#0056d2;
+}
 
 .preview{
   margin-top:20px;
@@ -61,10 +73,10 @@ button:hover{ background:#0056d2; }
 .box{
   background:#fff;
   padding:15px;
+  border-radius:14px;
   margin-top:15px;
-  border-radius:12px;
-  text-align:center;
   box-shadow:0 3px 12px rgba(0,0,0,0.08);
+  text-align:center;
 }
 
 .box img{
@@ -72,17 +84,14 @@ button:hover{ background:#0056d2; }
   border-radius:10px;
 }
 
-.badge{
-  display:inline-block;
-  padding:5px 10px;
-  border-radius:20px;
-  font-size:12px;
-  margin-top:5px;
+.top-buttons a{
+  text-decoration:none;
+  padding:6px 10px;
+  background:#f2f2f2;
+  border-radius:8px;
+  font-size:13px;
+  margin-right:5px;
 }
-
-.low{ background:#d4edda; color:#155724; }
-.medium{ background:#fff3cd; color:#856404; }
-.high{ background:#f8d7da; color:#721c24; }
 
 </style>
 </head>
@@ -90,27 +99,30 @@ button:hover{ background:#0056d2; }
 <body>
 
 <header>
-  <h1>🗜️ Compresseur d’images PRO</h1>
+  <h1>🗜️ Compresseur d’images</h1>
+  <p>Réduisez la taille sans perte visible</p>
 </header>
 
 <div class="container">
 
-<div class="card">
+  <div class="card">
 
-  <div class="drop-zone" id="dropZone">
-    🖼️ Clique ou glisse ton image ici
-    <input type="file" id="file" accept="image/*" hidden>
+    <div class="drop-zone" id="dropZone">
+      🖼️ Glisse ton image ici ou clique
+      <input type="file" id="file" accept="image/*" hidden>
+
+      <div id="dropPreview"></div>
+    </div>
+
+    <label>Qualité</label>
+    <input type="range" id="quality" min="10" max="100" value="70">
+    <p id="qtext">Qualité : 70%</p>
+
+    <button onclick="compressImage()">🚀 Compresser</button>
+
   </div>
 
-  <label>Qualité</label>
-  <input type="range" id="quality" min="10" max="100" value="70">
-  <p id="qtext">Qualité : 70%</p>
-
-  <button onclick="compressImage()">🚀 Compresser</button>
-
-</div>
-
-<div class="preview" id="preview"></div>
+  <div class="preview" id="preview"></div>
 
 </div>
 
@@ -123,32 +135,45 @@ let originalFileName = "";
 const fileInput = document.getElementById("file");
 const dropZone = document.getElementById("dropZone");
 
+fileInput.addEventListener("change", e => {
+  handleFile(e.target.files[0]);
+});
+
 dropZone.addEventListener("click", () => fileInput.click());
 
-fileInput.addEventListener("change", e => handleFile(e.target.files[0]));
+dropZone.addEventListener("dragover", e => {
+  e.preventDefault();
+  dropZone.classList.add("drag-active");
+});
+
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("drag-active");
+});
+
+dropZone.addEventListener("drop", e => {
+  e.preventDefault();
+  dropZone.classList.remove("drag-active");
+  handleFile(e.dataTransfer.files[0]);
+});
 
 function handleFile(file){
 
   if(!file) return;
 
   originalSize = file.size / 1024;
-  originalFileName = file.name.split(".")[0];
+  originalFileName = file.name.replace(/\.[^/.]+$/, "");
 
   const reader = new FileReader();
 
   reader.onload = e => {
-
     img.src = e.target.result;
 
     img.onload = () => {
 
-      document.getElementById("preview").innerHTML = `
-        <div class="box">
-          <h3>Image originale</h3>
-          <img src="${img.src}">
-          <p>${originalSize.toFixed(2)} KB</p>
-          <p>${img.width} × ${img.height}px</p>
-        </div>
+      // IMAGE DANS DROP ZONE
+      document.getElementById("dropPreview").innerHTML = `
+        <img src="${img.src}" style="max-width:100%;margin-top:10px;border-radius:10px;">
+        <p>${img.width} × ${img.height} px</p>
       `;
     };
   };
@@ -160,13 +185,6 @@ document.getElementById("quality").addEventListener("input", e => {
   document.getElementById("qtext").innerText =
   "Qualité : " + e.target.value + "%";
 });
-
-function getCompressionLevel(q){
-
-  if(q >= 80) return {text:"Compression légère", class:"low"};
-  if(q >= 50) return {text:"Compression moyenne", class:"medium"};
-  return {text:"Compression forte", class:"high"};
-}
 
 function compressImage(){
 
@@ -192,30 +210,20 @@ function compressImage(){
 
     let reduction = (100 - (newSize / originalSize * 100)).toFixed(1);
 
-    let level = getCompressionLevel(document.getElementById("quality").value);
-
-    document.getElementById("preview").innerHTML += `
+    document.getElementById("preview").innerHTML = `
       <div class="box">
-
         <h3>Image compressée</h3>
 
         <img src="${url}">
 
-        <p>Taille : ${newSize.toFixed(2)} KB</p>
-        <p>Réduction : ${reduction}%</p>
-
-        <p>Qualité JPEG : ${document.getElementById("quality").value}%</p>
-
-        <span class="badge ${level.class}">
-          ${level.text}
-        </span>
-
-        <p>${img.width} × ${img.height}px</p>
+        <p>📦 Taille : ${newSize.toFixed(2)} KB</p>
+        <p>📉 Réduction : ${reduction}%</p>
+        <p>⚙️ Qualité : ${document.getElementById("quality").value}%</p>
+        <p>📐 Dimensions : ${img.width} × ${img.height} px</p>
 
         <a href="${url}" download="${originalFileName}-compressed.jpg">
-          <button>Télécharger</button>
+          <button>⬇ Télécharger</button>
         </a>
-
       </div>
     `;
 
