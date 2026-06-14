@@ -260,12 +260,22 @@ function handleFile(file){
       img.width + " × " + img.height + " px";
 
       document.getElementById("preview").innerHTML = `
-        <div class="box">
-          <p>Image originale</p>
-          <img src="${img.src}">
-          <p>${originalSize.toFixed(2)} KB</p>
-        </div>
-      `;
+      
+  <div class="box">
+    <p>Image originale</p>
+
+    <img src="${img.src}">
+
+    <p>
+      ${originalSize.toFixed(2)} KB
+    </p>
+
+    <p>
+      ${img.width} × ${img.height} px
+    </p>
+
+  </div>
+  `;
     };
   };
 
