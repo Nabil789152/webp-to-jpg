@@ -84,8 +84,8 @@ DROP ZONE (PRO LARGE)
   border: 2px dashed #999;
   border-radius: 14px;
 
-  padding: 80px 20px;
-  min-height: 280px;
+  padding: 100px 20px;
+  min-height: 360px;
 
   display: flex;
   flex-direction: column;
