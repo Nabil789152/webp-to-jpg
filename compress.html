@@ -307,12 +307,10 @@ function compressImage(){
 
     let reduction = (100 - (newSize / originalSize * 100)).toFixed(1);
 
-    document.getElementById("preview").innerHTML += `
-      <div class="box">
-        <p>Image compressée</p>
-        <img src="${url}">
-        <p>${newSize.toFixed(2)} KB</p>
-        <p>Réduction : ${reduction}%</p>
+    <p>Taille : ${newSize.toFixed(2)} KB</p>
+    <p>Réduction : ${reduction}%</p>
+    <p>Qualité JPEG : ${document.getElementById("quality").value}%</p>
+    <p>Dimensions : ${img.width} × ${img.height} px</p>
 
         <a href="${url}" download="${originalFileName}-compressed.jpg">
           <button>Télécharger</button>
