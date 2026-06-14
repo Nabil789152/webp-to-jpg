@@ -209,8 +209,118 @@ footer a{
 
   <div class="preview" id="preview"></div>
 
-</div>
+</div>  
 
+<script>
+
+let img = new Image();
+let originalSize = 0;
+let originalFileName = "";
+
+/* FILE INPUT */
+const fileInput = document.getElementById("file");
+const dropZone = document.getElementById("dropZone");
+
+fileInput.addEventListener("change", e => {
+  handleFile(e.target.files[0]);
+});
+
+/* DROP */
+dropZone.addEventListener("dragover", e => {
+  e.preventDefault();
+  dropZone.classList.add("drag-active");
+});
+
+dropZone.addEventListener("dragleave", () => {
+  dropZone.classList.remove("drag-active");
+});
+
+dropZone.addEventListener("drop", e => {
+  e.preventDefault();
+  dropZone.classList.remove("drag-active");
+  handleFile(e.dataTransfer.files[0]);
+});
+
+/* LOAD IMAGE */
+function handleFile(file){
+
+  if(!file) return;
+
+  originalSize = file.size / 1024;
+  originalFileName = file.name.replace(/\.[^/.]+$/, "");
+
+  const reader = new FileReader();
+
+  reader.onload = e => {
+    img.src = e.target.result;
+
+    img.onload = () => {
+
+      document.getElementById("imgSize").innerText =
+      img.width + " × " + img.height + " px";
+
+      document.getElementById("preview").innerHTML = `
+        <div class="box">
+          <p>Image originale</p>
+          <img src="${img.src}">
+          <p>${originalSize.toFixed(2)} KB</p>
+        </div>
+      `;
+    };
+  };
+
+  reader.readAsDataURL(file);
+}
+
+/* QUALITY TEXT */
+document.getElementById("quality").addEventListener("input", e => {
+  document.getElementById("qtext").innerText =
+  "Qualité : " + e.target.value + "%";
+});
+
+/* COMPRESS */
+function compressImage(){
+
+  if(!img.src){
+    alert("Ajoute une image !");
+    return;
+  }
+
+  let quality = document.getElementById("quality").value / 100;
+
+  let canvas = document.createElement("canvas");
+  let ctx = canvas.getContext("2d");
+
+  canvas.width = img.width;
+  canvas.height = img.height;
+
+  ctx.drawImage(img, 0, 0);
+
+  canvas.toBlob(blob => {
+
+    let url = URL.createObjectURL(blob);
+    let newSize = blob.size / 1024;
+
+    let reduction = (100 - (newSize / originalSize * 100)).toFixed(1);
+
+    document.getElementById("preview").innerHTML += `
+      <div class="box">
+        <p>Image compressée</p>
+        <img src="${url}">
+        <p>${newSize.toFixed(2)} KB</p>
+        <p>Réduction : ${reduction}%</p>
+
+        <a href="${url}" download="${originalFileName}-compressed.jpg">
+          <button>Télécharger</button>
+        </a>
+      </div>
+    `;
+
+  }, "image/jpeg", quality);
+}
+
+</script>  
+  
 <script>
 document.getElementById('dropZone').addEventListener('click', function() {
     document.getElementById('file').click();
