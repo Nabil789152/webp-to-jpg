@@ -255,7 +255,46 @@ fileInput.addEventListener("change", async function () {
   fileReader.readAsArrayBuffer(file);
 });
 </script>  
+
+<script>
+const dropzone = document.getElementById("drop");
+const fileInput = document.getElementById("file");
+
+// Clique = ouvrir fichier
+dropzone.addEventListener("click", () => {
+  fileInput.click();
+});
+
+// Drag over (obligatoire)
+dropzone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropzone.style.borderColor = "#22c55e";
+});
+
+// Drag leave
+dropzone.addEventListener("dragleave", () => {
+  dropzone.style.borderColor = "#3b82f6";
+});
+
+// Drop
+dropzone.addEventListener("drop", (e) => {
+  e.preventDefault();
+
+  dropzone.style.borderColor = "#3b82f6";
+
+  const file = e.dataTransfer.files[0];
+
+  if (!file || file.type !== "application/pdf") return;
+
+  // injecte le fichier dans l’input
+  const dataTransfer = new DataTransfer();
+  dataTransfer.items.add(file);
+  fileInput.files = dataTransfer.files;
+
+  // déclenche preview / conversion
+  fileInput.dispatchEvent(new Event("change"));
+});
+</script>  
   
 </body>
 </html>
-  
