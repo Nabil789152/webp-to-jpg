@@ -9,9 +9,16 @@
 
 <link rel="stylesheet" href="style.css">
 
+<!-- LIBRAIRIES -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
-  
+
+<!-- PDF.js worker -->
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+</script>
+
 <style>
 
 body{
@@ -51,7 +58,6 @@ header{
 header h1{
   margin:0;
   font-size:34px;
-  color:white;
 }
 
 header p{
@@ -106,6 +112,11 @@ button:hover{
   border-radius:10px;
 }
 
+#status{
+  margin-top:10px;
+  color:#94a3b8;
+}
+
 footer{
   margin-top:40px;
   text-align:center;
@@ -133,44 +144,34 @@ footer a:hover{
   <a href="index.html">🏠 Accueil</a>
   <a href="resize.html">📏 Redimentionneur</a>
   <a href="compress.html">📦 Compresseur</a>
-  <a href="background-remover.html">🧹 BG</a>
-  <a href="grayscale.html">🏁 NB</a>
-  <a href="pdf-to-images.html">📝➡️🖼️ PDF vers Images</a>
-  <a href="blur.html">▒ Flou</a>
-  <a href="sharpen.html">💎 Netteté</a>
-  <a href="rotate.html">🔁 Rotation</a>
-  <a href="image-cropper.html">🔲 Recadrer</a>
-  <a href="jpg-png-converter.html">🖼️ JPG↔PNG</a>
-  <a href="avif-to-jpg.html">🖼️ AVIF→JPG</a>
-  <a href="jfif-to-jpg.html">🖼️ JFIF→JPG</a>
-  <a href="svg-to-jpg.html">🖼️ SVG→JPG</a>
 </div>
 
 <header>
   <h1>📝➡️🗎 PDF vers Word</h1>
-  <p>Convertissez vos fichiers PDF en documents Word</p>
+  <p>Convertisseur PRO stable (PDF → Word)</p>
 </header>
 
 <div class="container">
 
 <div class="card">
 
-<h2>🚀 PDF to Word</h2>
+<h2>🚀 PDF to Word PRO</h2>
 
 <div class="dropzone" id="drop">
 📄 Glisse ton PDF ici ou clique
 <input type="file" id="file" accept=".pdf" hidden>
 </div>
 
+<p id="status"></p>
+
 <canvas id="pdfPreview"></canvas>
 
 <button onclick="convert()">✨ Convertir en Word</button>
-  
-</div>
 
 </div>
 
-<!-- FOOTER -->
+</div>
+
 <footer>
   <p>© 2026 Image Tools Pro</p>
   <a href="about.html">À propos</a>
@@ -181,25 +182,27 @@ footer a:hover{
 
 <script>
 
-// 👉 PDF.js worker
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-
+// =======================
+// ELEMENTS
+// =======================
 const fileInput = document.getElementById("file");
 const dropzone = document.getElementById("drop");
 const canvas = document.getElementById("pdfPreview");
 const ctx = canvas.getContext("2d");
+const status = document.getElementById("status");
 
-// =====================
-// 📄 PREVIEW PDF
-// =====================
+// =======================
+// PREVIEW PDF (1ère page)
+// =======================
 fileInput.addEventListener("change", async function () {
+
   const file = this.files[0];
   if (!file) return;
 
   const reader = new FileReader();
 
   reader.onload = async function () {
+
     const typedarray = new Uint8Array(this.result);
 
     const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
@@ -220,31 +223,29 @@ fileInput.addEventListener("change", async function () {
   reader.readAsArrayBuffer(file);
 });
 
-// =====================
-// 📥 CLICK ZONE
-// =====================
-dropzone.addEventListener("click", () => {
-  fileInput.click();
-});
+// =======================
+// CLICK UPLOAD
+// =======================
+dropzone.addEventListener("click", () => fileInput.click());
 
-// =====================
-// 🟢 DRAG OVER
-// =====================
+// =======================
+// DRAG OVER
+// =======================
 dropzone.addEventListener("dragover", (e) => {
   e.preventDefault();
   dropzone.classList.add("dragover");
 });
 
-// =====================
-// 🔴 DRAG LEAVE
-// =====================
+// =======================
+// DRAG LEAVE
+// =======================
 dropzone.addEventListener("dragleave", () => {
   dropzone.classList.remove("dragover");
 });
 
-// =====================
-// 📤 DROP FILE
-// =====================
+// =======================
+// DROP FILE
+// =======================
 dropzone.addEventListener("drop", (e) => {
   e.preventDefault();
   dropzone.classList.remove("dragover");
@@ -252,20 +253,19 @@ dropzone.addEventListener("drop", (e) => {
   const file = e.dataTransfer.files[0];
   if (!file) return;
 
-  const dataTransfer = new DataTransfer();
-  dataTransfer.items.add(file);
-  fileInput.files = dataTransfer.files;
+  const dt = new DataTransfer();
+  dt.items.add(file);
+  fileInput.files = dt.files;
 
   fileInput.dispatchEvent(new Event("change"));
 });
 
-</script>
-
-<script>
+// =======================
+// CONVERT PDF -> WORD
+// =======================
 async function convert() {
 
-  const file = document.getElementById("file").files[0];
-  const status = document.getElementById("status");
+  const file = fileInput.files[0];
 
   if (!file) {
     alert("Choisis un PDF d'abord !");
@@ -278,60 +278,54 @@ async function convert() {
 
   reader.onload = async function () {
 
-    try {
+    const typedarray = new Uint8Array(this.result);
 
-      const typedarray = new Uint8Array(this.result);
+    const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
 
-      const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
+    const paragraphs = [];
 
-      const paragraphs = [];
+    for (let i = 1; i <= pdf.numPages; i++) {
 
-      for (let i = 1; i <= pdf.numPages; i++) {
+      status.innerText = `📄 Traitement page ${i}/${pdf.numPages}`;
 
-        status.innerText = `⏳ Traitement page ${i}/${pdf.numPages}`;
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
 
-        const page = await pdf.getPage(i);
-        const textContent = await page.getTextContent();
+      const text = textContent.items.map(item => item.str).join(" ");
 
-        const text = textContent.items.map(item => item.str).join(" ");
-
-        paragraphs.push(
-          new docx.Paragraph({
-            text: text,
-            spacing: { after: 200 }
-          })
-        );
-      }
-
-      status.innerText = "📦 Création du fichier Word...";
-
-      const doc = new docx.Document({
-        sections: [{
-          children: paragraphs
-        }]
-      });
-
-      const blob = await docx.Packer.toBlob(doc);
-
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "PDF-to-Word-PRO.docx";
-      a.click();
-
-      URL.revokeObjectURL(url);
-
-      status.innerText = "✅ Conversion terminée !";
-
-    } catch (err) {
-      console.error(err);
-      status.innerText = "❌ Erreur pendant la conversion";
+      paragraphs.push(
+        new docx.Paragraph({
+          text: text,
+          spacing: { after: 200 }
+        })
+      );
     }
+
+    status.innerText = "📦 Création du Word...";
+
+    const doc = new docx.Document({
+      sections: [{
+        children: paragraphs
+      }]
+    });
+
+    const blob = await docx.Packer.toBlob(doc);
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "PDF-to-Word-PRO.docx";
+    a.click();
+
+    URL.revokeObjectURL(url);
+
+    status.innerText = "✅ Conversion terminée !";
   };
 
   reader.readAsArrayBuffer(file);
 }
+
 </script>
-  
+
 </body>
 </html>
