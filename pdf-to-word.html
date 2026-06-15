@@ -1,25 +1,66 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF to Word SaaS</title>
-<meta name="description" content="Convertissez vos documents PDF en WORD en ligne. Outil rapide et sécurisé.">
+
+<title>PDF vers Word | Image Tools Pro</title>
+
+<meta name="description" content="Convertissez vos documents PDF en Word en ligne. Outil rapide et sécurisé.">
 <meta name="robots" content="index, follow">
+
 <link rel="stylesheet" href="style.css">
-</head>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 
-<header>
 <style>
+
 body{
   margin:0;
-  font-family:Arial;
+  font-family:Arial, sans-serif;
   background:#0f172a;
   color:white;
+}
+
+.top-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  padding:15px;
+  background:#0b1220;
+}
+
+.top-buttons a{
+  color:white;
+  text-decoration:none;
+  padding:8px 12px;
+  border-radius:8px;
+  background:#1e293b;
+}
+
+.top-buttons a:hover{
+  background:#3b82f6;
+}
+
+header{
+  text-align:center;
+  padding:35px 20px;
+  background:#111c2e;
+  border-bottom:1px solid #1e293b;
+}
+
+header h1{
+  margin:0;
+  font-size:34px;
+}
+
+header p{
+  margin-top:10px;
+  color:#94a3b8;
 }
 
 .container{
@@ -51,6 +92,7 @@ button{
   background:#3b82f6;
   color:white;
   cursor:pointer;
+  font-size:16px;
 }
 
 button:hover{
@@ -61,7 +103,8 @@ button:hover{
   height:8px;
   background:#1e293b;
   border-radius:10px;
-  margin-top:10px;
+  margin-top:15px;
+  overflow:hidden;
 }
 
 .bar{
@@ -75,11 +118,16 @@ button:hover{
   padding:5px 10px;
   border-radius:8px;
   font-size:12px;
-  margin-bottom:10px;
+  margin-bottom:15px;
 }
 
-.free{ background:#f59e0b; }
-.pro{ background:#22c55e; }
+.free{
+  background:#f59e0b;
+}
+
+.pro{
+  background:#22c55e;
+}
 
 #preview{
   margin-top:15px;
@@ -88,10 +136,41 @@ button:hover{
   padding:10px;
   border-radius:10px;
 }
+
+footer{
+  margin-top:40px;
+  text-align:center;
+  padding:25px;
+  background:#111c2e;
+}
+
+footer a{
+  color:white;
+  text-decoration:none;
+  margin:0 10px;
+}
+
+footer a:hover{
+  color:#3b82f6;
+}
+
 </style>
+
 </head>
 
 <body>
+
+<div class="top-buttons">
+  <a href="index.html">🏠 Accueil</a>
+  <a href="resize.html">📏 Redimensionneur</a>
+  <a href="compress.html">📦 Compresseur</a>
+  <a href="pdf-to-images.html">📝➡️🖼️ PDF vers Images</a>
+</div>
+
+<header>
+  <h1>📝➡️🗎 PDF vers Word</h1>
+  <p>Convertissez vos fichiers PDF en documents Word en quelques secondes</p>
+</header>
 
 <div class="container">
 
@@ -102,8 +181,8 @@ button:hover{
 <div id="userStatus" class="badge free">MODE FREE</div>
 
 <div class="dropzone" id="drop">
-📄 Glisse ton PDF ici
-<input type="file" id="file" hidden>
+📄 Glisse ton PDF ici ou clique pour sélectionner
+<input type="file" id="file" accept=".pdf" hidden>
 </div>
 
 <button onclick="convert()">✨ Convertir en Word</button>
@@ -121,161 +200,3 @@ button:hover{
 </div>
 
 </div>
-
-<script>
-
-pdfjsLib.GlobalWorkerOptions.workerSrc =
-"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
-
-let pdfDoc = null;
-
-// 🟡 MODE USER (FREE / PRO)
-let isPro = false;
-
-// 📌 LIMITES FREE
-const FREE_LIMIT_PAGES = 2;
-
-document.getElementById("drop").onclick = () =>
-  document.getElementById("file").click();
-
-document.getElementById("file").addEventListener("change", async (e) => {
-  const file = e.target.files[0];
-  const buffer = await file.arrayBuffer();
-  pdfDoc = await pdfjsLib.getDocument({ data: buffer }).promise;
-
-  alert("PDF chargé !");
-});
-
-// 🔥 PRO / FREE SWITCH UI
-function updateUI(){
-  const badge = document.getElementById("userStatus");
-
-  if(isPro){
-    badge.innerText = "MODE PRO";
-    badge.className = "badge pro";
-  }else{
-    badge.innerText = "MODE FREE";
-    badge.className = "badge free";
-  }
-}
-
-// 🔥 PRO UPGRADE (Stripe link simple)
-function upgrade(){
-  window.location.href = "https://buy.stripe.com/TON_LINK_ICI";
-}
-
-// 📊 PROGRESS BAR
-function updateProgress(v){
-  document.getElementById("bar").style.width = v + "%";
-}
-
-// 📄 TEXT EXTRACTION
-async function extractText(page){
-  const content = await page.getTextContent();
-  return content.items.map(i => i.str).join(" ");
-}
-
-// 👁 OCR (PRO ONLY)
-async function ocrPage(canvas){
-  const { data } = await Tesseract.recognize(canvas, "fra+eng");
-  return data.text;
-}
-
-// 🚀 MAIN CONVERT FUNCTION
-async function convert(){
-
-  if(!pdfDoc){
-    alert("Ajoute un PDF !");
-    return;
-  }
-
-  const { Document, Packer, Paragraph, TextRun } = window.docx;
-
-  const doc = new Document({
-    sections:[{ children:[] }]
-  });
-
-  let totalPages = pdfDoc.numPages;
-
-  // ❌ FREE LIMIT
-  if(!isPro && totalPages > FREE_LIMIT_PAGES){
-    alert("Version FREE limitée à 2 pages. Passe en PRO !");
-    return;
-  }
-
-  let allText = "";
-
-  for(let i=1;i<=totalPages;i++){
-
-    const page = await pdfDoc.getPage(i);
-    const viewport = page.getViewport({ scale: 2 });
-
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-
-    canvas.width = viewport.width;
-    canvas.height = viewport.height;
-
-    await page.render({ canvasContext:ctx, viewport }).promise;
-
-    let text = await extractText(page);
-
-    // 🔥 OCR ONLY IN PRO
-    if(isPro && text.trim().length < 10){
-      text = await ocrPage(canvas);
-    }
-
-    doc.addSection({
-      children:[
-        new Paragraph({
-          children:[
-            new TextRun({ text:"Page "+i, bold:true })
-          ]
-        }),
-        new Paragraph(text)
-      ]
-    });
-
-    updateProgress((i/totalPages)*100);
-  }
-
-  const blob = await Packer.toBlob(doc);
-
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-
-  a.href = url;
-  a.download = "PDF-SaaS.docx";
-  a.click();
-
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-
-  document.getElementById("preview").innerText =
-    "✅ Conversion terminée";
-
-}
-
-// 🟢 DEMO MODE PRO (test)
-document.addEventListener("keydown", (e)=>{
-  if(e.key === "p"){
-    isPro = true;
-    updateUI();
-    alert("MODE PRO ACTIVÉ (démo)");
-  }
-});
-
-updateUI();
-
-</script>
-
-<!-- FOOTER -->
-<footer>
-  <p>© 2026 Image Tools Pro</p>
-  <a href="about.html">À propos</a>
-  <a href="contact.html">Contact</a>
-  <a href="privacy.html">Confidentialité</a>
-  <a href="terms.html">Conditions</a>
-</footer>
-  
-</body>
-</html>
