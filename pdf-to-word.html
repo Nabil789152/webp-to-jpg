@@ -163,58 +163,8 @@ footer a:hover{
 
 <canvas id="pdfPreview"></canvas>
 
-<script>
-async function convert() {
-
-  const file = document.getElementById("file").files[0];
-  if (!file) {
-    alert("Choisis un PDF d'abord !");
-    return;
-  }
-
-  const reader = new FileReader();
-
-  reader.onload = async function () {
-
-    const typedarray = new Uint8Array(this.result);
-
-    const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
-
-    let fullText = "";
-
-    // 👉 extraire texte page par page
-    for (let i = 1; i <= pdf.numPages; i++) {
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
-
-      const pageText = textContent.items.map(item => item.str).join(" ");
-      fullText += pageText + "\n\n";
-    }
-
-    // 👉 créer document Word
-    const doc = new docx.Document({
-      sections: [{
-        children: [
-          new docx.Paragraph(fullText)
-        ]
-      }]
-    });
-
-    const blob = await docx.Packer.toBlob(doc);
-
-    // 👉 download
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "converted.docx";
-    a.click();
-
-    URL.revokeObjectURL(url);
-  };
-
-  reader.readAsArrayBuffer(file);
-}
-</script>
+<button onclick="convert()">✨ Convertir en Word</button>
+  
 </div>
 
 </div>
@@ -310,5 +260,58 @@ dropzone.addEventListener("drop", (e) => {
 
 </script>
 
+<script>
+async function convert() {
+
+  const file = document.getElementById("file").files[0];
+  if (!file) {
+    alert("Choisis un PDF d'abord !");
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = async function () {
+
+    const typedarray = new Uint8Array(this.result);
+
+    const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
+
+    let fullText = "";
+
+    // 👉 extraire texte page par page
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+
+      const pageText = textContent.items.map(item => item.str).join(" ");
+      fullText += pageText + "\n\n";
+    }
+
+    // 👉 créer document Word
+    const doc = new docx.Document({
+      sections: [{
+        children: [
+          new docx.Paragraph(fullText)
+        ]
+      }]
+    });
+
+    const blob = await docx.Packer.toBlob(doc);
+
+    // 👉 download
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "converted.docx";
+    a.click();
+
+    URL.revokeObjectURL(url);
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+</script>  
+  
 </body>
 </html>
