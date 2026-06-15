@@ -7,14 +7,9 @@
 
 <title>PDF vers Word | Image Tools Pro</title>
 
-<meta name="description" content="Convertissez vos documents PDF en Word en ligne. Outil rapide et sécurisé.">
-<meta name="robots" content="index, follow">
-
 <link rel="stylesheet" href="style.css">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
 
 <style>
 
@@ -50,16 +45,15 @@ header{
   text-align:center;
   padding:35px 20px;
   background:#111c2e;
-  border-bottom:1px solid #1e293b;
 }
 
 header h1{
   margin:0;
   font-size:34px;
+  color:white;
 }
 
 header p{
-  margin-top:10px;
   color:#94a3b8;
 }
 
@@ -83,6 +77,11 @@ header p{
   border-radius:10px;
 }
 
+.dropzone.dragover{
+  border-color:#22c55e;
+  background:#0b1220;
+}
+
 button{
   width:100%;
   padding:12px;
@@ -99,41 +98,10 @@ button:hover{
   background:#2563eb;
 }
 
-.progress{
-  height:8px;
-  background:#1e293b;
-  border-radius:10px;
+#pdfPreview{
   margin-top:15px;
-  overflow:hidden;
-}
-
-.bar{
-  height:100%;
-  width:0%;
-  background:#22c55e;
-}
-
-.badge{
-  display:inline-block;
-  padding:5px 10px;
-  border-radius:8px;
-  font-size:12px;
-  margin-bottom:15px;
-}
-
-.free{
-  background:#f59e0b;
-}
-
-.pro{
-  background:#22c55e;
-}
-
-#preview{
-  margin-top:15px;
-  white-space:pre-wrap;
+  width:100%;
   background:#0b1220;
-  padding:10px;
   border-radius:10px;
 }
 
@@ -164,79 +132,61 @@ footer a:hover{
   <a href="index.html">🏠 Accueil</a>
   <a href="resize.html">📏 Redimentionneur</a>
   <a href="compress.html">📦 Compresseur</a>
-  <a href="background-remover.html">🧹 BG</a>
-  <a href="grayscale.html">🏁 NB</a>
-  <a href="pdf-to-images.html">📝➡️🖼️ PDF vers Images</a>
-  <a href="blur.html">▒ Flou</a>
-  <a href="sharpen.html">💎 Netteté</a>
-  <a href="rotate.html">🔁 Rotation</a>
-  <a href="image-cropper.html">🔲 Recadrer</a>
-  <a href="jpg-png-converter.html">🖼️ JPG↔PNG</a>
-  <a href="avif-to-jpg.html">🖼️ AVIF→JPG</a>
-  <a href="jfif-to-jpg.html">🖼️ JFIF→JPG</a>
-  <a href="svg-to-jpg.html">🖼️ SVG→JPG</a>
 </div>
 
 <header>
   <h1>📝➡️🗎 PDF vers Word</h1>
-  <p>Convertissez vos fichiers PDF en documents Word en quelques secondes</p>
+  <p>Convertissez vos fichiers PDF en documents Word</p>
 </header>
 
 <div class="container">
 
 <div class="card">
 
-<h2>🚀 PDF to Word SaaS</h2>
-
-<div id="userStatus" class="badge free">MODE FREE</div>
+<h2>🚀 PDF to Word</h2>
 
 <div class="dropzone" id="drop">
-📄 Glisse ton PDF ici ou clique pour sélectionner
+📄 Glisse ton PDF ici ou clique
 <input type="file" id="file" accept=".pdf" hidden>
 </div>
-  
-<button onclick="convert()">✨ Convertir en Word</button>
 
-<button onclick="upgrade()">
-💳 Passer en PRO (5€ / mois)
-</button>
+<canvas id="pdfPreview"></canvas>
 
-<div class="progress">
-  <div class="bar" id="bar"></div>
-</div>
-
-<div id="preview"></div>
+<button onclick="convert()">✨ Convertir</button>
 
 </div>
 
 </div>
 
-<!-- FOOTER -->
 <footer>
   <p>© 2026 Image Tools Pro</p>
-  <a href="about.html">À propos</a>
-  <a href="contact.html">Contact</a>
-  <a href="privacy.html">Confidentialité</a>
-  <a href="terms.html">Conditions</a>
 </footer>
 
 <script>
+
+// 👉 PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
 const fileInput = document.getElementById("file");
+const dropzone = document.getElementById("drop");
 const canvas = document.getElementById("pdfPreview");
 const ctx = canvas.getContext("2d");
 
+// =====================
+// 📄 PREVIEW PDF
+// =====================
 fileInput.addEventListener("change", async function () {
   const file = this.files[0];
-  if (!file || file.type !== "application/pdf") return;
+  if (!file) return;
 
-  const fileReader = new FileReader();
+  const reader = new FileReader();
 
-  fileReader.onload = async function () {
+  reader.onload = async function () {
     const typedarray = new Uint8Array(this.result);
 
     const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
 
-    // 👉 Première page
     const page = await pdf.getPage(1);
 
     const viewport = page.getViewport({ scale: 1.5 });
@@ -244,57 +194,55 @@ fileInput.addEventListener("change", async function () {
     canvas.height = viewport.height;
     canvas.width = viewport.width;
 
-    const renderContext = {
+    await page.render({
       canvasContext: ctx,
       viewport: viewport
-    };
-
-    await page.render(renderContext).promise;
+    }).promise;
   };
 
-  fileReader.readAsArrayBuffer(file);
+  reader.readAsArrayBuffer(file);
 });
-</script>  
 
-<script>
-const dropzone = document.getElementById("drop");
-const fileInput = document.getElementById("file");
-
-// Clique = ouvrir fichier
+// =====================
+// 📥 CLICK ZONE
+// =====================
 dropzone.addEventListener("click", () => {
   fileInput.click();
 });
 
-// Drag over (obligatoire)
+// =====================
+// 🟢 DRAG OVER
+// =====================
 dropzone.addEventListener("dragover", (e) => {
   e.preventDefault();
-  dropzone.style.borderColor = "#22c55e";
+  dropzone.classList.add("dragover");
 });
 
-// Drag leave
+// =====================
+// 🔴 DRAG LEAVE
+// =====================
 dropzone.addEventListener("dragleave", () => {
-  dropzone.style.borderColor = "#3b82f6";
+  dropzone.classList.remove("dragover");
 });
 
-// Drop
+// =====================
+// 📤 DROP FILE
+// =====================
 dropzone.addEventListener("drop", (e) => {
   e.preventDefault();
-
-  dropzone.style.borderColor = "#3b82f6";
+  dropzone.classList.remove("dragover");
 
   const file = e.dataTransfer.files[0];
+  if (!file) return;
 
-  if (!file || file.type !== "application/pdf") return;
-
-  // injecte le fichier dans l’input
   const dataTransfer = new DataTransfer();
   dataTransfer.items.add(file);
   fileInput.files = dataTransfer.files;
 
-  // déclenche preview / conversion
   fileInput.dispatchEvent(new Event("change"));
 });
-</script>  
-  
+
+</script>
+
 </body>
 </html>
