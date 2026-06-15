@@ -225,3 +225,8 @@ h1 {
   border-radius:6px;
   font-size:14px;
 }
+
+#pdfPreview {
+  max-height: 500px;
+  object-fit: contain;
+}
