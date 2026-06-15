@@ -279,27 +279,32 @@ async function convert() {
 
     const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
 
-    let fullText = [];
+    const paragraphs = [];
 
     for (let i = 1; i <= pdf.numPages; i++) {
+
       const page = await pdf.getPage(i);
       const textContent = await page.getTextContent();
 
       const text = textContent.items.map(item => item.str).join(" ");
 
-      fullText.push(new docx.Paragraph(text));
+      paragraphs.push(
+        new docx.Paragraph({
+          text: text,
+          spacing: { after: 200 }
+        })
+      );
     }
 
     const doc = new docx.Document({
       sections: [{
-        children: fullText
+        children: paragraphs
       }]
     });
 
     const blob = await docx.Packer.toBlob(doc);
 
     const url = URL.createObjectURL(blob);
-
     const a = document.createElement("a");
     a.href = url;
     a.download = "converted.docx";
@@ -310,7 +315,7 @@ async function convert() {
 
   reader.readAsArrayBuffer(file);
 }
-</script>  
+</script>
   
 </body>
 </html>
