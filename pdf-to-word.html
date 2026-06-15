@@ -265,52 +265,68 @@ dropzone.addEventListener("drop", (e) => {
 async function convert() {
 
   const file = document.getElementById("file").files[0];
+  const status = document.getElementById("status");
 
   if (!file) {
     alert("Choisis un PDF d'abord !");
     return;
   }
 
+  status.innerText = "⏳ Conversion en cours...";
+
   const reader = new FileReader();
 
   reader.onload = async function () {
 
-    const typedarray = new Uint8Array(this.result);
+    try {
 
-    const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
+      const typedarray = new Uint8Array(this.result);
 
-    const paragraphs = [];
+      const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
 
-    for (let i = 1; i <= pdf.numPages; i++) {
+      const paragraphs = [];
 
-      const page = await pdf.getPage(i);
-      const textContent = await page.getTextContent();
+      for (let i = 1; i <= pdf.numPages; i++) {
 
-      const text = textContent.items.map(item => item.str).join(" ");
+        status.innerText = `⏳ Traitement page ${i}/${pdf.numPages}`;
 
-      paragraphs.push(
-        new docx.Paragraph({
-          text: text,
-          spacing: { after: 200 }
-        })
-      );
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+
+        const text = textContent.items.map(item => item.str).join(" ");
+
+        paragraphs.push(
+          new docx.Paragraph({
+            text: text,
+            spacing: { after: 200 }
+          })
+        );
+      }
+
+      status.innerText = "📦 Création du fichier Word...";
+
+      const doc = new docx.Document({
+        sections: [{
+          children: paragraphs
+        }]
+      });
+
+      const blob = await docx.Packer.toBlob(doc);
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "PDF-to-Word-PRO.docx";
+      a.click();
+
+      URL.revokeObjectURL(url);
+
+      status.innerText = "✅ Conversion terminée !";
+
+    } catch (err) {
+      console.error(err);
+      status.innerText = "❌ Erreur pendant la conversion";
     }
-
-    const doc = new docx.Document({
-      sections: [{
-        children: paragraphs
-      }]
-    });
-
-    const blob = await docx.Packer.toBlob(doc);
-
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "converted.docx";
-    a.click();
-
-    URL.revokeObjectURL(url);
   };
 
   reader.readAsArrayBuffer(file);
