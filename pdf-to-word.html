@@ -278,33 +278,75 @@ async function convert() {
 
     const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
 
-    let fullText = "";
+    const docChildren = [];
 
-    // 👉 extraire texte page par page
+    // =========================
+    // LOOP ALL PAGES
+    // =========================
     for (let i = 1; i <= pdf.numPages; i++) {
+
       const page = await pdf.getPage(i);
+
       const textContent = await page.getTextContent();
 
+      const viewport = page.getViewport({ scale: 1.5 });
+
+      // -------------------------
+      // TEXT EXTRACTION
+      // -------------------------
       const pageText = textContent.items.map(item => item.str).join(" ");
-      fullText += pageText + "\n\n";
+
+      if (pageText.trim()) {
+        docChildren.push(
+          new docx.Paragraph({
+            text: pageText,
+            spacing: { after: 200 }
+          })
+        );
+      }
+
+      // -------------------------
+      // IMAGE EXTRACTION (canvas trick)
+      // -------------------------
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      await page.render({
+        canvasContext: ctx,
+        viewport: viewport
+      }).promise;
+
+      const imgData = canvas.toDataURL("image/png");
+
+      // Add image to Word
+      const image = docx.Media.addImage(
+        docx.createDocument(),
+        imgData,
+        viewport.width / 2,
+        viewport.height / 2
+      );
+
+      docChildren.push(new docx.Paragraph(image));
     }
 
-    // 👉 créer document Word
+    // =========================
+    // CREATE DOCX
+    // =========================
     const doc = new docx.Document({
       sections: [{
-        children: [
-          new docx.Paragraph(fullText)
-        ]
+        children: docChildren
       }]
     });
 
     const blob = await docx.Packer.toBlob(doc);
 
-    // 👉 download
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "converted.docx";
+    a.download = "converted_with_images.docx";
     a.click();
 
     URL.revokeObjectURL(url);
