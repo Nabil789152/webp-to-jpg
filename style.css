@@ -202,3 +202,26 @@ footer {
 .tool-card:hover {
   transform: translateY(-5px);
 }
+
+h1 {
+  text-align:center;
+  color:#222;
+}
+
+.top-buttons {
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  padding:10px;
+  justify-content:center;
+  background:#fff;
+  box-shadow:0 2px 8px rgba(0,0,0,0.05);
+}
+
+.top-buttons a {
+  text-decoration:none;
+  padding:6px 10px;
+  background:#f1f1f1;
+  border-radius:6px;
+  font-size:14px;
+}
