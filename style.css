@@ -230,3 +230,8 @@ h1 {
   max-height: 500px;
   object-fit: contain;
 }
+
+header h1{
+  color: #ffffff;
+  font-size: 34px;
+}
