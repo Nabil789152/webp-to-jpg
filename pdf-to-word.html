@@ -265,6 +265,7 @@ dropzone.addEventListener("drop", (e) => {
 async function convert() {
 
   const file = document.getElementById("file").files[0];
+
   if (!file) {
     alert("Choisis un PDF d'abord !");
     return;
@@ -278,75 +279,30 @@ async function convert() {
 
     const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
 
-    const docChildren = [];
+    let fullText = [];
 
-    // =========================
-    // LOOP ALL PAGES
-    // =========================
     for (let i = 1; i <= pdf.numPages; i++) {
-
       const page = await pdf.getPage(i);
-
       const textContent = await page.getTextContent();
 
-      const viewport = page.getViewport({ scale: 1.5 });
+      const text = textContent.items.map(item => item.str).join(" ");
 
-      // -------------------------
-      // TEXT EXTRACTION
-      // -------------------------
-      const pageText = textContent.items.map(item => item.str).join(" ");
-
-      if (pageText.trim()) {
-        docChildren.push(
-          new docx.Paragraph({
-            text: pageText,
-            spacing: { after: 200 }
-          })
-        );
-      }
-
-      // -------------------------
-      // IMAGE EXTRACTION (canvas trick)
-      // -------------------------
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
-
-      canvas.width = viewport.width;
-      canvas.height = viewport.height;
-
-      await page.render({
-        canvasContext: ctx,
-        viewport: viewport
-      }).promise;
-
-      const imgData = canvas.toDataURL("image/png");
-
-      // Add image to Word
-      const image = docx.Media.addImage(
-        docx.createDocument(),
-        imgData,
-        viewport.width / 2,
-        viewport.height / 2
-      );
-
-      docChildren.push(new docx.Paragraph(image));
+      fullText.push(new docx.Paragraph(text));
     }
 
-    // =========================
-    // CREATE DOCX
-    // =========================
     const doc = new docx.Document({
       sections: [{
-        children: docChildren
+        children: fullText
       }]
     });
 
     const blob = await docx.Packer.toBlob(doc);
 
     const url = URL.createObjectURL(blob);
+
     const a = document.createElement("a");
     a.href = url;
-    a.download = "converted_with_images.docx";
+    a.download = "converted.docx";
     a.click();
 
     URL.revokeObjectURL(url);
