@@ -140,11 +140,13 @@ TOP MENU
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+  gap: 8px;
 
   padding: 12px;
   background: #fff;
   border-bottom: 1px solid #e6e6e6;
+  text-align: center;
 }
 
 .top-buttons a {
