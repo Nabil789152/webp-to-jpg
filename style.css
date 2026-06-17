@@ -231,9 +231,9 @@ h1 {
   object-fit: contain;
 }
 
-header h1{
-  color: #ffffff;
-  font-size: 34px;
+h1 {
+  text-align:center;
+  color:#222;
 }
 
 .blog-section{
