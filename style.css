@@ -235,3 +235,35 @@ header h1{
   color: #ffffff;
   font-size: 34px;
 }
+
+.blog-section{
+    margin:40px auto;
+    max-width:900px;
+    padding:25px;
+    background:#fff;
+    border-radius:15px;
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+    text-align:center;
+}
+
+.blog-links{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin:20px 0;
+}
+
+.blog-links a{
+    text-decoration:none;
+    color:#0077ff;
+    font-weight:600;
+}
+
+.btn-blog{
+    display:inline-block;
+    padding:12px 20px;
+    background:#0077ff;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+}
