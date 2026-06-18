@@ -174,21 +174,27 @@ FOOTER (CENTRÉ)
 footer {
   margin-top: 50px;
   padding: 20px;
-
-  font-size: 13px;
-  color: #777;
-
   background: #fff;
   border-top: 1px solid #eee;
 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
   text-align: center;
+  font-size: 13px;
+  color: #777;
 }
 
 footer a {
-  display: inline-block;
-  margin: 5px 8px;
+  color: #777;
   text-decoration: none;
-  color: #555;
+  margin: 4px 6px;
+}
+
+footer a:hover {
+  text-decoration: underline;
 }
 
 /* =========================
