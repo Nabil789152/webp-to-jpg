@@ -295,3 +295,7 @@ RESPONSIVE
     padding: 5px 8px;
   }
 }
+
+.container {
+  align-items: stretch;
+}
