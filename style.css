@@ -43,13 +43,14 @@ CONTAINER (TOOLS GRID)
 
 .container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   padding: 20px;
 
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
 }
+
 /* =========================
 BOX
 ========================= */
@@ -59,8 +60,11 @@ BOX
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  margin-top: 20px;
-  text-align: left;
+
+  /* IMPORTANT */
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 /* =========================
