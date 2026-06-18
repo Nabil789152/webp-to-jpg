@@ -86,8 +86,8 @@ IMAGES (FIX MINI SIZE BUG)
 ========================= */
 
 .tool-card img {
-  width: 132px;
-  height: 132px;
+  width: 320px;
+  height: 320px;
   object-fit: contain;
   margin-bottom: 15px;
 }
