@@ -43,21 +43,11 @@
 
   <div class="box">
 
-    <div class="drop-zone" id="dropZone">
-
-      <input type="file" id="file" accept="image/avif,.avif">
-
-      <div class="drop-content">
-        <div class="icon">📁</div>
-        <h3>Glisse-dépose ton image ici</h3>
-        <p>ou clique pour sélectionner</p>
-      </div>
-
-    </div>
-    <div class="box">
-      <p id="info">Format détecté : -</p>
-    </div>
-
+     <div class="drop-zone" id="dropZone">
+       <p>📁 Glissez ou cliquez pour importer une image</p>
+       <input type="file" id="file" accept="image/avif,.avif" hidden>
+     </div>
+    
     <button onclick="convert()">Convertir en JPG</button>
 
   </div>
