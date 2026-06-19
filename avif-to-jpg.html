@@ -134,6 +134,38 @@ function convert(){
 
 }
 
+<script>
+  const dropZone = document.getElementById("dropZone");
+  const fileInput = document.getElementById("file");
+
+  /* CLICK */
+  dropZone.addEventListener("click", () => {
+    fileInput.click();
+  });
+
+  /* DRAG OVER */
+  dropZone.addEventListener("dragover", (e) => {
+    e.preventDefault();
+    dropZone.style.border = "2px dashed #00aaff";
+  });
+
+  /* DRAG LEAVE */
+  dropZone.addEventListener("dragleave", () => {
+    dropZone.style.border = "";
+  });
+
+  /* DROP */
+  dropZone.addEventListener("drop", (e) => {
+    e.preventDefault();
+
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+
+    fileInput.files = e.dataTransfer.files;
+
+    fileInput.dispatchEvent(new Event("change"));
+  });
+</script>  
 </script>
 
 <footer>
