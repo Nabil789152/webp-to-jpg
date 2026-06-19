@@ -195,18 +195,12 @@ FOOTER (FIX CENTRÉ)
 ========================= */
 
 footer {
-  margin-top: 50px;
-  padding: 20px;
-  background: #fff;
-  border-top: 1px solid #eee;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-
-  font-size: 13px;
-  color: #777;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* espace entre les liens */
+    flex-wrap: nowrap; /* empêche le retour à la ligne */
+    padding: 20px;
 }
 
 footer p {
@@ -214,9 +208,7 @@ footer p {
 }
 
 footer a {
-  color: #777;
-  text-decoration: none;
-  margin: 5px;
+    text-decoration: none;
 }
 
 footer a:hover {
