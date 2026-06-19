@@ -59,80 +59,7 @@
 </div>
 
 <script>
-
-let img = new Image();
-
-/* CHARGEMENT IMAGE */
-document.getElementById("file").onchange = (e) => {
-
-  const file = e.target.files[0];
-  if(!file) return;
-
-  const type = file.type.toLowerCase();
-
-  if(!type.includes("jpeg") && !type.includes("avif")){
-    alert("Veuillez importer une image AVIF ou JPG");
-    return;
-  }
-
-  document.getElementById("info").innerText = "Format détecté : " + file.type;
-
-  const reader = new FileReader();
-
-  reader.onload = ev => {
-    img.src = ev.target.result;
-
-    img.onload = () => {
-      document.getElementById("preview").innerHTML = `
-        <div class="box">
-          <p>Image originale</p>
-          <img src="${img.src}" alt="image originale">
-        </div>
-      `;
-    };
-  };
-
-  reader.readAsDataURL(file);
-};
-
-/* CONVERSION */
-function convert(){
-
-  if(!img.src){
-    alert("Veuillez ajouter une image");
-    return;
-  }
-
-  let canvas = document.createElement("canvas");
-  canvas.width = img.width;
-  canvas.height = img.height;
-
-  let ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0);
-
-  canvas.toBlob(blob => {
-
-    let url = URL.createObjectURL(blob);
-
-    document.getElementById("preview").innerHTML += `
-      <div class="box">
-
-        <p>Image convertie en JPG</p>
-
-        <img src="${url}" alt="image convertie">
-
-        <br><br>
-
-        <a href="${url}" download="image-convertie.jpg">
-          <button>Télécharger JPG</button>
-        </a>
-
-      </div>
-    `;
-
-  }, "image/jpeg", 0.92);
-
-}
+document.addEventListener("DOMContentLoaded", () => {
 
   const dropZone = document.getElementById("dropZone");
   const fileInput = document.getElementById("file");
@@ -161,10 +88,11 @@ function convert(){
     if (!file) return;
 
     fileInput.files = e.dataTransfer.files;
-
     fileInput.dispatchEvent(new Event("change"));
   });
-</script>  
+
+});
+</script>
 
 <footer>
 <p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
