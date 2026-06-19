@@ -5,19 +5,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convertisseur AVIF en JPG en ligne gratuit | Image Tools Pro</title>
-
-<meta name="description" content="Convertissez vos images AVIF en JPG gratuitement en ligne. Outil rapide, sécurisé et facile d'utilisation.">
-<meta name="robots" content="index, follow">
+<title>Convertisseur AVIF en JPG | Image Tools Pro</title>
 
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- 🔥 TOP MENU -->
+<!-- TOP MENU -->
 <div class="top-buttons">
   <a href="index.html">🏠 Accueil</a>
+  <a href="blog.html">📚 Blog</a>
   <a href="converter.html">🔄 Convertisseur</a>
   <a href="resize.html">📏 Redimentionneur</a>
   <a href="compress.html">📦 Compresseur</a>
@@ -29,14 +27,13 @@
   <a href="rotate.html">🔁 Rotation</a>
   <a href="image-cropper.html">🔲 Recadrer</a>
   <a href="jpg-png-converter.html">🖼️ JPG↔PNG</a>
+  <a href="avif-to-jpg.html">🖼️ AVIF→JPG</a>
   <a href="jfif-to-jpg.html">🖼️ JFIF→JPG</a>
-  <a href="svg-to-jpg.html">🖼️ SVG→JPG</a>
 </div>
 
-  
 <header>
   <h1>Convertisseur AVIF en JPG</h1>
-  <p>Convertir des images AVIF en JPG instantanément</p>
+  <p>Convertissez vos images AVIF en JPG instantanément</p>
 </header>
 
 <div class="container">
@@ -44,13 +41,15 @@
   <div class="box">
 
     <div class="drop-zone" id="dropZone">
-    <p>🖼️ Glisse-dépose ton image ici ou clique pour sélectionner</p>
-    <input type="file" id="file" accept="image/avif,.avif" hidden>
+      <p>🖼️ Glisse-dépose ou clique pour sélectionner</p>
+      <input type="file" id="file" accept="image/avif,.avif" hidden>
     </div>
-     
+
     <br><br>
 
     <button onclick="convert()">Convertir en JPG</button>
+
+    <p id="info"></p>
 
   </div>
 
@@ -59,52 +58,107 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+let img = new Image();
 
-  const dropZone = document.getElementById("dropZone");
-  const fileInput = document.getElementById("file");
+const dropZone = document.getElementById("dropZone");
+const fileInput = document.getElementById("file");
+const preview = document.getElementById("preview");
+const info = document.getElementById("info");
 
-  /* CLICK */
-  dropZone.addEventListener("click", () => {
-    fileInput.click();
-  });
-
-  /* DRAG OVER */
-  dropZone.addEventListener("dragover", (e) => {
-    e.preventDefault();
-    dropZone.style.border = "2px dashed #00aaff";
-  });
-
-  /* DRAG LEAVE */
-  dropZone.addEventListener("dragleave", () => {
-    dropZone.style.border = "";
-  });
-
-  /* DROP */
-  dropZone.addEventListener("drop", (e) => {
-    e.preventDefault();
-
-    const file = e.dataTransfer.files[0];
-    if (!file) return;
-
-    fileInput.files = e.dataTransfer.files;
-    fileInput.dispatchEvent(new Event("change"));
-  });
-
+/* CLICK */
+dropZone.addEventListener("click", () => {
+  fileInput.click();
 });
+
+/* DRAG OVER */
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropZone.style.border = "2px dashed #00aaff";
+});
+
+/* DRAG LEAVE */
+dropZone.addEventListener("dragleave", () => {
+  dropZone.style.border = "";
+});
+
+/* DROP */
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+
+  fileInput.files = e.dataTransfer.files;
+  fileInput.dispatchEvent(new Event("change"));
+});
+
+/* CHARGEMENT IMAGE */
+fileInput.addEventListener("change", (e) => {
+
+  const file = e.target.files[0];
+  if (!file) return;
+
+  info.textContent = "Format détecté : " + file.type;
+
+  const reader = new FileReader();
+
+  reader.onload = ev => {
+    img.src = ev.target.result;
+
+    img.onload = () => {
+      preview.innerHTML = `
+        <div class="box">
+          <p>Image originale</p>
+          <img src="${img.src}" alt="original">
+        </div>
+      `;
+    };
+  };
+
+  reader.readAsDataURL(file);
+});
+
+/* CONVERSION */
+function convert() {
+
+  if (!img.src) {
+    alert("Veuillez ajouter une image");
+    return;
+  }
+
+  let canvas = document.createElement("canvas");
+  canvas.width = img.width;
+  canvas.height = img.height;
+
+  let ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+
+  canvas.toBlob(blob => {
+
+    const url = URL.createObjectURL(blob);
+
+    preview.innerHTML += `
+      <div class="box">
+        <p>Image convertie en JPG</p>
+        <img src="${url}" alt="converted">
+        <br><br>
+        <a href="${url}" download="image-convertie.jpg">
+          <button>Télécharger JPG</button>
+        </a>
+      </div>
+    `;
+
+  }, "image/jpeg", 0.92);
+}
 </script>
 
 <footer>
-<p>© 2026 Image Tools Pro — Outils d’images gratuits en ligne</p>
-<br>
+<p>© 2026 Image Tools Pro</p>
+
 <a href="index.html">Accueil</a>
-<a href="blog.html">Blog</a>
-<a href="guide.html">Guide</a>
-<a href="faq.html">Faq</a>
-<a href="about.html">À propos</a>
 <a href="contact.html">Contact</a>
-<a href="privacy.html">Politique de confidentialité</a>
-<a href="terms.html">Conditions d’utilisation</a>
+<a href="privacy.html">Confidentialité</a>
+<a href="terms.html">Conditions</a>
 </footer>
 
 </body>
