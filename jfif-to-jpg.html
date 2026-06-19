@@ -5,38 +5,34 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Convertisseur JFIF en JPG en ligne gratuit | Image Tools Pro</title>
-
-<meta name="description" content="Convertissez vos images JFIF en JPG gratuitement en ligne. Outil rapide, sécurisé et facile d'utilisation.">
-<meta name="robots" content="index, follow">
+<title>Convertisseur JFIF en JPG | Image Tools Pro</title>
 
 <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<!-- 🔥 TOP MENU -->
+<!-- TOP MENU -->
 <div class="top-buttons">
   <a href="index.html">🏠 Accueil</a>
   <a href="blog.html">📚 Blog</a>
   <a href="converter.html">🔄 Convertisseur</a>
-  <a href="compress.html">📦 Compresseur</a>
   <a href="resize.html">📏 Redimentionneur</a>
+  <a href="compress.html">📦 Compresseur</a>
   <a href="background-remover.html">🧹 BG</a>
-  <a href="pdf-to-images.html">📝➡️🖼️ PDF vers Images</a>
   <a href="grayscale.html">🏁 NB</a>
+  <a href="pdf-to-images.html">📝➡️🖼️ PDF vers Images</a>
   <a href="blur.html">▒ Flou</a>
   <a href="sharpen.html">💎 Netteté</a>
   <a href="rotate.html">🔁 Rotation</a>
   <a href="image-cropper.html">🔲 Recadrer</a>
   <a href="jpg-png-converter.html">🖼️ JPG↔PNG</a>
-  <a href="avif-to-jpg.html">🖼️ AVIF→JPG</a>
+  <a href="jfif-to-jpg.html">🖼️ AVIF→JPG</a>
 </div>
-
 
 <header>
   <h1>Convertisseur JFIF en JPG</h1>
-  <p>Convertir des images JFIF en JPG instantanément</p>
+  <p>Convertissez vos images JFIF en JPG instantanément</p>
 </header>
 
 <div class="container">
@@ -44,21 +40,15 @@
   <div class="box">
 
     <div class="drop-zone" id="dropZone">
-
-      <input type="file" id="file" accept="image/jfif,.jfif">
-
-      <div class="drop-content">
-        <div class="icon">📁</div>
-        <h3>Glisse-dépose ton image ici</h3>
-        <p>ou clique pour sélectionner</p>
-      </div>
-
+      <p>🖼️ Glisse-dépose ou clique pour sélectionner</p>
+      <input type="file" id="file" accept="image/jfif,.jfif" hidden>
     </div>
-    <div class="box">
-      <p id="info">Format détecté : -</p>
-    </div>
+
+    <br><br>
 
     <button onclick="convert()">Convertir en JPG</button>
+
+    <p id="info"></p>
 
   </div>
 
@@ -67,23 +57,47 @@
 </div>
 
 <script>
-
 let img = new Image();
 
+const dropZone = document.getElementById("dropZone");
+const fileInput = document.getElementById("file");
+const preview = document.getElementById("preview");
+const info = document.getElementById("info");
+
+/* CLICK */
+dropZone.addEventListener("click", () => {
+  fileInput.click();
+});
+
+/* DRAG OVER */
+dropZone.addEventListener("dragover", (e) => {
+  e.preventDefault();
+  dropZone.style.border = "2px dashed #00aaff";
+});
+
+/* DRAG LEAVE */
+dropZone.addEventListener("dragleave", () => {
+  dropZone.style.border = "";
+});
+
+/* DROP */
+dropZone.addEventListener("drop", (e) => {
+  e.preventDefault();
+
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+
+  fileInput.files = e.dataTransfer.files;
+  fileInput.dispatchEvent(new Event("change"));
+});
+
 /* CHARGEMENT IMAGE */
-document.getElementById("file").onchange = (e) => {
+fileInput.addEventListener("change", (e) => {
 
   const file = e.target.files[0];
-  if(!file) return;
+  if (!file) return;
 
-  const type = file.type.toLowerCase();
-
-  if(!type.includes("jpeg") && !type.includes("jfif")){
-    alert("Veuillez importer une image JFIF ou JPG");
-    return;
-  }
-
-  document.getElementById("info").innerText = "Format détecté : " + file.type;
+  info.textContent = "Format détecté : " + file.type;
 
   const reader = new FileReader();
 
@@ -91,22 +105,22 @@ document.getElementById("file").onchange = (e) => {
     img.src = ev.target.result;
 
     img.onload = () => {
-      document.getElementById("preview").innerHTML = `
+      preview.innerHTML = `
         <div class="box">
           <p>Image originale</p>
-          <img src="${img.src}" alt="image originale">
+          <img src="${img.src}" alt="original">
         </div>
       `;
     };
   };
 
   reader.readAsDataURL(file);
-};
+});
 
 /* CONVERSION */
-function convert(){
+function convert() {
 
-  if(!img.src){
+  if (!img.src) {
     alert("Veuillez ajouter une image");
     return;
   }
@@ -120,38 +134,31 @@ function convert(){
 
   canvas.toBlob(blob => {
 
-    let url = URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
 
-    document.getElementById("preview").innerHTML += `
+    preview.innerHTML += `
       <div class="box">
-
         <p>Image convertie en JPG</p>
-
-        <img src="${url}" alt="image convertie">
-
+        <img src="${url}" alt="converted">
         <br><br>
-
         <a href="${url}" download="image-convertie.jpg">
           <button>Télécharger JPG</button>
         </a>
-
       </div>
     `;
 
   }, "image/jpeg", 0.92);
-
 }
-
 </script>
 
-<!-- FOOTER -->
 <footer>
-  <p>© 2026 Image Tools Pro</p>
-  <a href="about.html">À propos</a>
-  <a href="contact.html">Contact</a>
-  <a href="privacy.html">Confidentialité</a>
-  <a href="terms.html">Conditions</a>
+<p>© 2026 Image Tools Pro</p>
+
+<a href="index.html">Accueil</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Confidentialité</a>
+<a href="terms.html">Conditions</a>
 </footer>
-  
+
 </body>
 </html>
