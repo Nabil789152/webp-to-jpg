@@ -58,98 +58,124 @@
 </div>
 
 <script>
+
 let img = new Image();
+let fileName = "image";
 
 const dropZone = document.getElementById("dropZone");
 const fileInput = document.getElementById("file");
 const preview = document.getElementById("preview");
-const info = document.getElementById("info");
 
-/* CLICK */
+/* CLIC */
 dropZone.addEventListener("click", () => {
-  fileInput.click();
+    fileInput.click();
 });
 
 /* DRAG OVER */
-dropZone.addEventListener("dragover", (e) => {
-  e.preventDefault();
-  dropZone.style.border = "2px dashed #00aaff";
+dropZone.addEventListener("dragover", e => {
+    e.preventDefault();
+    dropZone.style.border = "2px dashed #00aaff";
 });
 
 /* DRAG LEAVE */
 dropZone.addEventListener("dragleave", () => {
-  dropZone.style.border = "";
+    dropZone.style.border = "";
 });
 
 /* DROP */
-dropZone.addEventListener("drop", (e) => {
-  e.preventDefault();
+dropZone.addEventListener("drop", e => {
 
-  const file = e.dataTransfer.files[0];
-  if (!file) return;
+    e.preventDefault();
+    dropZone.style.border = "";
 
-  fileInput.files = e.dataTransfer.files;
-  fileInput.dispatchEvent(new Event("change"));
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+
+    fileInput.files = e.dataTransfer.files;
+    fileInput.dispatchEvent(new Event("change"));
+
 });
 
 /* CHARGEMENT IMAGE */
-fileInput.addEventListener("change", (e) => {
+fileInput.addEventListener("change", e => {
 
-  const file = e.target.files[0];
-  if (!file) return;
+    const file = e.target.files[0];
+    if (!file) return;
 
-  info.textContent = "Format détecté : " + file.type;
+    fileName = file.name.split(".")[0];
 
-  const reader = new FileReader();
+    document.getElementById("formatDetected").textContent = file.type;
 
-  reader.onload = ev => {
-    img.src = ev.target.result;
+    const reader = new FileReader();
 
-    img.onload = () => {
-      preview.innerHTML = `
-        <div class="box">
-          <p>Image originale</p>
-          <img src="${img.src}" alt="original">
-        </div>
-      `;
+    reader.onload = ev => {
+
+        img.src = ev.target.result;
+
+        img.onload = () => {
+
+            preview.innerHTML = `
+            <div class="box">
+                <p>Image originale</p>
+                <img src="${img.src}" alt="original">
+            </div>
+            `;
+
+        };
+
     };
-  };
 
-  reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
+
 });
 
+
 /* CONVERSION */
-function convert() {
+function convert(){
 
-  if (!img.src) {
-    alert("Veuillez ajouter une image");
-    return;
-  }
+    if(!img.src){
+        alert("Veuillez ajouter une image");
+        return;
+    }
 
-  let canvas = document.createElement("canvas");
-  canvas.width = img.width;
-  canvas.height = img.height;
+    let format = document.getElementById("format").value;
 
-  let ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0);
+    let canvas = document.createElement("canvas");
 
-  canvas.toBlob(blob => {
+    canvas.width = img.width;
+    canvas.height = img.height;
 
-    const url = URL.createObjectURL(blob);
+    let ctx = canvas.getContext("2d");
 
-    preview.innerHTML += `
-      <div class="box">
-        <p>Image convertie en JPG</p>
-        <img src="${url}" alt="converted">
-        <br><br>
-        <a href="${url}" download="image-convertie.jpg">
-          <button>Télécharger JPG</button>
-        </a>
-      </div>
-    `;
+    /* Fond blanc pour PNG → JPG */
+    if(format === "image/jpeg"){
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+    }
 
-  }, "image/jpeg", 0.92);
+    ctx.drawImage(img,0,0);
+
+    canvas.toBlob(blob=>{
+
+        const url = URL.createObjectURL(blob);
+
+        let ext = format === "image/png" ? "png" : "jpg";
+
+        preview.innerHTML += `
+        <div class="box">
+            <p>Image convertie</p>
+            <img src="${url}" alt="converted">
+            <br><br>
+            <a href="${url}" download="${fileName}-converti.${ext}">
+                <button>Télécharger ${ext.toUpperCase()}</button>
+            </a>
+        </div>
+        `;
+
+    }, format, 0.92);
+
 }
+
 </script>
 
 <footer>
