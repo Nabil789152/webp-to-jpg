@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Diviser un PDF en pages | Image Tools Pro</title>
+
+<meta name="description" content="Découpe un PDF en plusieurs fichiers PDF, une page par fichier, gratuitement en ligne.">
+<meta name="robots" content="index, follow">
+
+<link rel="stylesheet" href="style.css">
+
+<style>
+
+body{
+    font-family:Arial,sans-serif;
+    background:#f4f6f9;
+    margin:0;
+}
+
+header{
+    text-align:center;
+    padding:20px;
+}
+
+.container{
+    max-width:900px;
+    margin:auto;
+    padding:20px;
+}
+
+.box{
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 2px 10px rgba(0,0,0,.1);
+}
+
+.drop-zone{
+    border:2px dashed #999;
+    padding:40px;
+    text-align:center;
+    border-radius:12px;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.drop-zone.drag{
+    background:#e8f0ff;
+    border-color:#007bff;
+}
+
+button{
+    padding:10px 15px;
+    border:none;
+    border-radius:8px;
+    background:#007bff;
+    color:white;
+    cursor:pointer;
+    margin-top:10px;
+}
+
+button:hover{
+    background:#0056d2;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+    gap:15px;
+    margin-top:20px;
+}
+
+.thumb{
+    background:#fff;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 2px 6px rgba(0,0,0,.1);
+    text-align:center;
+}
+
+small{
+    display:block;
+    margin:10px 0;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- MENU -->
+<div class="top-buttons">
+  <a href="index.html">🏠 Accueil</a>
+  <a href="resize.html">📏 Redimentionneur</a>
+  <a href="compress.html">📦 Compresseur</a>
+  <a href="background-remover.html">🧹 BG</a>
+  <a href="grayscale.html">🏁 NB</a>
+  <a href="pdf-to-images.html">📝➡️🖼️ PDF vers Images</a>
+  <a href="pdf-to-word.html">🚀 PDF vers Word</a>
+  <a href="blur.html">▒ Flou</a>
+  <a href="sharpen.html">💎 Netteté</a>
+  <a href="rotate.html">🔁 Rotation</a>
+  <a href="image-cropper.html">🔲 Recadrer</a>
+  <a href="jpg-png-converter.html">🖼️ JPG↔PNG</a>
+  <a href="avif-to-jpg.html">🖼️ AVIF→JPG</a>
+  <a href="jfif-to-jpg.html">🖼️ JFIF→JPG</a>
+  <a href="svg-to-jpg.html">🖼️ SVG→JPG</a>
+</div>
+
+<header>
+<h1>✂️ Diviser un PDF</h1>
+<p>Sépare chaque page du PDF dans un fichier PDF individuel</p>
+</header>
+
+<div class="container">
+
+<div class="box">
+
+<div class="drop-zone" id="dropZone">
+📄 Glisse ton PDF ici ou clique pour sélectionner
+<input type="file" id="fileInput" accept="application/pdf" hidden>
+</div>
+
+<button onclick="splitPDF()">✂️ Diviser le PDF</button>
+<button onclick="downloadAll()">⬇ Télécharger ZIP</button>
+
+<div id="status" style="margin-top:15px"></div>
+
+<div class="grid" id="output"></div>
+
+</div>
+
+</div>
+
+<!-- PDF-LIB -->
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+
+<!-- JSZIP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+
+<script>
+
+let pdfBytes = null;
+let splitFiles = [];
+
+const fileInput=document.getElementById("fileInput");
+const dropZone=document.getElementById("dropZone");
+const output=document.getElementById("output");
+const status=document.getElementById("status");
+
+/* CLICK */
+dropZone.addEventListener("click",()=>{
+    fileInput.click();
+});
+
+/* FILE */
+fileInput.addEventListener("change",(e)=>{
+    loadPDF(e.target.files[0]);
+});
+
+/* DRAG */
+dropZone.addEventListener("dragover",(e)=>{
+    e.preventDefault();
+    dropZone.classList.add("drag");
+});
+
+dropZone.addEventListener("dragleave",()=>{
+    dropZone.classList.remove("drag");
+});
+
+dropZone.addEventListener("drop",(e)=>{
+    e.preventDefault();
+    dropZone.classList.remove("drag");
+    loadPDF(e.dataTransfer.files[0]);
+});
+
+function loadPDF(file){
+
+    if(!file) return;
+
+    const reader=new FileReader();
+
+    reader.onload=function(){
+        pdfBytes=reader.result;
+        status.innerHTML="✅ PDF chargé";
+    };
+
+    reader.readAsArrayBuffer(file);
+
+}
+
+/* SPLIT */
+async function splitPDF(){
+
+    if(!pdfBytes){
+        alert("Ajoute un PDF !");
+        return;
+    }
+
+    output.innerHTML="";
+    splitFiles=[];
+
+    const pdfDoc=await PDFLib.PDFDocument.load(pdfBytes);
+    const totalPages=pdfDoc.getPageCount();
+
+    for(let i=0;i<totalPages;i++){
+
+        const newPdf=await PDFLib.PDFDocument.create();
+
+        const [page]=await newPdf.copyPages(pdfDoc,[i]);
+
+        newPdf.addPage(page);
+
+        const bytes=await newPdf.save();
+
+        splitFiles.push({
+            name:`page-${i+1}.pdf`,
+            bytes:bytes
+        });
+
+        const blob=new Blob([bytes],{
+            type:"application/pdf"
+        });
+
+        const url=URL.createObjectURL(blob);
+
+        const div=document.createElement("div");
+
+        div.className="thumb";
+
+        div.innerHTML=`
+        <div style="font-size:60px">📄</div>
+
+        <small>Page ${i+1}</small>
+
+        <a href="${url}" download="page-${i+1}.pdf">
+        <button>⬇ Télécharger</button>
+        </a>
+        `;
+
+        output.appendChild(div);
+
+        status.innerHTML=`Découpage : ${i+1}/${totalPages}`;
+
+    }
+
+    status.innerHTML="✅ PDF découpé avec succès";
+
+}
+
+/* ZIP */
+async function downloadAll(){
+
+    if(splitFiles.length===0){
+        alert("Découpe d'abord le PDF !");
+        return;
+    }
+
+    const zip=new JSZip();
+
+    splitFiles.forEach(file=>{
+        zip.file(file.name,file.bytes);
+    });
+
+    const content=await zip.generateAsync({
+        type:"blob"
+    });
+
+    const link=document.createElement("a");
+
+    link.href=URL.createObjectURL(content);
+    link.download="split-pdf.zip";
+    link.click();
+
+}
+
+</script>
+
+<!-- FOOTER -->
+<footer>
+<p>© 2026 Image Tools Pro — Outils PDF gratuits en ligne</p>
+
+<a href="index.html">Accueil</a>
+<a href="about.html">À propos</a>
+<a href="contact.html">Contact</a>
+<a href="privacy.html">Politique de confidentialité</a>
+<a href="terms.html">Conditions d'utilisation</a>
+
+</footer>
+
+</body>
+</html>
