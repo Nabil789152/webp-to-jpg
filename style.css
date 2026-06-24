@@ -263,10 +263,10 @@ RESPONSIVE
   }
 }
 
-footer p{
-    margin-bottom:15px;
+footer{
+    text-align:center;
 }
 
 footer nav{
-    display:block;
+    margin-top:15px;
 }
