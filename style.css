@@ -262,3 +262,11 @@ RESPONSIVE
     height: 90px;
   }
 }
+
+footer p{
+    margin-bottom:15px;
+}
+
+footer nav{
+    display:block;
+}
