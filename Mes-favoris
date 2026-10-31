@@ -1,0 +1,135 @@
+
+<style>
+#liens-flottants {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 999999;
+    font-family: Arial, sans-serif;
+}
+
+#liens-flottants summary {
+    list-style: none;
+    cursor: pointer;
+    background: #1877f2;
+    color: white;
+    padding: 13px 20px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 3px 12px rgba(0,0,0,.3);
+    text-align: center;
+}
+
+#liens-flottants summary::-webkit-details-marker {
+    display: none;
+}
+
+#liens-flottants summary:before {
+    content: "☰  ";
+}
+
+#liens-flottants[open] summary:before {
+    content: "✕  ";
+}
+
+#liens-flottants .menu-contenu {
+    position: absolute;
+    bottom: 55px;
+    right: 0;
+    width: 280px;
+    max-height: 65vh;
+    overflow-y: auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.3);
+    padding: 15px;
+    border: 1px solid #ddd;
+}
+
+#liens-flottants h4 {
+    background: #f0f2f5;
+    color: #1877f2;
+    padding: 8px;
+    margin: 12px 0 6px;
+    font-size: 13px;
+    border-left: 3px solid #1877f2;
+}
+
+#liens-flottants .menu-contenu a {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    font-size: 13px;
+    padding: 7px 9px;
+    border-bottom: 1px solid #eee;
+}
+
+#liens-flottants .menu-contenu a:hover {
+    background: #edf4ff;
+    color: #1877f2;
+}
+
+@media(max-width:480px) {
+    #liens-flottants {
+        right: 10px;
+        bottom: 12px;
+    }
+    #liens-flottants .menu-contenu {
+        width: min(280px, calc(100vw - 40px));
+        max-height: 65vh;
+    }
+}
+</style>
+
+<details id="liens-flottants">
+    <summary>LIENS UTILES</summary>
+
+    <div class="menu-contenu">
+
+        <h4>ACTUALITÉS ET SERVICES</h4>
+        <a href="https://www.facebook.com/observalgerie" target="_blank">Observ'Algérie</a>
+        <a href="https://www.facebook.com/Police.Oran" target="_blank">Police d'Oran</a>
+        <a href="https://www.facebook.com/tariki.GN" target="_blank">Tariki – Gendarmerie</a>
+        <a href="https://www.facebook.com/DGPC0031" target="_blank">Protection civile</a>
+        <a href="https://www.facebook.com/RadioOran.dz" target="_blank">Radio Oran</a>
+        <a href="https://www.facebook.com/RadioElBahiaOran" target="_blank">Radio El Bahia</a>
+        <a href="https://www.facebook.com/pageofficiellewilayaoran" target="_blank">Wilaya d'Oran</a>
+        <a href="https://www.facebook.com/31chu" target="_blank">CHU d'Oran</a>
+        <a href="https://www.facebook.com/EHUORAN31" target="_blank">EHU Oran</a>
+        <a href="https://www.facebook.com/BahiaTvOran/videos" target="_blank">Bahia TV – Vidéos</a>
+        <a href="https://www.facebook.com/profile.php?id=61553101300941" target="_blank">EPSP Front de Mer</a>
+
+        <h4>COMMUNES ET WILAYAS</h4>
+        <a href="https://www.facebook.com/profile.php?id=61583275571997" target="_blank">Mers El Kébir</a>
+        <a href="https://www.facebook.com/profile.php?id=100076355919184" target="_blank">Aïn El Turck</a>
+        <a href="https://www.facebook.com/profile.php?id=100063547481161" target="_blank">Commune d'Oran</a>
+        <a href="https://www.facebook.com/profile.php?id=61568331975081" target="_blank">Arzew</a>
+        <a href="https://www.facebook.com/WilayaOran00031" target="_blank">Wilaya d'Oran – 00031</a>
+        <a href="https://www.facebook.com/WilayaAinTemouchent00046" target="_blank">Aïn Témouchent</a>
+        <a href="https://www.facebook.com/WilayaSidiBelabbes00022" target="_blank">Sidi Bel Abbès</a>
+        <a href="https://www.facebook.com/WilayaMascara00029" target="_blank">Mascara</a>
+        <a href="https://www.facebook.com/WilayadeMostaganem00027" target="_blank">Mostaganem</a>
+        <a href="https://www.facebook.com/WilayaTiaret00014" target="_blank">Tiaret</a>
+        <a href="https://www.facebook.com/WilayaTlemcen00013" target="_blank">Tlemcen</a>
+        <a href="https://www.facebook.com/WilayaRelizane00048" target="_blank">Relizane</a>
+        <a href="https://www.facebook.com/WilayaChlef00002" target="_blank">Chlef</a>
+        <a href="https://www.facebook.com/WilayaSaida00020" target="_blank">Saïda</a>
+        <a href="https://www.facebook.com/WilayaTissemsilt00038" target="_blank">Tissemsilt</a>
+        <a href="https://www.facebook.com/dprhoran" target="_blank">Aquaculture</a>
+
+        <h4>SPORT ET MÉDIAS</h4>
+        <a href="https://www.facebook.com/90-%D8%AF%D9%82%D9%8A%D9%82%D8%A9-2222523321320075/" target="_blank">90 Dakika</a>
+        <a href="https://www.facebook.com/tvdznews" target="_blank">TV DZ News</a>
+
+        <h4>HYGIÈNE ET ENVIRONNEMENT</h4>
+        <a href="https://www.facebook.com/%D9%84%D8%AC%D9%86%D8%A9-%D8%A7%D9%84%D8%B5%D8%AD%D8%A9-%D8%A7%D9%84%D9%86%D8%B8%D8%A7%D9%81%D8%A9-%D9%88%D8%AD%D9%85%D8%A7%D9%8A%D8%A9-%D8%A7%D9%84%D8%A8%D9%8A%D8%A6%D8%A9-%D9%84%D8%A8%D9%84%D8%AF%D9%8A%D8%A9-%D9%88%D9%87%D8%B1%D8%A7%D9%86-106940125220054" target="_blank">Comité hygiène et environnement</a>
+
+        <h4>VIDÉOS</h4>
+        <a href="https://www.facebook.com/profile.php?id=100077274111456&sk=videos" target="_blank">Vidéos Facebook</a>
+
+        <h4>PROTECTION CIVILE – ORAN</h4>
+        <a href="https://www.facebook.com/profile.php?id=100067421621193" target="_blank">PC Oran</a>
+
+    </div>
+</details>
